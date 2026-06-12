@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.1.2</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.1.3</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -1804,7 +1804,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.1.2</div>
+  <div class="fixed-version-mark">v2.1.3</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -1875,6 +1875,13 @@
             <div class="field">
               <label for="titleJa">Title / タイトル</label>
               <input id="titleJa" type="text" placeholder="">
+            </div>
+          </div>
+
+          <div class="entry-row">
+            <div class="field">
+              <label for="titleEn">Title EN / タイトル英語</label>
+              <input id="titleEn" type="text" placeholder="">
             </div>
           </div>
 
@@ -4638,6 +4645,7 @@
           alert("シリーズ番号は0000〜9999の4桁で入力してください。");
           return;
         }
+        console.error(error);
         alert("保存できませんでした。");
         return;
       }
@@ -5074,7 +5082,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.1.2",
+        version: "minimal-text-v2.1.3",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

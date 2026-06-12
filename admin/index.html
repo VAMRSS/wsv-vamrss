@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.1.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -1707,24 +1707,51 @@
 
     .logo-entry-preview,
     .logo-detail-preview {
-      min-height: 96px;
-      display: grid;
-      place-items: center;
-      border: 1px dashed var(--line);
-      border-radius: var(--radius-small);
-      background: var(--surface-soft);
+      width: 100%;
+      display: block;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
       color: var(--sub);
-      padding: 14px;
-      overflow: hidden;
+      padding: 0;
+      overflow: visible;
       font-size: 12px;
+      line-height: 1.6;
       letter-spacing: 0.04em;
     }
 
     .logo-entry-preview img,
     .logo-detail-preview img {
-      max-width: 100%;
-      max-height: 180px;
       display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: none;
+      margin: 0;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    html[data-theme="dark"] .logo-entry-preview img,
+    html[data-theme="dark"] .logo-detail-preview img {
+      filter: invert(1);
+    }
+
+    .detail-row.logo-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 8px 0;
+      padding: 0;
+    }
+
+    .detail-row.logo-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
     }
 
     .logo-entry-actions {
@@ -1776,7 +1803,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.1</div>
+  <div class="fixed-version-mark">v2.1.1</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3033,7 +3060,7 @@
       const url = cloudAssetPublicUrl(path);
       if (!url) return "";
       return `
-                <div class="detail-row logo-detail-row"><div class="detail-key">Logo</div><div class="detail-value"><div class="logo-detail-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div></div></div>`;
+                <div class="detail-row logo-detail-row"><div class="detail-value"><div class="logo-detail-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div></div></div>`;
     }
 
     function currentLogoRecord(kind) {
@@ -4250,7 +4277,7 @@
             </button>
             <div class="work-detail">
               <div class="detail-grid">
-                <div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>${logoDetailRowHtml("work", w)}
+                ${logoDetailRowHtml("work", w)}<div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>
                 <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(w.title || w.titleJa || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Start</div><div class="detail-value">${escapeHtml(normalizeProductionDate(w))}</div></div>
@@ -4502,7 +4529,7 @@
             </button>
             <div class="work-detail">
               <div class="detail-grid">
-                <div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(no)}</div></div>${logoDetailRowHtml("series", s)}
+                ${logoDetailRowHtml("series", s)}<div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(no)}</div></div>
                 <div class="detail-row"><div class="detail-key">Code</div><div class="detail-value">${escapeHtml(s.code || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(s.title || s.titleJa || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(s.titleEn || "")}</div></div>
@@ -5046,7 +5073,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.1",
+        version: "minimal-text-v2.1.1",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

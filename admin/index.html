@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.1.3</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.2.0</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -1779,6 +1779,84 @@
       min-width: 0;
     }
 
+    .image-entry-preview {
+      margin-top: 8px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface-soft);
+      padding: 12px;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .image-entry-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
+    }
+
+    .image-entry-actions,
+    .image-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .image-entry-note {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .image-file-input {
+      margin-top: 8px;
+      font-size: 13px;
+      border-style: dashed;
+    }
+
+    .work-image-gallery {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .work-image-card {
+      width: 100%;
+    }
+
+    .work-image-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .work-image-caption {
+      margin-top: 5px;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .work-image-cover {
+      display: inline-block;
+      margin-left: 7px;
+      border: 1px solid var(--deep);
+      border-radius: 999px;
+      padding: 0 7px;
+      color: var(--deep);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
   </style>
 </head>
 <body>
@@ -1804,7 +1882,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.1.3</div>
+  <div class="fixed-version-mark">v2.2.0</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -1895,6 +1973,20 @@
                 <button class="text-button danger" type="button" id="workLogoDeleteButton" onclick="deleteEntryLogo('work')">DELETE SVG</button>
               </div>
               <p class="logo-entry-note">保存済み作品のEDIT画面で登録できます。新規作品は一度SAVEしてから登録してください。</p>
+            </div>
+          </div>
+
+          <div class="entry-row">
+            <div class="field">
+              <label for="workImageFile">Images / 作品画像</label>
+              <div id="workImagePreview" class="image-entry-preview">No images</div>
+              <input id="workImageFile" class="image-file-input" type="file" accept="image/jpeg,image/png,image/webp">
+              <input id="workImageCaption" type="text" placeholder="Caption / キャプション">
+              <textarea id="workImageAlt" placeholder="Alt Text / 画像説明"></textarea>
+              <div class="image-entry-actions">
+                <button class="text-button active" type="button" id="workImageUploadButton" onclick="uploadWorkImage()">UPLOAD IMAGE</button>
+              </div>
+              <p class="image-entry-note">保存済み作品のEDIT画面で登録できます。新規作品は一度SAVEしてから登録してください。</p>
             </div>
           </div>
 
@@ -3015,6 +3107,10 @@
         storagePath: asset.storage_path || asset.storagePath || "",
         fileName: asset.file_name || asset.fileName || "",
         mimeType: asset.mime_type || asset.mimeType || "",
+        altText: asset.alt_text || asset.altText || "",
+        caption: asset.caption || "",
+        sortOrder: Number.isFinite(Number(asset.sort_order ?? asset.sortOrder)) ? Number(asset.sort_order ?? asset.sortOrder) : 0,
+        isCover: Boolean(asset.is_cover || asset.isCover),
         isPublic: Boolean(asset.is_public || asset.isPublic),
         createdAt: asset.created_at || asset.createdAt || "",
         updatedAt: asset.updated_at || asset.updatedAt || ""
@@ -3070,6 +3166,263 @@
       return `
                 <div class="detail-row logo-detail-row"><div class="detail-value"><div class="logo-detail-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div></div></div>`;
     }
+
+
+    function findWorkImageAssets(work = {}) {
+      if (!work || !work.id) return [];
+      return cloudAssets
+        .filter(asset => asset.workId === work.id && asset.assetType === "work_image")
+        .sort((a, b) => {
+          if (a.isCover !== b.isCover) return a.isCover ? -1 : 1;
+          return (a.sortOrder || 0) - (b.sortOrder || 0) || String(a.createdAt || "").localeCompare(String(b.createdAt || ""));
+        });
+    }
+
+    function findCoverImageAsset(work = {}) {
+      if (!work) return null;
+      const coverId = work.coverAssetId || work.cover_asset_id || "";
+      if (coverId) {
+        const byId = cloudAssets.find(asset => asset.id === coverId && asset.assetType === "work_image");
+        if (byId) return byId;
+      }
+      return findWorkImageAssets(work).find(asset => asset.isCover) || findWorkImageAssets(work)[0] || null;
+    }
+
+    function workImagesDetailRowHtml(work = {}) {
+      const images = findWorkImageAssets(work);
+      if (!images.length) return "";
+      return `
+                <div class="detail-row">
+                  <div class="detail-key">Images</div>
+                  <div class="detail-value">
+                    <div class="work-image-gallery">
+                      ${images.map(asset => {
+                        const url = cloudAssetPublicUrl(asset.storagePath);
+                        if (!url) return "";
+                        const label = [
+                          escapeHtml(asset.caption || ""),
+                          escapeHtml(asset.fileName || ""),
+                          asset.isCover ? '<span class="work-image-cover">COVER</span>' : ""
+                        ].filter(Boolean).join(" ");
+                        return `
+                          <div class="work-image-card">
+                            <img src="${escapeAttr(url)}" alt="${escapeAttr(asset.altText || asset.caption || asset.fileName || "Work image")}">
+                            ${label ? `<div class="work-image-caption">${label}</div>` : ""}
+                          </div>`;
+                      }).join("")}
+                    </div>
+                  </div>
+                </div>`;
+    }
+
+    function currentWorkImageRecord() {
+      return works.find(item => item.id === editingId) || null;
+    }
+
+    function renderWorkImageControls() {
+      const record = currentWorkImageRecord();
+      const preview = document.getElementById("workImagePreview");
+      const uploadButton = document.getElementById("workImageUploadButton");
+      const fileInput = document.getElementById("workImageFile");
+      const captionInput = document.getElementById("workImageCaption");
+      const altInput = document.getElementById("workImageAlt");
+      if (!preview) return;
+
+      const enabled = Boolean(cloudReady && record && record.id);
+      if (uploadButton) uploadButton.disabled = !enabled;
+      if (fileInput) fileInput.disabled = !enabled;
+      if (captionInput) captionInput.disabled = !enabled;
+      if (altInput) altInput.disabled = !enabled;
+
+      if (!record) {
+        preview.textContent = "Save first";
+        return;
+      }
+
+      const images = findWorkImageAssets(record);
+      if (!images.length) {
+        preview.textContent = "No images";
+        return;
+      }
+
+      preview.innerHTML = `<div class="work-image-gallery">
+        ${images.map(asset => {
+          const url = cloudAssetPublicUrl(asset.storagePath);
+          if (!url) return "";
+          return `<div class="work-image-card">
+            <img src="${escapeAttr(url + "?t=" + Date.now())}" alt="${escapeAttr(asset.altText || asset.caption || asset.fileName || "Work image")}">
+            <div class="work-image-caption">${escapeHtml(asset.fileName || "")}${asset.isCover ? '<span class="work-image-cover">COVER</span>' : ""}</div>
+            <div class="image-card-actions">
+              <button class="text-button" type="button" ${asset.isCover ? "disabled" : ""} onclick="setWorkCoverImage('${escapeAttr(asset.id)}')">SET COVER</button>
+              <button class="text-button danger" type="button" onclick="deleteWorkImage('${escapeAttr(asset.id)}')">DELETE</button>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>`;
+    }
+
+    function safeAssetFileName(name) {
+      return String(name || "image")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9._-]+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "") || "image";
+    }
+
+    function imageExtension(mime) {
+      if (mime === "image/jpeg") return "jpg";
+      if (mime === "image/png") return "png";
+      if (mime === "image/webp") return "webp";
+      return "img";
+    }
+
+    function validateWorkImageFile(file) {
+      if (!file) throw new Error("画像ファイルを選択してください。");
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        throw new Error("JPEG / PNG / WebP のいずれかを選択してください。");
+      }
+      if (file.size > 12 * 1024 * 1024) {
+        throw new Error("12MB以下の画像を選択してください。");
+      }
+    }
+
+    async function refreshWorkImageAssets() {
+      await refreshCloudAssets();
+      renderWorkImageControls();
+    }
+
+    window.uploadWorkImage = async function() {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        if (cloudSyncing || cloudLoading) throw new Error("同期処理中です。数秒後にもう一度実行してください。");
+
+        const record = currentWorkImageRecord();
+        if (!record) throw new Error("新規作品は一度SAVEしてからEDIT画面で画像を登録してください。");
+
+        const input = document.getElementById("workImageFile");
+        const file = input && input.files ? input.files[0] : null;
+        validateWorkImageFile(file);
+
+        await cloudSyncAll(false);
+
+        const no = normalizeWorkNo(record.workNo);
+        const refreshedRecord = works.find(item => normalizeWorkNo(item.workNo) === no);
+        if (!refreshedRecord || !refreshedRecord.id) throw new Error("対象作品をSupabase上で確認できませんでした。");
+
+        const existingImages = findWorkImageAssets(refreshedRecord);
+        const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14);
+        const ext = imageExtension(file.type);
+        const baseName = safeAssetFileName(file.name).replace(/\.[a-z0-9]+$/, "");
+        const path = `${cloudUser.id}/works/${no}/images/${timestamp}-${baseName}.${ext}`;
+
+        setCloudStatus("作品画像をSupabase Storageへ保存中です。");
+        const uploadResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).upload(path, file, {
+          contentType: file.type,
+          upsert: false
+        });
+        if (uploadResult.error) throw uploadResult.error;
+
+        const isFirst = existingImages.length === 0;
+        const payload = {
+          owner_id: cloudUser.id,
+          work_id: refreshedRecord.id,
+          series_id: null,
+          asset_type: "work_image",
+          storage_bucket: WSV_ASSET_BUCKET,
+          storage_path: path,
+          file_name: file.name,
+          mime_type: file.type,
+          alt_text: toNull(document.getElementById("workImageAlt")?.value || ""),
+          caption: toNull(document.getElementById("workImageCaption")?.value || ""),
+          sort_order: existingImages.length,
+          is_cover: isFirst,
+          is_public: false
+        };
+
+        const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
+        if (insertResult.error) throw insertResult.error;
+
+        if (isFirst) {
+          const updateResult = await cloudClient.from("wsv_works").update({ cover_asset_id: insertResult.data.id }).eq("id", refreshedRecord.id);
+          if (updateResult.error) throw updateResult.error;
+        }
+
+        if (input) input.value = "";
+        const caption = document.getElementById("workImageCaption");
+        const alt = document.getElementById("workImageAlt");
+        if (caption) caption.value = "";
+        if (alt) alt.value = "";
+
+        await refreshWorkImageAssets();
+        setCloudStatus("作品画像を保存しました。");
+        alert("作品画像を保存しました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("作品画像保存エラー: " + (error.message || error));
+        alert("作品画像保存エラー: " + (error.message || error));
+      }
+    };
+
+    window.setWorkCoverImage = async function(assetId) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        const record = currentWorkImageRecord();
+        if (!record) throw new Error("対象作品がありません。");
+
+        const resetResult = await cloudClient.from("wsv_assets").update({ is_cover: false }).eq("work_id", record.id).eq("asset_type", "work_image");
+        if (resetResult.error) throw resetResult.error;
+
+        const coverResult = await cloudClient.from("wsv_assets").update({ is_cover: true }).eq("id", assetId);
+        if (coverResult.error) throw coverResult.error;
+
+        const workResult = await cloudClient.from("wsv_works").update({ cover_asset_id: assetId }).eq("id", record.id);
+        if (workResult.error) throw workResult.error;
+
+        await refreshWorkImageAssets();
+        setCloudStatus("カバー画像を更新しました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("カバー画像更新エラー: " + (error.message || error));
+        alert("カバー画像更新エラー: " + (error.message || error));
+      }
+    };
+
+    window.deleteWorkImage = async function(assetId) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        const record = currentWorkImageRecord();
+        if (!record) throw new Error("対象作品がありません。");
+        const asset = cloudAssets.find(item => item.id === assetId && item.assetType === "work_image");
+        if (!asset) throw new Error("削除対象の画像がありません。");
+        if (!confirm("この作品画像を削除しますか？")) return;
+
+        const removeResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).remove([asset.storagePath]);
+        if (removeResult.error) throw removeResult.error;
+
+        const deleteResult = await cloudClient.from("wsv_assets").delete().eq("id", asset.id);
+        if (deleteResult.error) throw deleteResult.error;
+
+        if (asset.isCover || record.coverAssetId === asset.id || record.cover_asset_id === asset.id) {
+          const remaining = findWorkImageAssets(record).filter(item => item.id !== asset.id);
+          if (remaining.length) {
+            const nextCover = remaining[0];
+            await cloudClient.from("wsv_assets").update({ is_cover: true }).eq("id", nextCover.id);
+            await cloudClient.from("wsv_works").update({ cover_asset_id: nextCover.id }).eq("id", record.id);
+          } else {
+            await cloudClient.from("wsv_works").update({ cover_asset_id: null }).eq("id", record.id);
+          }
+        }
+
+        await refreshWorkImageAssets();
+        setCloudStatus("作品画像を削除しました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("作品画像削除エラー: " + (error.message || error));
+        alert("作品画像削除エラー: " + (error.message || error));
+      }
+    };
+
 
     function currentLogoRecord(kind) {
       if (kind === "series") return seriesRecords.find(item => item.id === editingSeriesId) || null;
@@ -3135,8 +3488,8 @@
       if (!cloudReady || !cloudUser) return;
       const { data, error } = await cloudClient
         .from("wsv_assets")
-        .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,is_public,created_at,updated_at")
-        .in("asset_type", ["work_logo", "series_logo"]);
+        .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at")
+        .in("asset_type", ["work_logo", "series_logo", "work_image"]);
       if (error) throw error;
       cloudAssets = (data || []).map(normalizeCloudAsset);
       attachLogoAssetsToRecords();
@@ -3145,6 +3498,7 @@
       render();
       renderLogoControls("work");
       renderLogoControls("series");
+      renderWorkImageControls();
     }
 
     window.uploadEntryLogo = async function(kind) {
@@ -3351,7 +3705,7 @@
           cloudLoadCatalog("wsv_locations"),
           cloudLoadCatalog("wsv_exhibitions"),
           cloudClient.from("wsv_work_exhibitions").select("work_id, exhibition_id, wsv_exhibitions(name)"),
-          cloudClient.from("wsv_assets").select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,is_public,created_at,updated_at").in("asset_type", ["work_logo", "series_logo"])
+          cloudClient.from("wsv_assets").select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at").in("asset_type", ["work_logo", "series_logo", "work_image"])
         ]);
 
         if (seriesResult.error) throw seriesResult.error;
@@ -3373,6 +3727,7 @@
             descriptionEn: row.description_en || "",
             isPublic: Boolean(row.is_public),
             logoAssetId: row.logo_asset_id || "",
+            coverAssetId: row.cover_asset_id || "",
             logoStoragePath: "",
             logoFileName: "",
             createdAt: row.created_at || nowIso(),
@@ -4062,6 +4417,7 @@
       const workLogoFile = document.getElementById("workLogoFile");
       if (workLogoFile) workLogoFile.value = "";
       renderLogoControls("work");
+      renderWorkImageControls();
       document.getElementById("submitButton").textContent = "SAVE";
       document.getElementById("cancelButton").style.display = "none";
     }
@@ -4304,6 +4660,7 @@
                 <div class="detail-row"><div class="detail-key">Exhibition</div><div class="detail-value">${escapeHtml(w.exhibitionHistory || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
                 <div class="detail-row"><div class="detail-key">Description EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+                ${workImagesDetailRowHtml(w)}
               </div>
               <div class="detail-actions">
                 <button class="text-button" type="button" onclick="startEdit('${escapeAttr(w.id)}')">EDIT</button>
@@ -4378,6 +4735,7 @@
       const workLogoFile = document.getElementById("workLogoFile");
       if (workLogoFile) workLogoFile.value = "";
       renderLogoControls("work");
+      renderWorkImageControls();
 
       document.getElementById("submitButton").textContent = "UPDATE";
       document.getElementById("cancelButton").style.display = "inline-block";
@@ -4405,6 +4763,16 @@
 
     const workLogoFileInput = document.getElementById("workLogoFile");
     if (workLogoFileInput) workLogoFileInput.addEventListener("change", () => previewSelectedSvg("work"));
+
+    const workImageFileInput = document.getElementById("workImageFile");
+    if (workImageFileInput) workImageFileInput.addEventListener("change", () => {
+      const preview = document.getElementById("workImagePreview");
+      const file = workImageFileInput.files && workImageFileInput.files[0];
+      if (!preview || !file) return;
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return;
+      const objectUrl = URL.createObjectURL(file);
+      preview.innerHTML = `<img src="${escapeAttr(objectUrl)}" alt="Selected image preview">`;
+    });
 
 
 
@@ -5082,7 +5450,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.1.3",
+        version: "minimal-text-v2.2.0",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

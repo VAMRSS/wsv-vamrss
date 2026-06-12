@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.1.0.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.1.9.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2022,7 +2022,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.1.0</div>
+  <div class="fixed-version-mark">v3.1.9</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -4702,9 +4702,12 @@
         throw new Error("INVALID_WORK_NO");
       }
 
-      const used = usedWorkNos(existing.id || null);
-      if (used.has(workNo)) {
-        throw new Error("DUPLICATE_WORK_NO");
+      const originalWorkNo = normalizeWorkNo(existing.workNo);
+      if (workNo !== originalWorkNo) {
+        const used = usedWorkNos(existing.id || null);
+        if (used.has(workNo)) {
+          throw new Error("DUPLICATE_WORK_NO");
+        }
       }
 
       const title = fields.titleJa.value.trim();
@@ -5100,16 +5103,20 @@
         throw new Error("INVALID_SERIES_NO");
       }
 
-      const used = usedNumbers({ type: "series", id: existing.id || null });
-      if (used.has(seriesNo)) {
-        throw new Error("DUPLICATE_SERIES_NO");
+      const originalSeriesNo = normalizeWorkNo(existing.seriesNo);
+      if (seriesNo !== originalSeriesNo) {
+        const used = usedNumbers({ type: "series", id: existing.id || null });
+        if (used.has(seriesNo)) {
+          throw new Error("DUPLICATE_SERIES_NO");
+        }
       }
 
       const code = normalizeSeriesCode(seriesFields.code ? seriesFields.code.value : "");
       if (!code || !/^[A-Z]{4}$/.test(code)) {
         throw new Error("INVALID_SERIES_CODE");
       }
-      if (seriesCodeExists(code, existing.id || null)) {
+      const originalSeriesCode = normalizeSeriesCode(existing.code || "");
+      if (code !== originalSeriesCode && seriesCodeExists(code, existing.id || null)) {
         throw new Error("DUPLICATE_SERIES_CODE");
       }
 
@@ -5743,7 +5750,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.1.0",
+        version: "minimal-text-v3.1.9",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

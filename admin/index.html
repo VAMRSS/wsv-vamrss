@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.1.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.1.2</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -1740,8 +1740,9 @@
     .detail-row.logo-detail-row {
       display: block;
       grid-template-columns: none;
-      margin: 0 0 8px 0;
+      margin: 0 0 8px calc(88px + 10px);
       padding: 0;
+      width: calc(100% - 88px - 10px);
     }
 
     .detail-row.logo-detail-row .detail-key {
@@ -1803,7 +1804,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.1.1</div>
+  <div class="fixed-version-mark">v2.1.2</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -5073,7 +5074,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.1.1",
+        version: "minimal-text-v2.1.2",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

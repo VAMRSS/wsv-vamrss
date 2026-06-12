@@ -2032,7 +2032,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.1.2</div>
+    <div class="fixed-version-mark">v3.1.4</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2042,9 +2042,7 @@
           </button>
         </h1>
         <nav class="text-nav">
-          <button class="text-button" type="button" onclick="setListMode('works')" id="navWorksButton">WORKS</button>
-          <button class="text-button" type="button" onclick="setListMode('series')" id="navSeriesButton">SERIES</button>
-          <a class="text-button" href="../admin/">ADMIN</a>
+          <button class="text-button" type="button" aria-disabled="true" title="Profile page coming later">PROFILE</button>
         </nav>
       </div>
 
@@ -2510,8 +2508,10 @@
       const isSeries = activeListMode === "series";
       document.getElementById("worksModeButton").classList.toggle("selected", !isSeries);
       document.getElementById("seriesModeButton").classList.toggle("selected", isSeries);
-      document.getElementById("navWorksButton").classList.toggle("selected", !isSeries);
-      document.getElementById("navSeriesButton").classList.toggle("selected", isSeries);
+      const navWorksButton = document.getElementById("navWorksButton");
+      const navSeriesButton = document.getElementById("navSeriesButton");
+      if (navWorksButton) navWorksButton.classList.toggle("selected", !isSeries);
+      if (navSeriesButton) navSeriesButton.classList.toggle("selected", isSeries);
       document.getElementById("worksFilterArea").style.display = isSeries ? "none" : "grid";
       const headerButtons = document.querySelectorAll(".list-head .text-button");
       if (headerButtons[2]) headerButtons[2].firstChild.nodeValue = isSeries ? "START" : "DONE";

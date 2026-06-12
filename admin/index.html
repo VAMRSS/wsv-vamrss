@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.0</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -1703,6 +1703,54 @@
       text-transform: none;
     }
 
+  
+
+    .logo-entry-preview,
+    .logo-detail-preview {
+      min-height: 96px;
+      display: grid;
+      place-items: center;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface-soft);
+      color: var(--sub);
+      padding: 14px;
+      overflow: hidden;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-entry-preview img,
+    .logo-detail-preview img {
+      max-width: 100%;
+      max-height: 180px;
+      display: block;
+    }
+
+    .logo-entry-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .logo-entry-note {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .logo-file-input {
+      margin-top: 8px;
+      font-size: 13px;
+      border-style: dashed;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      min-width: 0;
+    }
+
   </style>
 </head>
 <body>
@@ -1728,7 +1776,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.0</div>
+  <div class="fixed-version-mark">v2.1</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -1804,8 +1852,14 @@
 
           <div class="entry-row">
             <div class="field">
-              <label for="titleEn">Title EN / タイトル英語</label>
-              <input id="titleEn" type="text" placeholder="">
+              <label for="workLogoFile">Logo SVG / 作品ロゴ</label>
+              <div id="workLogoPreview" class="logo-entry-preview">No SVG</div>
+              <input id="workLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml">
+              <div class="logo-entry-actions">
+                <button class="text-button active" type="button" id="workLogoUploadButton" onclick="uploadEntryLogo('work')">UPLOAD SVG</button>
+                <button class="text-button danger" type="button" id="workLogoDeleteButton" onclick="deleteEntryLogo('work')">DELETE SVG</button>
+              </div>
+              <p class="logo-entry-note">保存済み作品のEDIT画面で登録できます。新規作品は一度SAVEしてから登録してください。</p>
             </div>
           </div>
 
@@ -1972,6 +2026,17 @@
           </div>
 
           <div class="field">
+            <label for="seriesLogoFile">Logo SVG / シリーズロゴ</label>
+            <div id="seriesLogoPreview" class="logo-entry-preview">No SVG</div>
+            <input id="seriesLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml">
+            <div class="logo-entry-actions">
+              <button class="text-button active" type="button" id="seriesLogoUploadButton" onclick="uploadEntryLogo('series')">UPLOAD SVG</button>
+              <button class="text-button danger" type="button" id="seriesLogoDeleteButton" onclick="deleteEntryLogo('series')">DELETE SVG</button>
+            </div>
+            <p class="logo-entry-note">保存済みシリーズのEDIT画面で登録できます。新規シリーズは一度SAVEしてから登録してください。</p>
+          </div>
+
+          <div class="field">
             <label for="seriesDescriptionJa">Description / 説明文</label>
             <textarea id="seriesDescriptionJa" placeholder=""></textarea>
           </div>
@@ -2100,6 +2165,8 @@
     let cloudLoading = false;
     let cloudSyncTimer = null;
     let cloudSyncing = false;
+    const WSV_ASSET_BUCKET = "wsv-assets";
+    let cloudAssets = [];
 
     const DEFAULT_CATEGORIES = [];
     const DEFAULT_TECHNIQUES = [];
@@ -2902,6 +2969,250 @@
       return code || codeFromSeriesNo(series.seriesNo);
     }
 
+
+    function normalizeCloudAsset(asset = {}) {
+      return {
+        id: asset.id || "",
+        workId: asset.work_id || asset.workId || null,
+        seriesId: asset.series_id || asset.seriesId || null,
+        assetType: asset.asset_type || asset.assetType || "",
+        storageBucket: asset.storage_bucket || asset.storageBucket || WSV_ASSET_BUCKET,
+        storagePath: asset.storage_path || asset.storagePath || "",
+        fileName: asset.file_name || asset.fileName || "",
+        mimeType: asset.mime_type || asset.mimeType || "",
+        isPublic: Boolean(asset.is_public || asset.isPublic),
+        createdAt: asset.created_at || asset.createdAt || "",
+        updatedAt: asset.updated_at || asset.updatedAt || ""
+      };
+    }
+
+    function cloudAssetPublicUrl(path) {
+      if (!path) return "";
+      const { data } = cloudClient.storage.from(WSV_ASSET_BUCKET).getPublicUrl(path);
+      return data && data.publicUrl ? data.publicUrl : "";
+    }
+
+    function findLogoAsset(kind, record = {}) {
+      if (!record) return null;
+      const assetType = kind === "series" ? "series_logo" : "work_logo";
+      const id = record.logoAssetId || record.logo_asset_id || "";
+      if (id) {
+        const byId = cloudAssets.find(asset => asset.id === id && asset.assetType === assetType);
+        if (byId) return byId;
+      }
+      if (kind === "series") return cloudAssets.find(asset => asset.seriesId === record.id && asset.assetType === assetType) || null;
+      return cloudAssets.find(asset => asset.workId === record.id && asset.assetType === assetType) || null;
+    }
+
+    function attachLogoAssetsToRecords() {
+      seriesRecords = seriesRecords.map(series => {
+        const asset = findLogoAsset("series", series);
+        return {
+          ...series,
+          logoAssetId: asset ? asset.id : (series.logoAssetId || ""),
+          logoStoragePath: asset ? asset.storagePath : (series.logoStoragePath || ""),
+          logoFileName: asset ? asset.fileName : (series.logoFileName || "")
+        };
+      });
+
+      works = works.map(work => {
+        const asset = findLogoAsset("work", work);
+        return {
+          ...work,
+          logoAssetId: asset ? asset.id : (work.logoAssetId || ""),
+          logoStoragePath: asset ? asset.storagePath : (work.logoStoragePath || ""),
+          logoFileName: asset ? asset.fileName : (work.logoFileName || "")
+        };
+      });
+    }
+
+    function logoDetailRowHtml(kind, record = {}) {
+      const asset = findLogoAsset(kind, record);
+      const path = asset ? asset.storagePath : record.logoStoragePath;
+      if (!path) return "";
+      const url = cloudAssetPublicUrl(path);
+      if (!url) return "";
+      return `
+                <div class="detail-row logo-detail-row"><div class="detail-key">Logo</div><div class="detail-value"><div class="logo-detail-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div></div></div>`;
+    }
+
+    function currentLogoRecord(kind) {
+      if (kind === "series") return seriesRecords.find(item => item.id === editingSeriesId) || null;
+      return works.find(item => item.id === editingId) || null;
+    }
+
+    function renderLogoControls(kind) {
+      const record = currentLogoRecord(kind);
+      const preview = document.getElementById(kind === "series" ? "seriesLogoPreview" : "workLogoPreview");
+      const uploadButton = document.getElementById(kind === "series" ? "seriesLogoUploadButton" : "workLogoUploadButton");
+      const deleteButton = document.getElementById(kind === "series" ? "seriesLogoDeleteButton" : "workLogoDeleteButton");
+      const fileInput = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
+      if (!preview) return;
+
+      const enabled = Boolean(cloudReady && record && record.id);
+      if (uploadButton) uploadButton.disabled = !enabled;
+      if (deleteButton) deleteButton.disabled = !enabled || !(record && (record.logoStoragePath || findLogoAsset(kind, record)));
+      if (fileInput) fileInput.disabled = !enabled;
+
+      if (!record) {
+        preview.textContent = "Save first";
+        return;
+      }
+
+      const asset = findLogoAsset(kind, record);
+      const path = asset ? asset.storagePath : record.logoStoragePath;
+      if (!path) {
+        preview.textContent = "No SVG";
+        return;
+      }
+
+      const url = cloudAssetPublicUrl(path);
+      if (!url) {
+        preview.textContent = "No SVG";
+        return;
+      }
+
+      preview.innerHTML = `<img src="${escapeAttr(url + "?t=" + Date.now())}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}">`;
+    }
+
+    async function previewSelectedSvg(kind) {
+      const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
+      const preview = document.getElementById(kind === "series" ? "seriesLogoPreview" : "workLogoPreview");
+      if (!input || !preview || !input.files || !input.files[0]) return;
+      const file = input.files[0];
+      if (!file.name.toLowerCase().endsWith(".svg")) return;
+      const text = await file.text();
+      if (!/<svg[\s>]/i.test(text.slice(0, 2000))) return;
+      const objectUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
+      preview.innerHTML = `<img src="${escapeAttr(objectUrl)}" alt="Selected SVG preview">`;
+    }
+
+    async function validateLogoSvgFile(file) {
+      if (!file) throw new Error("SVGファイルを選択してください。");
+      if (!file.name.toLowerCase().endsWith(".svg")) throw new Error("拡張子 .svg のファイルを選択してください。");
+      if (file.size > 1024 * 1024) throw new Error("1MB以下のSVGを選択してください。");
+      const text = await file.text();
+      if (!/<svg[\s>]/i.test(text.slice(0, 2000))) throw new Error("SVGとして認識できませんでした。");
+      return new Blob([text], { type: "image/svg+xml" });
+    }
+
+    async function refreshCloudAssets() {
+      if (!cloudReady || !cloudUser) return;
+      const { data, error } = await cloudClient
+        .from("wsv_assets")
+        .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,is_public,created_at,updated_at")
+        .in("asset_type", ["work_logo", "series_logo"]);
+      if (error) throw error;
+      cloudAssets = (data || []).map(normalizeCloudAsset);
+      attachLogoAssetsToRecords();
+      saveLocalOnly();
+      saveSeriesRecordsLocalOnly();
+      render();
+      renderLogoControls("work");
+      renderLogoControls("series");
+    }
+
+    window.uploadEntryLogo = async function(kind) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        if (cloudSyncing || cloudLoading) throw new Error("同期処理中です。数秒後にもう一度実行してください。");
+
+        const record = currentLogoRecord(kind);
+        if (!record) throw new Error("新規データは一度SAVEしてからEDIT画面でロゴを登録してください。");
+
+        const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
+        const file = input && input.files ? input.files[0] : null;
+        const blob = await validateLogoSvgFile(file);
+
+        await cloudSyncAll(false);
+
+        const no = kind === "series" ? normalizeWorkNo(record.seriesNo) : normalizeWorkNo(record.workNo);
+        const refreshedRecord = kind === "series"
+          ? seriesRecords.find(item => normalizeWorkNo(item.seriesNo) === no)
+          : works.find(item => normalizeWorkNo(item.workNo) === no);
+        if (!refreshedRecord || !refreshedRecord.id) throw new Error("対象データをSupabase上で確認できませんでした。");
+
+        const assetType = kind === "series" ? "series_logo" : "work_logo";
+        const table = kind === "series" ? "wsv_series" : "wsv_works";
+        const path = `${cloudUser.id}/${kind === "series" ? "series" : "works"}/${no}/logo.svg`;
+
+        setCloudStatus("SVGをSupabase Storageへ保存中です。");
+        const uploadResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).upload(path, blob, {
+          contentType: "image/svg+xml",
+          upsert: true
+        });
+        if (uploadResult.error) throw uploadResult.error;
+
+        let deleteQuery = cloudClient.from("wsv_assets").delete().eq("asset_type", assetType);
+        deleteQuery = kind === "series" ? deleteQuery.eq("series_id", refreshedRecord.id) : deleteQuery.eq("work_id", refreshedRecord.id);
+        const deleteResult = await deleteQuery;
+        if (deleteResult.error) throw deleteResult.error;
+
+        const payload = {
+          owner_id: cloudUser.id,
+          work_id: kind === "work" ? refreshedRecord.id : null,
+          series_id: kind === "series" ? refreshedRecord.id : null,
+          asset_type: assetType,
+          storage_bucket: WSV_ASSET_BUCKET,
+          storage_path: path,
+          file_name: file.name,
+          mime_type: "image/svg+xml",
+          sort_order: 0,
+          is_cover: false,
+          is_public: false
+        };
+
+        const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
+        if (insertResult.error) throw insertResult.error;
+
+        const updateResult = await cloudClient.from(table).update({ logo_asset_id: insertResult.data.id }).eq("id", refreshedRecord.id);
+        if (updateResult.error) throw updateResult.error;
+
+        if (input) input.value = "";
+        await refreshCloudAssets();
+        setCloudStatus("SVGロゴを保存しました。");
+        alert("SVGロゴを保存しました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("SVG保存エラー: " + (error.message || error));
+        alert("SVG保存エラー: " + (error.message || error));
+      }
+    };
+
+    window.deleteEntryLogo = async function(kind) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        const record = currentLogoRecord(kind);
+        if (!record) throw new Error("対象データがありません。");
+        const asset = findLogoAsset(kind, record);
+        const path = asset ? asset.storagePath : record.logoStoragePath;
+        if (!asset && !path) throw new Error("削除するSVGがありません。");
+        if (!confirm("登録済みSVGロゴを削除しますか？")) return;
+
+        const table = kind === "series" ? "wsv_series" : "wsv_works";
+        const updateResult = await cloudClient.from(table).update({ logo_asset_id: null }).eq("id", record.id);
+        if (updateResult.error) throw updateResult.error;
+
+        if (asset && asset.id) {
+          const deleteAssetResult = await cloudClient.from("wsv_assets").delete().eq("id", asset.id);
+          if (deleteAssetResult.error) throw deleteAssetResult.error;
+        }
+
+        if (path) {
+          const removeResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).remove([path]);
+          if (removeResult.error) throw removeResult.error;
+        }
+
+        await refreshCloudAssets();
+        setCloudStatus("SVGロゴを削除しました。");
+        alert("SVGロゴを削除しました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("SVG削除エラー: " + (error.message || error));
+        alert("SVG削除エラー: " + (error.message || error));
+      }
+    };
+
     async function cloudIsAdmin() {
       const { data, error } = await cloudClient.rpc("wsv_is_admin");
       if (error) throw error;
@@ -2996,19 +3307,23 @@
           techniquesList,
           locationsList,
           exhibitionsList,
-          workExhibitionsResult
+          workExhibitionsResult,
+          assetsResult
         ] = await Promise.all([
           cloudClient.from("wsv_series").select("*").order("series_no", { ascending: true }),
           cloudClient.from("wsv_works").select("*").order("work_no", { ascending: true }),
           cloudLoadCatalog("wsv_techniques"),
           cloudLoadCatalog("wsv_locations"),
           cloudLoadCatalog("wsv_exhibitions"),
-          cloudClient.from("wsv_work_exhibitions").select("work_id, exhibition_id, wsv_exhibitions(name)")
+          cloudClient.from("wsv_work_exhibitions").select("work_id, exhibition_id, wsv_exhibitions(name)"),
+          cloudClient.from("wsv_assets").select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,is_public,created_at,updated_at").in("asset_type", ["work_logo", "series_logo"])
         ]);
 
         if (seriesResult.error) throw seriesResult.error;
         if (worksResult.error) throw worksResult.error;
         if (workExhibitionsResult.error) throw workExhibitionsResult.error;
+        if (assetsResult.error) throw assetsResult.error;
+        cloudAssets = (assetsResult.data || []).map(normalizeCloudAsset);
 
         const seriesById = new Map();
         seriesRecords = (seriesResult.data || []).map(row => {
@@ -3022,6 +3337,9 @@
             description: row.description || "",
             descriptionEn: row.description_en || "",
             isPublic: Boolean(row.is_public),
+            logoAssetId: row.logo_asset_id || "",
+            logoStoragePath: "",
+            logoFileName: "",
             createdAt: row.created_at || nowIso(),
             updatedAt: row.updated_at || nowIso()
           };
@@ -3066,10 +3384,15 @@
             memo: row.description || "",
             exhibitionHistory: (exhibitionMap.get(row.id) || []).join("\n"),
             isPublic: Boolean(row.is_public),
+            logoAssetId: row.logo_asset_id || "",
+            logoStoragePath: "",
+            logoFileName: "",
             createdAt: row.created_at || nowIso(),
             updatedAt: row.updated_at || nowIso()
           };
         });
+
+        attachLogoAssetsToRecords();
 
         techniques = cleanOptions(techniquesList, DEFAULT_TECHNIQUES);
         locations = cleanOptions(locationsList, DEFAULT_LOCATIONS);
@@ -3701,6 +4024,9 @@
       updateManagementDependentFields();
       fields.priceAsk.checked = false;
       fields.price.disabled = false;
+      const workLogoFile = document.getElementById("workLogoFile");
+      if (workLogoFile) workLogoFile.value = "";
+      renderLogoControls("work");
       document.getElementById("submitButton").textContent = "SAVE";
       document.getElementById("cancelButton").style.display = "none";
     }
@@ -3924,7 +4250,7 @@
             </button>
             <div class="work-detail">
               <div class="detail-grid">
-                <div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>
+                <div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>${logoDetailRowHtml("work", w)}
                 <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(w.title || w.titleJa || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Start</div><div class="detail-value">${escapeHtml(normalizeProductionDate(w))}</div></div>
@@ -4014,6 +4340,9 @@
       fields.description.value = w.description || w.memo || "";
       fields.descriptionEn.value = w.descriptionEn || "";
       fields.memo.value = w.description || w.memo || "";
+      const workLogoFile = document.getElementById("workLogoFile");
+      if (workLogoFile) workLogoFile.value = "";
+      renderLogoControls("work");
 
       document.getElementById("submitButton").textContent = "UPDATE";
       document.getElementById("cancelButton").style.display = "inline-block";
@@ -4039,6 +4368,9 @@
       fields.workNo.value = fields.workNo.value.replace(/\D/g, "").slice(0, 4);
     });
 
+    const workLogoFileInput = document.getElementById("workLogoFile");
+    if (workLogoFileInput) workLogoFileInput.addEventListener("change", () => previewSelectedSvg("work"));
+
 
 
     const seriesForm = document.getElementById("seriesForm");
@@ -4057,6 +4389,9 @@
     function resetSeriesForm() {
       editingSeriesId = null;
       seriesForm.reset();
+      const seriesLogoFile = document.getElementById("seriesLogoFile");
+      if (seriesLogoFile) seriesLogoFile.value = "";
+      renderLogoControls("series");
       document.getElementById("seriesSubmitButton").textContent = "SAVE";
       document.getElementById("seriesCancelButton").style.display = "none";
     }
@@ -4167,7 +4502,7 @@
             </button>
             <div class="work-detail">
               <div class="detail-grid">
-                <div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(no)}</div></div>
+                <div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(no)}</div></div>${logoDetailRowHtml("series", s)}
                 <div class="detail-row"><div class="detail-key">Code</div><div class="detail-value">${escapeHtml(s.code || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(s.title || s.titleJa || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(s.titleEn || "")}</div></div>
@@ -4215,6 +4550,9 @@
       seriesFields.startDate.value = s.startDate || "";
       seriesFields.descriptionJa.value = s.description || s.descriptionJa || "";
       seriesFields.descriptionEn.value = s.descriptionEn || "";
+      const seriesLogoFile = document.getElementById("seriesLogoFile");
+      if (seriesLogoFile) seriesLogoFile.value = "";
+      renderLogoControls("series");
 
       document.getElementById("seriesSubmitButton").textContent = "UPDATE";
       document.getElementById("seriesCancelButton").style.display = "inline-block";
@@ -4238,6 +4576,9 @@
         seriesFields.code.value = normalizeSeriesCode(seriesFields.code.value);
       });
     }
+
+    const seriesLogoFileInput = document.getElementById("seriesLogoFile");
+    if (seriesLogoFileInput) seriesLogoFileInput.addEventListener("change", () => previewSelectedSvg("series"));
 
     seriesForm.addEventListener("submit", event => {
       event.preventDefault();
@@ -4704,8 +5045,8 @@
       const backup = {
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
-        schemaVersion: 8,
-        version: "minimal-text-v2.0",
+        schemaVersion: 9,
+        version: "minimal-text-v2.1",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

@@ -2027,12 +2027,94 @@
     .fixed-version-mark {
       right: 20px;
     }
+    .portfolio-search-line {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 10px;
+      align-items: center;
+      justify-content: start;
+      margin: 8px 0 12px;
+    }
+
+    .portfolio-search-line.search-open {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      justify-content: stretch;
+    }
+
+    .portfolio-search-wrap {
+      display: none !important;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .portfolio-search-line.search-open .portfolio-search-wrap {
+      display: block !important;
+    }
+
+    .portfolio-search-wrap input {
+      display: block !important;
+      width: 100%;
+      min-width: 0;
+      height: auto;
+      opacity: 1 !important;
+      visibility: visible !important;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      padding: 4px 0;
+      outline: none;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .portfolio-search-wrap input::placeholder {
+      color: var(--muted);
+      opacity: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .portfolio-search-reset {
+      display: none;
+    }
+
+    .portfolio-search-line.search-open .portfolio-search-reset {
+      display: inline-block;
+      justify-self: end;
+    }
+
+    .portfolio-search-line {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      justify-content: stretch;
+      width: 100%;
+    }
+
+    .portfolio-search-line #statusPanelText {
+      grid-column: 1;
+      justify-self: start;
+    }
+
+    .portfolio-search-line .portfolio-search-wrap {
+      grid-column: 2;
+    }
+
+    .portfolio-search-line .portfolio-search-reset {
+      grid-column: 3;
+      display: inline-block !important;
+      justify-self: end;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.1.4</div>
+    <div class="fixed-version-mark">v3.1.8</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2055,12 +2137,12 @@
         <div class="link-list bracket-switch" id="techniqueLinks"></div>
       </div>
 
-      <div class="search-line utility-line">
+      <div class="portfolio-search-line" id="portfolioSearchLine">
         <button class="text-button" type="button" onclick="toggleStatusPanel()" id="statusPanelText">＋</button>
-        <div class="inline-search-wrap" id="inlineSearchWrap">
-          <input id="searchInput" type="search" placeholder="search">
+        <div class="portfolio-search-wrap" id="inlineSearchWrap">
+          <input id="searchInput" type="search" placeholder="SEARCH">
         </div>
-        <button class="text-button" type="button" onclick="clearFilters()">RESET</button>
+        <button class="text-button portfolio-search-reset" type="button" onclick="clearFilters()">RESET</button>
       </div>
 
       <div class="collapsible" id="statusPanel">
@@ -2569,8 +2651,14 @@
     window.toggleStatusPanel = function() {
       const panel = document.getElementById("statusPanel");
       const text = document.getElementById("statusPanelText");
+      const searchLine = document.getElementById("portfolioSearchLine");
       const open = panel.classList.toggle("open");
+      if (searchLine) searchLine.classList.toggle("search-open", open);
       text.textContent = open ? "−" : "＋";
+      if (open) {
+        const input = document.getElementById("searchInput");
+        if (input) setTimeout(() => input.focus(), 0);
+      }
     };
 
     window.clearFilters = function() {

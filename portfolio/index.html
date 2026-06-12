@@ -2032,7 +2032,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.0.1</div>
+    <div class="fixed-version-mark">v3.1.1</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2444,9 +2444,7 @@
       renderFilters();
       renderSortMarks();
       const query = searchInput.value.trim().toLowerCase();
-      const publicWorkSeriesIds = new Set(works.map(w => w.series_id).filter(Boolean));
       const filtered = seriesRecords
-        .filter(s => publicWorkSeriesIds.has(s.id))
         .filter(s => {
           if (!query) return true;
           return [

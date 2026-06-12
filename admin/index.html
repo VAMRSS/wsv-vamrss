@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.2.5.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.2.6.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2022,7 +2022,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.2.5</div>
+  <div class="fixed-version-mark">v2.2.6</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -4703,10 +4703,36 @@
         return;
       }
 
+      const statuses = normalizeStatuses(w);
+      const priceText = w.priceAsk ? "ASK" : formatMoney(w.price);
+      const costText = formatMoney(w.cost);
+      const workNo = normalizeWorkNo(w.workNo);
+
       target.dataset.open = "1";
       target.innerHTML = `
         <div class="inline-expanded" style="margin-top:1em; margin-bottom:1em;">
-          ${workDetailGridHtml(w)}
+          <div class="detail-grid">
+            ${coverImageDetailRowHtml(w)}${logoDetailRowHtml("work", w)}<div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>
+            <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(w.title || w.titleJa || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Start</div><div class="detail-value">${escapeHtml(normalizeProductionDate(w))}</div></div>
+            <div class="detail-row"><div class="detail-key">Completed</div><div class="detail-value">${escapeHtml(w.completedDate || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Series</div><div class="detail-value">${seriesLinkHtml(w.series)}</div></div>
+            <div id="inline-series-nested-${escapeAttr(hostId)}-${escapeAttr(w.id)}"></div>
+            <div class="detail-row"><div class="detail-key">Production</div><div class="detail-value">${escapeHtml(statuses.productionStatus)}</div></div>
+            <div class="detail-row"><div class="detail-key">Management</div><div class="detail-value">${escapeHtml(statuses.managementStatus)}</div></div>
+            <div class="detail-row"><div class="detail-key">Technique</div><div class="detail-value">${escapeHtml(w.technique || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Materials</div><div class="detail-value">${escapeHtml(w.materials || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Size</div><div class="detail-value">${escapeHtml(formatDimensions(w))}</div></div>
+            <div class="detail-row"><div class="detail-key">Price</div><div class="detail-value">${escapeHtml(priceText)}</div></div>
+            <div class="detail-row"><div class="detail-key">Cost</div><div class="detail-value">${escapeHtml(costText)}</div></div>
+            <div class="detail-row"><div class="detail-key">Location</div><div class="detail-value">${escapeHtml(w.location || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Owner</div><div class="detail-value">${escapeHtml(w.owner || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Exhibition</div><div class="detail-value">${escapeHtml(w.exhibitionHistory || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
+            <div class="detail-row"><div class="detail-key">Description EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+            ${workImagesDetailRowHtml(w)}
+          </div>
         </div>
       `;
     };
@@ -4714,16 +4740,6 @@
 
 
 
-
-
-    function workDetailGridHtml(w) {
-      const statuses = normalizeStatuses(w);
-      const priceText = w.priceAsk ? "ASK" : formatMoney(w.price);
-      const costText = formatMoney(w.cost);
-      const workNo = normalizeWorkNo(w.workNo);
-      return `
-              ${workDetailGridHtml(w)}`;
-    }
 
 
     function renderWorksList() {
@@ -5601,7 +5617,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.2.5",
+        version: "minimal-text-v2.2.6",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

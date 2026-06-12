@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>(VAMRSS) WORKSHEET VAULT SYSTEM / PORTFOLIO</title>
+  <meta name="description" content="Public portfolio for (VAMRSS) WORKSHEET VAULT SYSTEM.">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #f4f5f5;
+      --surface: #f9faf9;
+      --surface-soft: #ecefef;
+      --ink: #161a1c;
+      --sub: #687174;
+      --muted: #9aa2a5;
+      --line: #d9dddd;
+      --deep: #071c16;
+      --invert-bg: #071c16;
+      --invert-ink: #f7f9f8;
+      --radius: 18px;
+      --content: 760px;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #111615;
+      --surface: #151b1a;
+      --surface-soft: #1b2321;
+      --ink: #eef2f1;
+      --sub: #a5adab;
+      --muted: #717a78;
+      --line: #2f3836;
+      --deep: #eef2f1;
+      --invert-bg: #eef2f1;
+      --invert-ink: #071c16;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", "YuGothic", sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.85;
+      letter-spacing: 0.01em;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(100%, var(--content));
+      margin: 0 auto;
+      padding: 22px 20px 54px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      padding: 0 0 30px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: min(220px, 52vw);
+      height: auto;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    html[data-theme="dark"] .brand-mark {
+      filter: invert(1);
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--sub);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .text-button {
+      appearance: none;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--sub);
+      padding: 0;
+      font-size: 11px;
+      font-weight: 300;
+      line-height: 1.8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .text-button.selected {
+      color: var(--invert-ink);
+      background: var(--invert-bg);
+      padding: 0 5px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--sub);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 8px;
+      margin-bottom: 18px;
+      color: var(--sub);
+    }
+
+    .filters .text-button::before {
+      content: "[ ";
+    }
+
+    .filters .text-button::after {
+      content: " ]";
+    }
+
+    .filters .text-button.selected::before,
+    .filters .text-button.selected::after {
+      color: var(--invert-ink);
+    }
+
+    .search-row {
+      margin-bottom: 18px;
+    }
+
+    .search-row input {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      padding: 8px 0;
+      outline: none;
+    }
+
+    .work-list {
+      display: grid;
+      gap: 1px;
+    }
+
+    .work {
+      border-top: 1px solid var(--line);
+      padding: 0;
+    }
+
+    .work-summary {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 8px 0;
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 86px;
+      gap: 12px;
+      align-items: baseline;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .work-no,
+    .work-year {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .work-title {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .work-detail {
+      display: none;
+      padding: 0 0 22px;
+    }
+
+    .work.open .work-detail {
+      display: block;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 1px;
+      padding: 2px 0 8px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .detail-key {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+    }
+
+    .detail-value {
+      color: var(--ink);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .cover-row {
+      display: block;
+      margin: 0 0 1em calc(88px + 10px);
+      width: calc(100% - 88px - 10px);
+    }
+
+    .cover-row img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .logo-row {
+      align-items: start;
+      margin-bottom: 1em;
+    }
+
+    .logo-row .detail-key,
+    .logo-row .detail-value {
+      line-height: 1;
+    }
+
+    .logo-preview {
+      width: 50%;
+      max-width: 50%;
+      line-height: 1;
+    }
+
+    .logo-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    html[data-theme="dark"] .logo-preview img {
+      filter: invert(1);
+    }
+
+    .image-row {
+      display: block;
+      margin: 0 0 8px calc(88px + 10px);
+      width: calc(100% - 88px - 10px);
+    }
+
+    .image-gallery {
+      display: grid;
+      gap: 2em;
+      width: 100%;
+    }
+
+    .image-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .image-caption {
+      margin-top: 6px;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.65;
+      text-align: center;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .empty,
+    .status {
+      border-top: 1px solid var(--line);
+      padding: 16px 0;
+      color: var(--sub);
+    }
+
+    .footer {
+      margin-top: 34px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        padding: 18px 18px 48px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .work-summary {
+        grid-template-columns: 44px minmax(0, 1fr) 70px;
+        gap: 9px;
+      }
+
+      .detail-row {
+        grid-template-columns: 78px minmax(0, 1fr);
+        gap: 9px;
+      }
+
+      .cover-row,
+      .image-row {
+        margin-left: calc(78px + 9px);
+        width: calc(100% - 78px - 9px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand-mark" src="../admin/assets/wsv-logo.svg" alt="WSV">
+        <h1 class="brand-title">(VAMRSS) WORKSHEET VAULT SYSTEM</h1>
+        <p class="brand-subtitle">PUBLIC PORTFOLIO</p>
+      </div>
+      <div class="top-actions">
+        <button class="text-button selected" type="button" id="themeButton">THEME</button>
+        <a class="text-button" href="../admin/">ADMIN</a>
+      </div>
+    </header>
+
+    <section class="section-head">
+      <h2 class="section-title">Works</h2>
+      <div class="count" id="count">Loading</div>
+    </section>
+
+    <div class="filters" id="seriesFilters"></div>
+
+    <div class="search-row">
+      <input id="searchInput" type="search" placeholder="Search">
+    </div>
+
+    <section id="status" class="status">公開作品を読み込み中です。</section>
+    <section id="workList" class="work-list"></section>
+
+    <footer class="footer">WSV PORTFOLIO / READ ONLY / v3.0.0</footer>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
+    const WSV_ASSET_BUCKET = "wsv-assets";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    let works = [];
+    let seriesRecords = [];
+    let assets = [];
+    let activeSeries = "ALL";
+
+    const workList = document.getElementById("workList");
+    const statusEl = document.getElementById("status");
+    const countEl = document.getElementById("count");
+    const searchInput = document.getElementById("searchInput");
+    const seriesFilters = document.getElementById("seriesFilters");
+    const themeButton = document.getElementById("themeButton");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, "&#096;");
+    }
+
+    function normalizeNo(value) {
+      const digits = String(value ?? "").replace(/\D/g, "").slice(0, 4);
+      return digits ? digits.padStart(4, "0") : "";
+    }
+
+    function publicUrl(path) {
+      if (!path) return "";
+      const { data } = client.storage.from(WSV_ASSET_BUCKET).getPublicUrl(path);
+      return data && data.publicUrl ? data.publicUrl : "";
+    }
+
+    function formatMoney(value) {
+      if (value === null || value === undefined || value === "") return "";
+      const number = Number(value);
+      if (!Number.isFinite(number)) return String(value);
+      return "¥" + Math.round(number).toLocaleString("ja-JP");
+    }
+
+    function formatDimensions(work) {
+      const h = work.size_h ?? "";
+      const w = work.size_w ?? "";
+      const d = work.size_d ?? "";
+      const parts = [];
+      if (h !== "" && h !== null) parts.push("H" + h);
+      if (w !== "" && w !== null) parts.push("W" + w);
+      if (d !== "" && d !== null) parts.push("D" + d);
+      return parts.length ? parts.join(" × ") + " mm" : "";
+    }
+
+    function seriesTitle(series) {
+      if (!series) return "";
+      return series.title || series.title_en || series.code || normalizeNo(series.series_no);
+    }
+
+    function seriesForWork(work) {
+      return seriesRecords.find(series => series.id === work.series_id) || null;
+    }
+
+    function workTitle(work) {
+      return work.title || work.title_en || "Untitled";
+    }
+
+    function workDescription(work) {
+      return work.description || "";
+    }
+
+    function workAssets(work, type) {
+      return assets
+        .filter(asset => asset.work_id === work.id && asset.asset_type === type)
+        .sort((a, b) => {
+          if (Boolean(a.is_cover) !== Boolean(b.is_cover)) return a.is_cover ? -1 : 1;
+          return Number(a.sort_order || 0) - Number(b.sort_order || 0);
+        });
+    }
+
+    function logoAsset(work) {
+      const byId = work.logo_asset_id ? assets.find(asset => asset.id === work.logo_asset_id && asset.asset_type === "work_logo") : null;
+      return byId || workAssets(work, "work_logo")[0] || null;
+    }
+
+    function imageAssets(work) {
+      return workAssets(work, "work_image");
+    }
+
+    function coverAsset(work) {
+      const byId = work.cover_asset_id ? assets.find(asset => asset.id === work.cover_asset_id && asset.asset_type === "work_image") : null;
+      return byId || imageAssets(work).find(asset => asset.is_cover) || imageAssets(work)[0] || null;
+    }
+
+    function coverHtml(work) {
+      const asset = coverAsset(work);
+      if (!asset) return "";
+      const url = publicUrl(asset.storage_path);
+      if (!url) return "";
+      return `<div class="cover-row"><img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || workTitle(work))}"></div>`;
+    }
+
+    function logoHtml(work) {
+      const asset = logoAsset(work);
+      if (!asset) return "";
+      const url = publicUrl(asset.storage_path);
+      if (!url) return "";
+      return `
+        <div class="detail-row logo-row">
+          <div class="detail-key">LOGO</div>
+          <div class="detail-value"><div class="logo-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(workTitle(work) + " logo")}"></div></div>
+        </div>`;
+    }
+
+    function imagesHtml(work) {
+      const cover = coverAsset(work);
+      const images = imageAssets(work).filter(asset => !cover || asset.id !== cover.id);
+      if (!images.length) return "";
+      return `
+        <div class="image-row">
+          <div class="image-gallery">
+            ${images.map(asset => {
+              const url = publicUrl(asset.storage_path);
+              if (!url) return "";
+              const caption = asset.caption || "";
+              return `
+                <div class="image-card">
+                  <img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || caption || workTitle(work))}">
+                  ${caption ? `<div class="image-caption">${escapeHtml(caption)}</div>` : ""}
+                </div>`;
+            }).join("")}
+          </div>
+        </div>`;
+    }
+
+    function row(label, value) {
+      if (value === null || value === undefined || String(value).trim() === "") return "";
+      return `<div class="detail-row"><div class="detail-key">${escapeHtml(label)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`;
+    }
+
+    function detailHtml(work) {
+      const series = seriesForWork(work);
+      const price = work.price_ask ? "ASK" : formatMoney(work.price_amount);
+      return `
+        <div class="detail-grid">
+          ${coverHtml(work)}
+          ${logoHtml(work)}
+          ${row("#", normalizeNo(work.work_no))}
+          ${row("Title", work.title)}
+          ${row("Title EN", work.title_en)}
+          ${row("Start", work.start_date)}
+          ${row("Completed", work.completed_date)}
+          ${row("Series", seriesTitle(series))}
+          ${row("Production", work.production_status)}
+          ${row("Management", work.management_status)}
+          ${row("Technique", work.technique)}
+          ${row("Materials", work.materials)}
+          ${row("Size", formatDimensions(work))}
+          ${row("Price", price)}
+          ${row("Location", work.location)}
+          ${row("Owner", work.holder_name)}
+          ${row("Description", workDescription(work))}
+          ${row("Description EN", work.description_en)}
+          ${imagesHtml(work)}
+        </div>`;
+    }
+
+    function filterWorks() {
+      const query = searchInput.value.trim().toLowerCase();
+      return works
+        .filter(work => activeSeries === "ALL" || work.series_id === activeSeries)
+        .filter(work => {
+          if (!query) return true;
+          const series = seriesForWork(work);
+          return [
+            normalizeNo(work.work_no),
+            work.title,
+            work.title_en,
+            work.start_date,
+            work.completed_date,
+            seriesTitle(series),
+            work.production_status,
+            work.management_status,
+            work.technique,
+            work.materials,
+            formatDimensions(work),
+            work.location,
+            work.holder_name,
+            work.description,
+            work.description_en
+          ].some(value => String(value || "").toLowerCase().includes(query));
+        })
+        .sort((a, b) => normalizeNo(a.work_no).localeCompare(normalizeNo(b.work_no), "ja", { numeric: true }));
+    }
+
+    function renderFilters() {
+      const usedSeriesIds = new Set(works.map(work => work.series_id).filter(Boolean));
+      const options = seriesRecords.filter(series => usedSeriesIds.has(series.id));
+      const buttons = [
+        `<button class="text-button ${activeSeries === "ALL" ? "selected" : ""}" type="button" data-series="ALL">ALL</button>`,
+        ...options.map(series => `<button class="text-button ${activeSeries === series.id ? "selected" : ""}" type="button" data-series="${escapeAttr(series.id)}">${escapeHtml(series.code || normalizeNo(series.series_no))}</button>`)
+      ];
+      seriesFilters.innerHTML = buttons.join("");
+      seriesFilters.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => {
+          activeSeries = button.dataset.series || "ALL";
+          render();
+        });
+      });
+    }
+
+    function render() {
+      const filtered = filterWorks();
+      renderFilters();
+      countEl.textContent = String(filtered.length).padStart(2, "0");
+      statusEl.style.display = "none";
+
+      if (!filtered.length) {
+        workList.innerHTML = '<div class="empty">公開作品がありません。</div>';
+        return;
+      }
+
+      workList.innerHTML = filtered.map(work => {
+        const no = normalizeNo(work.work_no);
+        return `
+          <article class="work" id="work-${escapeAttr(work.id)}">
+            <button class="work-summary" type="button" data-work="${escapeAttr(work.id)}">
+              <div class="work-no">${escapeHtml(no)}</div>
+              <div class="work-title">${escapeHtml(workTitle(work))}</div>
+              <div class="work-year">${escapeHtml(work.completed_date || work.start_date || "")}</div>
+            </button>
+            <div class="work-detail">${detailHtml(work)}</div>
+          </article>`;
+      }).join("");
+
+      workList.querySelectorAll(".work-summary").forEach(button => {
+        button.addEventListener("click", () => {
+          const item = document.getElementById("work-" + button.dataset.work);
+          if (item) item.classList.toggle("open");
+        });
+      });
+    }
+
+    async function loadPortfolio() {
+      try {
+        statusEl.textContent = "公開作品を読み込み中です。";
+
+        const [seriesResult, worksResult, assetsResult] = await Promise.all([
+          client
+            .from("wsv_series")
+            .select("id,series_no,code,title,title_en,start_date,description,description_en,is_public,sort_order")
+            .eq("is_public", true)
+            .order("series_no", { ascending: true }),
+          client
+            .from("wsv_works")
+            .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,materials,size_h,size_w,size_d,price_amount,price_ask,location,holder_name,description,description_en,logo_asset_id,cover_asset_id,is_public,sort_order")
+            .eq("is_public", true)
+            .order("work_no", { ascending: true }),
+          client
+            .from("wsv_assets")
+            .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at")
+            .eq("is_public", true)
+            .in("asset_type", ["work_logo", "work_image", "series_logo"])
+        ]);
+
+        if (seriesResult.error) throw seriesResult.error;
+        if (worksResult.error) throw worksResult.error;
+        if (assetsResult.error) throw assetsResult.error;
+
+        seriesRecords = seriesResult.data || [];
+        works = worksResult.data || [];
+        assets = assetsResult.data || [];
+
+        render();
+      } catch (error) {
+        console.error(error);
+        statusEl.style.display = "block";
+        statusEl.textContent = "公開作品を読み込めませんでした。公開設定またはSupabaseのRLS設定をご確認ください。";
+        countEl.textContent = "Error";
+      }
+    }
+
+    themeButton.addEventListener("click", () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("wsvPortfolioTheme", next);
+    });
+
+    searchInput.addEventListener("input", render);
+
+    const savedTheme = localStorage.getItem("wsvPortfolioTheme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+      document.documentElement.dataset.theme = savedTheme;
+    }
+
+    loadPortfolio();
+  </script>
+</body>
+</html>

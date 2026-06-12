@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.2.0</title>
+  <title>(VAMRSS) WSV Minimal Text / v2.2.1.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -1857,6 +1857,38 @@
       letter-spacing: 0.08em;
     }
 
+    .detail-row.image-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 8px calc(88px + 10px);
+      padding: 0;
+      width: calc(100% - 88px - 10px);
+    }
+
+    .detail-row.image-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.image-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery {
+      width: 100%;
+      gap: 2em;
+    }
+
+    .detail-row.image-detail-row .work-image-caption {
+      text-align: center;
+      margin-top: 6px;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
   </style>
 </head>
 <body>
@@ -1882,7 +1914,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.2.0</div>
+  <div class="fixed-version-mark">v2.2.1</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3192,22 +3224,18 @@
       const images = findWorkImageAssets(work);
       if (!images.length) return "";
       return `
-                <div class="detail-row">
-                  <div class="detail-key">Images</div>
+                <div class="detail-row image-detail-row">
                   <div class="detail-value">
                     <div class="work-image-gallery">
                       ${images.map(asset => {
                         const url = cloudAssetPublicUrl(asset.storagePath);
                         if (!url) return "";
-                        const label = [
-                          escapeHtml(asset.caption || ""),
-                          escapeHtml(asset.fileName || ""),
-                          asset.isCover ? '<span class="work-image-cover">COVER</span>' : ""
-                        ].filter(Boolean).join(" ");
+                        const caption = escapeHtml(asset.caption || "");
+                        const coverBadge = asset.isCover ? '<span class="work-image-cover">COVER</span>' : "";
                         return `
                           <div class="work-image-card">
                             <img src="${escapeAttr(url)}" alt="${escapeAttr(asset.altText || asset.caption || asset.fileName || "Work image")}">
-                            ${label ? `<div class="work-image-caption">${label}</div>` : ""}
+                            ${(caption || coverBadge) ? `<div class="work-image-caption">${caption}${coverBadge}</div>` : ""}
                           </div>`;
                       }).join("")}
                     </div>
@@ -3251,7 +3279,7 @@
           if (!url) return "";
           return `<div class="work-image-card">
             <img src="${escapeAttr(url + "?t=" + Date.now())}" alt="${escapeAttr(asset.altText || asset.caption || asset.fileName || "Work image")}">
-            <div class="work-image-caption">${escapeHtml(asset.fileName || "")}${asset.isCover ? '<span class="work-image-cover">COVER</span>' : ""}</div>
+            <div class="work-image-caption">${escapeHtml(asset.caption || asset.fileName || "")}${asset.isCover ? '<span class="work-image-cover">COVER</span>' : ""}</div>
             <div class="image-card-actions">
               <button class="text-button" type="button" ${asset.isCover ? "disabled" : ""} onclick="setWorkCoverImage('${escapeAttr(asset.id)}')">SET COVER</button>
               <button class="text-button danger" type="button" onclick="deleteWorkImage('${escapeAttr(asset.id)}')">DELETE</button>
@@ -5450,7 +5478,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.2.0",
+        version: "minimal-text-v2.2.1",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

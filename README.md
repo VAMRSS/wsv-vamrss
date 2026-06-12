@@ -1,26 +1,18 @@
-# (VAMRSS) WORKSHEET VAULT SYSTEM / WSV
+# WSV v3.1 Public Toggle
 
-WSV v2.0 Supabase Admin.
+- `/admin/` has PUBLIC / PRIVATE buttons.
+- `/portfolio/` remains the admin-style public read-only portfolio.
 
-## Structure
+## PUBLIC behavior
 
-```text
-index.html
-admin/
-  index.html
-  assets/
-    wsv-logo.svg
-```
+When a work is set to PUBLIC:
+- `wsv_works.is_public = true`
+- linked work logo and work images in `wsv_assets` are set to public
+- linked series is also set to public
+- linked series logo is also set to public
 
-## Pages
+When a work is set to PRIVATE:
+- `wsv_works.is_public = false`
+- linked work logo and work images are set to private
 
-- `/admin/` is the WSV Admin page.
-- Sign in with the registered admin account.
-- Sign up is not available in the HTML.
-- Supabase RLS restricts editing to the registered admin user.
-
-## Security
-
-The HTML contains the Supabase Project URL and Publishable key. This is expected for browser-based Supabase apps.
-
-Do not put a Secret key or service_role key in this repository.
+Series PUBLIC / PRIVATE controls only the series and series logo.

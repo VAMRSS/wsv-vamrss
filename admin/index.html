@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v2.2.6.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.1.0.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2022,7 +2022,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v2.2.6</div>
+  <div class="fixed-version-mark">v3.1.0</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3366,6 +3366,126 @@
                 </div>`;
     }
 
+
+    function publicActionButtonHtml(kind, record = {}) {
+      const isPublic = Boolean(record && record.isPublic);
+      const id = record && record.id ? escapeAttr(record.id) : "";
+      if (!id) return "";
+      if (kind === "series") {
+        return `<button class="text-button ${isPublic ? "danger" : "active"}" type="button" onclick="setSeriesPublic('${id}', ${isPublic ? "false" : "true"})">${isPublic ? "PRIVATE" : "PUBLIC"}</button>`;
+      }
+      return `<button class="text-button ${isPublic ? "danger" : "active"}" type="button" onclick="setWorkPublic('${id}', ${isPublic ? "false" : "true"})">${isPublic ? "PRIVATE" : "PUBLIC"}</button>`;
+    }
+
+    async function updateAssetsPublicByWorkId(workId, isPublic) {
+      const result = await cloudClient
+        .from("wsv_assets")
+        .update({ is_public: Boolean(isPublic) })
+        .eq("work_id", workId)
+        .in("asset_type", ["work_logo", "work_image"]);
+      if (result.error) throw result.error;
+    }
+
+    async function updateAssetsPublicBySeriesId(seriesId, isPublic) {
+      const result = await cloudClient
+        .from("wsv_assets")
+        .update({ is_public: Boolean(isPublic) })
+        .eq("series_id", seriesId)
+        .in("asset_type", ["series_logo"]);
+      if (result.error) throw result.error;
+    }
+
+    window.setWorkPublic = async function(id, isPublic) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        if (cloudSyncing || cloudLoading) throw new Error("同期処理中です。数秒後にもう一度実行してください。");
+
+        const work = works.find(item => item.id === id);
+        if (!work) throw new Error("対象作品が見つかりません。");
+
+        await cloudSyncAll(false);
+
+        const refreshedWork = works.find(item => normalizeWorkNo(item.workNo) === normalizeWorkNo(work.workNo)) || work;
+        if (!refreshedWork || !refreshedWork.id) throw new Error("対象作品をSupabase上で確認できませんでした。");
+
+        setCloudStatus(isPublic ? "作品を公開設定にしています。" : "作品を非公開設定にしています。");
+
+        const workResult = await cloudClient
+          .from("wsv_works")
+          .update({ is_public: Boolean(isPublic) })
+          .eq("id", refreshedWork.id);
+        if (workResult.error) throw workResult.error;
+
+        await updateAssetsPublicByWorkId(refreshedWork.id, isPublic);
+
+        if (isPublic) {
+          const linkedSeries = getSeriesRecordForWork(refreshedWork);
+          if (linkedSeries && linkedSeries.id) {
+            const seriesResult = await cloudClient
+              .from("wsv_series")
+              .update({ is_public: true })
+              .eq("id", linkedSeries.id);
+            if (seriesResult.error) throw seriesResult.error;
+            await updateAssetsPublicBySeriesId(linkedSeries.id, true);
+            seriesRecords = seriesRecords.map(item => item.id === linkedSeries.id ? { ...item, isPublic: true } : item);
+          }
+        }
+
+        works = works.map(item => item.id === refreshedWork.id ? { ...item, isPublic: Boolean(isPublic) } : item);
+
+        await refreshCloudAssets();
+        saveLocalOnly();
+        saveSeriesRecordsLocalOnly();
+        render();
+
+        setCloudStatus(isPublic ? "作品を公開しました。" : "作品を非公開にしました。");
+        alert(isPublic ? "作品を公開しました。" : "作品を非公開にしました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("公開設定エラー: " + (error.message || error));
+        alert("公開設定エラー: " + (error.message || error));
+      }
+    };
+
+    window.setSeriesPublic = async function(id, isPublic) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        if (cloudSyncing || cloudLoading) throw new Error("同期処理中です。数秒後にもう一度実行してください。");
+
+        const series = seriesRecords.find(item => item.id === id);
+        if (!series) throw new Error("対象シリーズが見つかりません。");
+
+        await cloudSyncAll(false);
+
+        const refreshedSeries = seriesRecords.find(item => normalizeWorkNo(item.seriesNo) === normalizeWorkNo(series.seriesNo)) || series;
+        if (!refreshedSeries || !refreshedSeries.id) throw new Error("対象シリーズをSupabase上で確認できませんでした。");
+
+        setCloudStatus(isPublic ? "シリーズを公開設定にしています。" : "シリーズを非公開設定にしています。");
+
+        const seriesResult = await cloudClient
+          .from("wsv_series")
+          .update({ is_public: Boolean(isPublic) })
+          .eq("id", refreshedSeries.id);
+        if (seriesResult.error) throw seriesResult.error;
+
+        await updateAssetsPublicBySeriesId(refreshedSeries.id, isPublic);
+
+        seriesRecords = seriesRecords.map(item => item.id === refreshedSeries.id ? { ...item, isPublic: Boolean(isPublic) } : item);
+
+        await refreshCloudAssets();
+        saveSeriesRecordsLocalOnly();
+        render();
+
+        setCloudStatus(isPublic ? "シリーズを公開しました。" : "シリーズを非公開にしました。");
+        alert(isPublic ? "シリーズを公開しました。" : "シリーズを非公開にしました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("公開設定エラー: " + (error.message || error));
+        alert("公開設定エラー: " + (error.message || error));
+      }
+    };
+
+
     function currentWorkImageRecord() {
       return works.find(item => item.id === editingId) || null;
     }
@@ -3926,6 +4046,7 @@
             exhibitionHistory: (exhibitionMap.get(row.id) || []).join("\n"),
             isPublic: Boolean(row.is_public),
             logoAssetId: row.logo_asset_id || "",
+            coverAssetId: row.cover_asset_id || "",
             logoStoragePath: "",
             logoFileName: "",
             createdAt: row.created_at || nowIso(),
@@ -4732,6 +4853,9 @@
             <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
             <div class="detail-row"><div class="detail-key">Description EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
             ${workImagesDetailRowHtml(w)}
+            <div class="detail-actions">
+              ${publicActionButtonHtml("work", w)}
+            </div>
           </div>
         </div>
       `;
@@ -4832,6 +4956,7 @@
               <div class="detail-actions">
                 <button class="text-button" type="button" onclick="startEdit('${escapeAttr(w.id)}')">EDIT</button>
                 <button class="text-button danger" type="button" onclick="deleteWork('${escapeAttr(w.id)}')">DELETE</button>
+                ${publicActionButtonHtml("work", w)}
               </div>
             </div>
           </article>
@@ -5095,6 +5220,7 @@
               <div class="detail-actions">
                 <button class="text-button" type="button" onclick="startSeriesEdit('${escapeAttr(s.id)}')">EDIT</button>
                 <button class="text-button danger" type="button" onclick="deleteSeries('${escapeAttr(s.id)}')">DELETE</button>
+                ${publicActionButtonHtml("series", s)}
               </div>
             </div>
           </article>
@@ -5617,7 +5743,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v2.2.6",
+        version: "minimal-text-v3.1.0",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

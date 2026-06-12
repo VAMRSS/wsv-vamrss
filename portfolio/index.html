@@ -3,253 +3,687 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WORKSHEET VAULT SYSTEM / PORTFOLIO</title>
-  <meta name="description" content="Public portfolio for (VAMRSS) WORKSHEET VAULT SYSTEM.">
+  <title>(VAMRSS) WSV PORTFOLIO</title>
+  <meta name="description" content="(VAMRSS) WORKSHEET VAULT SYSTEM public portfolio.">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+
     :root {
-      --bg: #f4f5f5;
-      --surface: #f9faf9;
-      --surface-soft: #ecefef;
-      --ink: #161a1c;
-      --sub: #687174;
-      --muted: #9aa2a5;
-      --line: #d9dddd;
-      --deep: #071c16;
-      --invert-bg: #071c16;
-      --invert-ink: #f7f9f8;
-      --radius: 18px;
-      --content: 760px;
+      --bg: #f8f9f9;
+      --ink: #111714;
+      --sub: #68736f;
+      --muted: #9aa5a1;
+      --invert-bg: #111714;
+      --invert-ink: #f8f9f9;
+      --danger: #9b3144;
+      --font-main: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
     }
 
     html[data-theme="dark"] {
-      --bg: #111615;
-      --surface: #151b1a;
-      --surface-soft: #1b2321;
-      --ink: #eef2f1;
-      --sub: #a5adab;
-      --muted: #717a78;
-      --line: #2f3836;
-      --deep: #eef2f1;
-      --invert-bg: #eef2f1;
-      --invert-ink: #071c16;
+      --bg: #101312;
+      --ink: #edf1ef;
+      --sub: #a4aeaa;
+      --muted: #707b77;
+      --invert-bg: #edf1ef;
+      --invert-ink: #101312;
+      --danger: #e28a9a;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
-      background: var(--bg);
       -webkit-text-size-adjust: 100%;
+      background: var(--bg);
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
       color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", "YuGothic", sans-serif;
-      font-size: 13px;
+      background: var(--bg);
+      font-family: var(--font-main);
+      font-size: 12px;
       font-weight: 300;
-      line-height: 1.85;
+      line-height: 2;
       letter-spacing: 0.01em;
     }
 
-    button,
-    input,
-    select {
+    button, input, textarea, select {
       font: inherit;
     }
 
-    a {
+    button {
       color: inherit;
-      text-decoration: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .page {
-      width: min(100%, var(--content));
+    .app {
+      width: 100%;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 22px 20px 54px;
+      padding: calc(max(18px, env(safe-area-inset-top)) + 24px) 20px max(36px, env(safe-area-inset-bottom));
+      position: relative;
     }
+
+
+    .fixed-version-mark {
+      position: absolute;
+      right: 20px;
+      bottom: max(36px, env(safe-area-inset-bottom));
+      z-index: 20;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
 
     .topbar {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
+      grid-template-columns: minmax(0, 1fr) max-content;
+      grid-template-areas: "logo nav";
       align-items: start;
-      padding: 0 0 30px;
+      column-gap: 18px;
+      row-gap: 0;
+      margin-bottom: 48px;
     }
 
-    .brand {
-      display: grid;
-      gap: 2px;
-      min-width: 0;
+    .site-title {
+      grid-area: logo;
+      margin: 0;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.11em;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      text-align: left;
     }
 
-    .brand-mark {
-      width: min(220px, 52vw);
-      height: auto;
+
+    .site-title {
+      grid-area: logo;
+      justify-self: start;
+      align-self: start;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 6px;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .site-logo {
+      appearance: none;
+      border: 0;
+      background: transparent;
       display: block;
-      margin-bottom: 6px;
+      width: 145px;
+      max-width: 38vw;
+      margin: 0;
+      padding: 0;
+      line-height: 0;
+      text-align: left;
+      flex: 0 0 auto;
+      transform: translateX(0);
+      cursor: pointer;
     }
 
-    html[data-theme="dark"] .brand-mark {
+    .site-logo-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 32px;
+      margin: 0;
+      padding: 0;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .site-logo:focus {
+      outline: none;
+    }
+
+    html[data-theme="dark"] .site-logo-img {
       filter: invert(1);
     }
 
-    .brand-title {
-      margin: 0;
-      font-size: 11px;
-      font-weight: 300;
-      line-height: 1.6;
+    .screen-label {
       color: var(--sub);
       letter-spacing: 0.08em;
-      text-transform: uppercase;
     }
 
-    .brand-subtitle {
-      margin: 0;
+    .version-mark {
       color: var(--muted);
-      font-size: 11px;
+      font-weight: 300;
       letter-spacing: 0.08em;
-      text-transform: uppercase;
     }
 
-    .top-actions {
+    .text-nav {
+      grid-area: nav;
       display: flex;
-      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
       justify-content: flex-end;
-      gap: 8px;
+      flex-wrap: nowrap;
+      text-align: right;
+      align-self: start;
+      justify-self: end;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     .text-button {
       appearance: none;
       border: 0;
-      border-radius: 0;
       background: transparent;
+      padding: 0 2px;
       color: var(--sub);
-      padding: 0;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 300;
-      line-height: 1.8;
-      letter-spacing: 0.08em;
+      line-height: 2;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      cursor: pointer;
+      text-decoration: none;
+    }
+
+
+    .inline-search-wrap.open {
+      display: block;
+    }
+
+    .inline-search-wrap #searchInput {
+      width: 100%;
+      min-width: 0;
+      min-height: 24px;
+      border: 0;
+      border-radius: 0;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 2px 8px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+      text-align: left;
+    }
+
+    .inline-search-wrap #searchInput::placeholder {
+      color: var(--bg);
+      opacity: 0.88;
+    }
+
+    .theme-symbol {
+      font-family: var(--font-main);
+      font-size: 12px;
+      line-height: 2;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .topbar .text-nav .text-button {
+      line-height: 1;
+      padding-top: 0;
+    }
+
+    .text-button:hover,
+    .text-button.active {
+      color: var(--ink);
     }
 
     .text-button.selected {
+      color: var(--ink);
+    }
+
+    .text-button.selected::before {
+      content: "[";
+    }
+
+    .text-button.selected::after {
+      content: "]";
+    }
+
+    #techniqueLinks .text-button.selected {
       color: var(--invert-ink);
       background: var(--invert-bg);
-      padding: 0 5px;
     }
 
-    .section-head {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: end;
-      border-top: 1px solid var(--line);
-      padding-top: 10px;
-      margin-bottom: 12px;
+    #techniqueLinks .text-button.selected::before,
+    #techniqueLinks .text-button.selected::after {
+      content: "";
     }
 
-    .section-title {
-      margin: 0;
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--sub);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .text-button.danger {
+      color: var(--danger);
     }
 
-    .count {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-    }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0 8px;
-      margin-bottom: 18px;
-      color: var(--sub);
-    }
-
-    .filters .text-button::before {
-      content: "[ ";
-    }
-
-    .filters .text-button::after {
-      content: " ]";
-    }
-
-    .filters .text-button.selected::before,
-    .filters .text-button.selected::after {
+    .text-button.danger:hover {
       color: var(--invert-ink);
+      background: var(--danger);
     }
 
-    .search-row {
-      margin-bottom: 18px;
+
+    .mode-switch .text-button::before,
+    .bracket-switch .text-button::before {
+      content: "[";
+      color: var(--bg);
     }
 
-    .search-row input {
-      width: 100%;
-      border: 0;
-      border-bottom: 1px solid var(--line);
-      border-radius: 0;
-      background: transparent;
+    .mode-switch .text-button::after,
+    .bracket-switch .text-button::after {
+      content: "]";
+      color: var(--bg);
+    }
+
+    .mode-switch .text-button.selected::before,
+    .mode-switch .text-button.selected::after,
+    .bracket-switch .text-button.selected::before,
+    .bracket-switch .text-button.selected::after {
+      content: "";
+    }
+
+    .mode-switch .text-button .mode-bracket {
+      color: var(--bg);
+    }
+
+    .mode-switch .text-button.selected,
+    .bracket-switch .text-button.selected {
       color: var(--ink);
-      padding: 8px 0;
-      outline: none;
     }
 
-    .work-list {
-      display: grid;
-      gap: 1px;
+    .mode-switch .text-button.selected::before,
+    .bracket-switch .text-button.selected::before {
+      content: "[";
+      color: var(--ink);
     }
 
-    .work {
-      border-top: 1px solid var(--line);
+    .mode-switch .text-button.selected::after,
+    .bracket-switch .text-button.selected::after {
+      content: "]";
+      color: var(--ink);
+    }
+
+    #entryScreen .form input,
+    #entryScreen .form textarea,
+    #entryScreen .form select,
+    #seriesEntryScreen .form input,
+    #seriesEntryScreen .form textarea,
+    #seriesEntryScreen .form select {
+      border: 0;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 2px 8px;
+    }
+
+    #entryScreen .form input::placeholder,
+    #entryScreen .form textarea::placeholder,
+    #seriesEntryScreen .form input::placeholder,
+    #seriesEntryScreen .form textarea::placeholder {
+      color: var(--bg);
+      opacity: 0.65;
+    }
+
+    #entryScreen .ask-line,
+    #seriesEntryScreen .ask-line {
+      color: var(--sub);
+    }
+
+    #entryScreen .ask-line input {
+      background: transparent;
       padding: 0;
     }
 
-    .work-summary {
-      appearance: none;
-      width: 100%;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      padding: 8px 0;
-      display: grid;
-      grid-template-columns: 52px minmax(0, 1fr) 86px;
-      gap: 12px;
-      align-items: baseline;
-      text-align: left;
-      cursor: pointer;
+    #entryScreen .form select,
+    #seriesEntryScreen .form select {
+      color-scheme: dark;
     }
 
-    .work-no,
-    .work-year {
+    html[data-theme="dark"] #entryScreen .form select,
+    html[data-theme="dark"] #seriesEntryScreen .form select {
+      color-scheme: light;
+    }
+
+    .filter-area {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 11px;
+    }
+
+    .link-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 5px;
+      min-width: 0;
+    }
+
+    .mode-switch,
+    .bracket-switch {
+      gap: 0 2px;
+    }
+
+    .collapsible {
+      display: none;
+      margin-top: 7px;
+    }
+
+    .collapsible.open {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 24px;
+    }
+
+    .search-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .utility-line {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .utility-line button:first-child {
+      grid-column: 1;
+      justify-self: start;
+    }
+
+    .utility-line button:last-child {
+      grid-column: 3;
+      justify-self: end;
+    }
+
+    .inline-search-wrap {
+      display: none;
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .inline-search-wrap.open {
+      display: block;
+    }
+
+    #searchInput {
+      width: 100%;
+      min-width: 0;
+      min-height: 24px;
+      border: 0;
+      border-radius: 0;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 2px 8px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+      text-align: left;
+    }
+
+    #searchInput::placeholder {
+      color: var(--bg);
+      opacity: 0.88;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      min-width: 0;
+      min-height: 24px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      padding: 2px 0;
+      outline: none;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .search-line input {
+      border-bottom: 0;
+    }
+
+    .search-line input:focus {
+      border-bottom: 0;
+    }
+
+    .form input,
+    .form textarea,
+    .form select,
+    .data-block input,
+    .data-block textarea,
+    .data-block select {
+      border-bottom: 1px solid var(--sub);
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus,
+    .data-block input:focus,
+    .data-block textarea:focus,
+    .data-block select:focus {
+      border-bottom-color: var(--ink);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
       color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.08em;
+      opacity: 1;
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    select {
+      appearance: none;
+    }
+
+    .section-title {
+      margin: 16px 0 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .list {
+      display: grid;
+      gap: 0;
+    }
+
+    .list-head,
+    .work-summary {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 4.5em minmax(0, 1fr) 7.5em;
+      gap: 1em;
+      align-items: baseline;
+      border: 0;
+      background: transparent;
+      padding: 1px 0;
+      text-align: left;
+    }
+
+
+    .list-head .text-button.selected::before,
+    .list-head .text-button.selected::after {
+      content: "";
+    }
+
+    .list-head .text-button.selected {
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .list-head button,
+    .list-head button:last-child,
+    .list-head .text-button:nth-child(1),
+    .list-head .text-button:nth-child(2),
+    .list-head .text-button:nth-child(3) {
+      justify-self: stretch;
+      text-align: left;
+    }
+
+
+    .sort-mark {
+      display: inline-block;
+      width: 1em;
+      text-align: left;
+      transform-origin: center;
+    }
+
+    .sort-mark.desc {
+      transform: rotate(180deg);
+    }
+
+    .title-end-date {
+      color: var(--sub);
+      margin-left: 1em;
+      white-space: nowrap;
       font-variant-numeric: tabular-nums;
     }
 
+    #techniqueLinks .text-button {
+      background: transparent;
+    }
+
+    #techniqueLinks .text-button.selected {
+      background: transparent !important;
+      color: var(--ink);
+    }
+
+    #techniqueLinks .text-button::before,
+    #techniqueLinks .text-button::after {
+      display: inline-block;
+      width: 0.55em;
+      text-align: center;
+    }
+
+    #techniqueLinks .text-button.selected::before {
+      content: "[";
+      color: var(--ink);
+    }
+
+    #techniqueLinks .text-button.selected::after {
+      content: "]";
+      color: var(--ink);
+    }
+
+    #techniqueLinks .text-button:not(.selected)::before {
+      content: "[";
+      color: var(--bg);
+    }
+
+    #techniqueLinks .text-button:not(.selected)::after {
+      content: "]";
+      color: var(--bg);
+    }
+
+    .list-head {
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .list-head button {
+      text-align: left;
+    }
+
+    .list-head button:last-child {
+      text-align: left;
+    }
+
+    .list-head .text-button {
+      display: block;
+      width: 100%;
+      white-space: nowrap;
+      min-width: 0;
+      overflow: visible;
+    }
+
+    .list-head .text-button:nth-child(1),
+    .list-head .text-button:nth-child(2) {
+      justify-self: stretch;
+      text-align: left;
+    }
+
+    .list-head .text-button:nth-child(3) {
+      justify-self: stretch;
+      text-align: left;
+    }
+
+    .work {
+      margin: 0;
+    }
+
+    .work-no {
+      color: var(--sub);
+      text-align: left;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+
+
+
     .work-title {
+      position: relative;
       min-width: 0;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      color: var(--ink);
-      font-size: 13px;
+    }
+
+    .work-title .title-scroll {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+
+    }
+
+    }
+
+
+    .work-year {
+      display: block;
+      width: 100%;
+      color: var(--sub);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
     }
 
     .work-detail {
       display: none;
-      padding: 0 0 22px;
+      margin-left: 1em;
+      padding: 2px 0 9px 0;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .inline-expanded {
+      margin-left: 1em;
     }
 
     .work.open .work-detail {
@@ -259,7 +693,7 @@
     .detail-grid {
       display: grid;
       gap: 1px;
-      padding: 2px 0 8px;
+      padding: 3px 0 6px;
     }
 
     .detail-row {
@@ -271,185 +705,1404 @@
 
     .detail-key {
       color: var(--muted);
-      text-transform: uppercase;
+      text-align: left;
       letter-spacing: 0.08em;
-      font-size: 11px;
+      text-transform: uppercase;
     }
 
     .detail-value {
       color: var(--ink);
+      text-align: left;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
 
-    .cover-row {
-      display: block;
-      margin: 0 0 1em calc(88px + 10px);
-      width: calc(100% - 88px - 10px);
+    .detail-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 5px;
     }
 
-    .cover-row img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: var(--radius);
+    .empty {
+      padding: 14px 0;
+      color: var(--sub);
+      text-align: left;
+    }
+
+
+    }
+
+
+    }
+
+
+    .entry-layout {
+      display: grid;
+      gap: 10px;
+    }
+
+    .entry-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px 14px;
+      min-width: 0;
+    }
+
+    .entry-row.cols-2 {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .entry-workno-technique {
+      grid-template-columns: 100px 200px;
+      justify-content: start;
+    }
+
+    .entry-dates {
+      grid-template-columns: 130px 130px;
+      justify-content: start;
+    }
+
+    .entry-price {
+      grid-template-columns: 100px minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .entry-exhibition {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .entry-add-selected {
+      align-self: end;
+    }
+
+    .inline-add {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .price-row .ask-line,
+    .entry-price .ask-line {
+      min-height: 24px;
+      align-items: center;
+      display: flex;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .entry-hidden {
+      display: none;
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea {
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .form select,
+    .form input[type="date"] {
       border: 1px solid var(--line);
-      background: var(--surface-soft);
+      border-radius: 0;
+      background: transparent;
+      padding-left: 6px;
+      padding-right: 6px;
     }
 
-    .logo-row {
-      align-items: start;
-      margin-bottom: 1em;
+    .form input[type="date"] {
+      text-align: left;
     }
 
-    .logo-row .detail-key,
-    .logo-row .detail-value {
-      line-height: 1;
+    .form input:not([type="checkbox"]),
+    .form textarea,
+    .form select {
+      background: var(--bg) !important;
+      color: var(--ink);
     }
 
-    .logo-preview {
-      width: 50%;
-      max-width: 50%;
-      line-height: 1;
+    .form input[type="date"] {
+      background: var(--bg) !important;
+      color: var(--ink);
     }
 
-    .logo-preview img {
+
+
+    .form input:not([type="checkbox"]),
+    .form textarea {
+      border-bottom-color: var(--ink) !important;
+    }
+
+    .form select,
+    .form input[type="date"] {
+      border-color: var(--ink) !important;
+    }
+
+
+    /* Readability-first form controls */
+    .form label {
+      color: var(--sub);
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea,
+    .form select {
       width: 100%;
-      height: auto;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: var(--surface-soft) !important;
+      border: 1px solid var(--line-strong) !important;
+      border-radius: 0;
+      box-shadow: none;
+      opacity: 1;
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea {
+      border-width: 0 0 1px 0 !important;
+      background: transparent !important;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .form select,
+    .form input[type="date"] {
+      border-width: 1px !important;
+      background: var(--surface-soft) !important;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .form input::placeholder,
+    .form textarea::placeholder {
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus {
+      outline: 1px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    .form input[type="date"] {
+      text-align: left;
+    }
+
+    .form input[type="date"]::-webkit-date-and-time-value {
+      text-align: left;
+    }
+
+    .form input[type="checkbox"] {
+      opacity: 1;
+      accent-color: var(--ink);
+    }
+
+    @media (max-width: 380px) {
+      .entry-workno-technique {
+        grid-template-columns: 100px minmax(0, 1fr);
+      }
+
+      .entry-dates {
+        grid-template-columns: 130px 130px;
+        overflow-x: auto;
+      }
+    }
+
+    .form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 10px 20px;
+    }
+
+    .field {
+      display: grid;
+      gap: 1px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .two-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .sub-field {
+      display: grid;
+      gap: 1px;
+    }
+
+    .sub-field label:not(.ask-line) {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .ask-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 20px;
+      margin-top: 1px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .ask-line input {
+      width: 12px;
+      min-height: 12px;
+      padding: 0;
+      accent-color: var(--ink);
+    }
+
+
+
+    .inline-add {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .inline-add.single-action {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .selected-list {
+      display: grid;
+      gap: 1px;
+      margin: 2px 0;
+      color: var(--sub);
+    }
+
+    .selected-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+
+    .hidden-file {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .file-label {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 5px;
+      margin-top: 3px;
+    }
+
+    .data-block {
+      display: grid;
+      gap: 7px;
+      padding: 8px 0;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .option-list {
+      display: grid;
+      gap: 1px;
+      margin-top: 2px;
+    }
+
+    .option-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 1px 0;
+      color: var(--ink);
+    }
+
+
+    .theme-icon {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .nested-list {
+      display: grid;
+      gap: 0;
+      margin-top: 4px;
+    }
+
+    .nested-work {
+      padding-left: 0;
+    }
+
+    .nested-work .work-summary {
+      grid-template-columns: 4.5em minmax(0, 1fr) 7.5em;
+    }
+
+    .inline-series-link {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .inline-series-link:hover {
+      text-decoration: underline;
+    }
+
+    .font-sampler {
+      margin-top: 28px;
+      padding-top: 10px;
+      color: var(--sub);
+    }
+
+    .font-sampler-title {
+      margin: 0 0 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .font-list {
+      display: grid;
+      gap: 2px;
+    }
+
+    .font-option {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border: 0;
+      background: transparent;
+      padding: 1px 0;
+      text-align: left;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .font-name {
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .font-preview {
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+
+    .topbar .site-title,
+    .site-title .site-logo,
+    .site-title .site-logo-img {
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+    .topbar .site-title {
+      justify-self: start;
+    }
+
+
+    #techniqueLinks {
+      gap: 0 4px;
+    }
+
+    #techniqueLinks .text-button {
+      font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+      letter-spacing: 0;
+      padding: 0 0.25em;
+      background: transparent;
+      color: var(--sub);
+      white-space: pre;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #techniqueLinks .text-button::before {
+      content: "[ ";
+      color: var(--bg);
+    }
+
+    #techniqueLinks .text-button::after {
+      content: " ]";
+      color: var(--bg);
+    }
+
+    #techniqueLinks .text-button.selected {
+      color: var(--invert-ink);
+      background: var(--invert-bg) !important;
+    }
+
+    #techniqueLinks .text-button.selected::before {
+      content: "[ ";
+      color: var(--invert-ink);
+    }
+
+    #techniqueLinks .text-button.selected::after {
+      content: " ]";
+      color: var(--invert-ink);
+    }
+
+    html[data-theme="dark"] #techniqueLinks .text-button::before,
+    html[data-theme="dark"] #techniqueLinks .text-button::after {
+      color: var(--bg);
+    }
+
+
+    #techniqueLinks {
+      gap: 0 4px;
+    }
+
+    #techniqueLinks .text-button {
+      font-family: inherit !important;
+      letter-spacing: inherit;
+      padding: 0 0.65em;
+      background: transparent;
+      color: var(--sub);
+      white-space: nowrap;
+      font-variant-numeric: normal;
+    }
+
+    #techniqueLinks .text-button::before,
+    #techniqueLinks .text-button::after,
+    #techniqueLinks .text-button.selected::before,
+    #techniqueLinks .text-button.selected::after,
+    #techniqueLinks .text-button:not(.selected)::before,
+    #techniqueLinks .text-button:not(.selected)::after {
+      content: "" !important;
+      display: none !important;
+    }
+
+    #techniqueLinks .text-button.selected {
+      color: var(--invert-ink);
+      background: var(--invert-bg) !important;
+    }
+
+
+
+
+    .list-head .text-button:nth-child(3) {
+      text-align: left !important;
+      justify-self: stretch;
+      padding-left: max(0px, calc(100% - 9.5ch));
+      white-space: nowrap;
+    }
+
+    @media (max-width: 420px) {
+      .topbar {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        grid-template-areas: "logo nav";
+        gap: 18px;
+      }
+
+      .text-nav {
+        justify-content: flex-end;
+      }
+    }
+  
+    /* Final form visibility override */
+    .form input:not([type="checkbox"]),
+    .form textarea,
+    .form select {
+      width: 100% !important;
+      min-height: 28px;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: rgba(96, 112, 132, 0.10) !important;
+      border: 1px solid rgba(96, 112, 132, 0.38) !important;
+      border-radius: 0 !important;
+      padding: 3px 6px !important;
+      box-shadow: none !important;
+      opacity: 1 !important;
+      appearance: auto;
+      -webkit-appearance: auto;
+    }
+
+    .theme-dark .form input:not([type="checkbox"]),
+    .theme-dark .form textarea,
+    .theme-dark .form select {
+      background: rgba(255, 255, 255, 0.10) !important;
+      border-color: rgba(255, 255, 255, 0.34) !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+    }
+
+    .form textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .form input[type="date"] {
+      text-align: left !important;
+    }
+
+    .form input[type="date"]::-webkit-date-and-time-value {
+      text-align: left !important;
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus {
+      outline: 1px solid var(--ink) !important;
+      outline-offset: 1px !important;
+      border-color: var(--ink) !important;
+    }
+
+    .form input[type="checkbox"] {
+      opacity: 1 !important;
+      accent-color: var(--ink);
+    }
+
+  
+    /* DATA page controls visibility */
+    #dataScreen input:not([type="checkbox"]),
+    #dataScreen textarea,
+    #dataScreen select {
+      width: 100% !important;
+      min-height: 28px;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: rgba(96, 112, 132, 0.10) !important;
+      border: 1px solid rgba(96, 112, 132, 0.38) !important;
+      border-radius: 0 !important;
+      padding: 3px 6px !important;
+      box-shadow: none !important;
+      opacity: 1 !important;
+      appearance: auto;
+      -webkit-appearance: auto;
+    }
+
+    .theme-dark #dataScreen input:not([type="checkbox"]),
+    .theme-dark #dataScreen textarea,
+    .theme-dark #dataScreen select {
+      background: rgba(255, 255, 255, 0.10) !important;
+      border-color: rgba(255, 255, 255, 0.34) !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+    }
+
+    #dataScreen input:focus,
+    #dataScreen textarea:focus,
+    #dataScreen select:focus {
+      outline: 1px solid var(--ink) !important;
+      outline-offset: 1px !important;
+      border-color: var(--ink) !important;
+    }
+
+    #dataScreen input[type="file"] {
+      font-size: 12px;
+    }
+
+  
+    /* DATA compact layout */
+    #dataScreen .data-block,
+    #dataScreen .data-section,
+    #dataScreen .settings-section {
+      min-width: 0;
+    }
+
+    #dataScreen input[type="file"] {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 4px 6px !important;
+      overflow: hidden;
+    }
+
+    #dataScreen .field input[type="file"] {
       display: block;
     }
 
-    html[data-theme="dark"] .logo-preview img {
+    #dataScreen .inline-add,
+    #dataScreen .data-import-row,
+    #dataScreen .csv-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    #dataScreen .setting-item,
+    #dataScreen .catalog-item,
+    #dataScreen .option-item,
+    #dataScreen .series-item,
+    #dataScreen .data-list-row {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+      align-items: baseline;
+      min-width: 0;
+      padding: 0;
+      margin: 0;
+      line-height: 2;
+    }
+
+    #dataScreen .setting-item > *,
+    #dataScreen .catalog-item > *,
+    #dataScreen .option-item > *,
+    #dataScreen .series-item > *,
+    #dataScreen .data-list-row > * {
+      min-width: 0;
+    }
+
+    #dataScreen .setting-item span,
+    #dataScreen .catalog-item span,
+    #dataScreen .option-item span,
+    #dataScreen .series-item span,
+    #dataScreen .data-list-row span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #dataScreen .setting-item .text-button,
+    #dataScreen .catalog-item .text-button,
+    #dataScreen .option-item .text-button,
+    #dataScreen .series-item .text-button,
+    #dataScreen .data-list-row .text-button {
+      padding: 0;
+      min-height: 0;
+      line-height: 2;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    #dataScreen .settings-list,
+    #dataScreen .catalog-list,
+    #dataScreen .option-list,
+    #dataScreen .series-list,
+    #dataScreen .data-list {
+      display: grid;
+      gap: 0;
+    }
+
+    #dataScreen .data-actions,
+    #dataScreen .import-actions,
+    #dataScreen .csv-actions {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    @media (max-width: 380px) {
+      #dataScreen .inline-add,
+      #dataScreen .data-import-row,
+      #dataScreen .csv-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+  
+    /* DATA import/csv compact fix */
+    #dataScreen .hidden-file {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    #dataScreen .data-file-row {
+      display: flex !important;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    #dataScreen .file-label {
+      display: inline-flex !important;
+      width: auto !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      line-height: 2 !important;
+      background: transparent !important;
+      border: 0 !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      letter-spacing: .18em;
+      cursor: pointer;
+    }
+
+    #dataScreen .file-label:hover {
+      text-decoration: underline;
+    }
+
+    #dataScreen .option-list {
+      display: grid !important;
+      gap: 0 !important;
+      margin-top: 8px;
+    }
+
+    #dataScreen .compact-option-item {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto auto !important;
+      gap: 14px !important;
+      align-items: baseline !important;
+      min-width: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      line-height: 2 !important;
+    }
+
+    #dataScreen .compact-option-item .option-name {
+      min-width: 0 !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      color: var(--ink);
+    }
+
+    #dataScreen .compact-option-item .option-action {
+      padding: 0 !important;
+      margin: 0 !important;
+      min-height: 0 !important;
+      line-height: 2 !important;
+      font-size: 12px !important;
+      white-space: nowrap !important;
+      background: transparent !important;
+      border: 0 !important;
+    }
+
+    #dataScreen .search-line {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      gap: 12px !important;
+      align-items: center !important;
+      min-width: 0 !important;
+    }
+
+    #dataScreen input:not(.hidden-file):not([type="checkbox"]),
+    #dataScreen textarea,
+    #dataScreen select {
+      width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+  
+    /* ENTRY layout adjustment */
+    .entry-workno {
+      grid-template-columns: 100px;
+      justify-content: start;
+    }
+
+    .entry-technique {
+      grid-template-columns: 200px;
+      justify-content: start;
+    }
+
+    .entry-dates {
+      grid-template-columns: 130px 130px !important;
+      gap: 20px !important;
+      justify-content: start;
+    }
+
+  
+    .form input::placeholder,
+    .form textarea::placeholder {
+      color: var(--sub) !important;
+      opacity: 1 !important;
+    }
+
+  
+    /* TOP list/date and version position adjustment */
+    .fixed-version-mark {
+      position: fixed !important;
+      right: 20px !important;
+      bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .work-summary {
+      padding-right: 0 !important;
+    }
+
+    .work-year {
+      justify-self: end !important;
+      text-align: right !important;
+      min-width: 0;
+    }
+
+    .works-list,
+    .work-list,
+    #worksList,
+    #seriesList {
+      padding-bottom: 32px;
+    }
+
+  
+
+  
+    /* TOP list column alignment */
+    .work-summary,
+    .list-header {
+      grid-template-columns: 4.5em minmax(0, 1fr) 9.5ch !important;
+      column-gap: 1em !important;
+      align-items: baseline;
+    }
+
+    .work-no {
+      text-align: left !important;
+      justify-self: start !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .work-year {
+      width: 9.5ch !important;
+      min-width: 9.5ch !important;
+      justify-self: start !important;
+      text-align: left !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .list-header .work-year,
+    .list-header button[data-sort="year"],
+    .list-header button[data-sort="startDate"] {
+      width: 9.5ch !important;
+      min-width: 9.5ch !important;
+      justify-self: start !important;
+      text-align: left !important;
+    }
+
+      input[type="hidden"],
+    textarea.entry-hidden {
+      display: none !important;
+    }
+
+  
+    .fixed-copyright-mark {
+      position: fixed !important;
+      left: 20px !important;
+      bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      z-index: 20;
+      pointer-events: none;
+      font-size: 10px;
+      line-height: 1;
+      color: var(--sub);
+      letter-spacing: 0.04em;
+    }
+
+  
+    .app.is-locked {
+      display: none;
+    }
+
+    .auth-gate {
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      padding: 72px 20px;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .auth-card {
+      width: min(100%, 420px);
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+    }
+
+    .auth-card h1 {
+      margin: 0 0 28px;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    .auth-note,
+    .auth-message {
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .auth-card label {
+      display: block;
+      margin-top: 18px;
+      color: var(--sub);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .auth-card input {
+      width: 100%;
+      margin-top: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 16px;
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+  
+
+    .logo-entry-preview,
+    .logo-detail-preview {
+      width: 100%;
+      display: block;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--sub);
+      padding: 0;
+      overflow: visible;
+      font-size: 12px;
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-entry-preview img,
+    .logo-detail-preview img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: none;
+      margin: 0;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    html[data-theme="dark"] .logo-entry-preview img,
+    html[data-theme="dark"] .logo-detail-preview img {
       filter: invert(1);
     }
 
-    .image-row {
+    .detail-row.logo-detail-row {
       display: block;
+      grid-template-columns: none;
       margin: 0 0 8px calc(88px + 10px);
+      padding: 0;
       width: calc(100% - 88px - 10px);
     }
 
-    .image-gallery {
-      display: grid;
-      gap: 2em;
-      width: 100%;
+    .detail-row.logo-detail-row .detail-key {
+      display: none;
     }
 
-    .image-card img {
+    .detail-row.logo-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+    }
+
+    .logo-entry-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .logo-entry-note {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .logo-file-input {
+      margin-top: 8px;
+      font-size: 13px;
+      border-style: dashed;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      min-width: 0;
+    }
+
+    .image-entry-preview {
+      margin-top: 8px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface-soft);
+      padding: 12px;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .image-entry-preview img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: var(--radius);
+      border-radius: var(--radius-small);
+    }
+
+    .image-entry-actions,
+    .image-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .image-entry-note {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .image-file-input {
+      margin-top: 8px;
+      font-size: 13px;
+      border-style: dashed;
+    }
+
+    .work-image-gallery {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .work-image-card {
+      width: 100%;
+    }
+
+    .work-image-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
       border: 1px solid var(--line);
       background: var(--surface-soft);
     }
 
-    .image-caption {
+    .work-image-caption {
+      margin-top: 5px;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .work-image-cover {
+      display: inline-block;
+      margin-left: 7px;
+      border: 1px solid var(--deep);
+      border-radius: 999px;
+      padding: 0 7px;
+      color: var(--deep);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
+    .detail-row.image-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 8px calc(88px + 10px);
+      padding: 0;
+      width: calc(100% - 88px - 10px);
+    }
+
+    .detail-row.image-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.image-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery {
+      width: 100%;
+      gap: 2em;
+    }
+
+    .detail-row.image-detail-row .work-image-caption {
+      text-align: center;
       margin-top: 6px;
       color: var(--sub);
       font-size: 11px;
       line-height: 1.65;
-      text-align: center;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
     }
 
-    .empty,
-    .status {
-      border-top: 1px solid var(--line);
-      padding: 16px 0;
+    .detail-row.cover-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 10px calc(88px + 10px);
+      padding: 0;
+      width: calc(100% - 88px - 10px);
+    }
+
+    .detail-row.cover-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.cover-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .cover-detail-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .detail-row.logo-detail-row {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      margin: 0;
+      padding: 0;
+      width: auto;
+    }
+
+    .detail-row.logo-detail-row .detail-key {
+      display: block;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview {
+      width: 100px;
+      max-width: 100%;
+      display: block;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview img {
+      width: 100px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .detail-row.cover-detail-row {
+      margin-bottom: 1em;
+    }
+
+    .detail-row.logo-detail-row {
+      align-items: start;
+      margin-bottom: 1em;
+    }
+
+    .detail-row.logo-detail-row .detail-key {
+      line-height: 1;
+      padding-top: 0;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      line-height: 1;
+      padding-top: 0;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview {
+      width: 150px;
+      max-width: 100%;
+      line-height: 1;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview img {
+      width: 150px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview {
+      width: 50%;
+      max-width: 50%;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0;
+    }
+
+  
+
+    .portfolio-note {
       color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
     }
 
-    .footer {
-      margin-top: 34px;
-      padding-top: 10px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .portfolio-disabled {
+      opacity: 0.35;
+      pointer-events: none;
     }
 
-    @media (max-width: 560px) {
-      .page {
-        padding: 18px 18px 48px;
-      }
+    .portfolio-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-      .topbar {
-        grid-template-columns: 1fr;
-      }
+    .work-detail .detail-actions {
+      display: none;
+    }
 
-      .top-actions {
-        justify-content: flex-start;
-      }
-
-      .work-summary {
-        grid-template-columns: 44px minmax(0, 1fr) 70px;
-        gap: 9px;
-      }
-
-      .detail-row {
-        grid-template-columns: 78px minmax(0, 1fr);
-        gap: 9px;
-      }
-
-      .cover-row,
-      .image-row {
-        margin-left: calc(78px + 9px);
-        width: calc(100% - 78px - 9px);
-      }
+    .fixed-version-mark {
+      right: 20px;
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <header class="topbar">
-      <div class="brand">
-        <img class="brand-mark" src="../admin/assets/wsv-logo.svg" alt="WSV">
-        <h1 class="brand-title">(VAMRSS) WORKSHEET VAULT SYSTEM</h1>
-        <p class="brand-subtitle">PUBLIC PORTFOLIO</p>
-      </div>
-      <div class="top-actions">
-        <button class="text-button selected" type="button" id="themeButton">THEME</button>
-        <a class="text-button" href="../admin/">ADMIN</a>
-      </div>
-    </header>
+  <main class="app">
+    <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
+    <div class="fixed-version-mark">v3.0.1</div>
 
-    <section class="section-head">
-      <h2 class="section-title">Works</h2>
-      <div class="count" id="count">Loading</div>
+    <section id="worksScreen" class="screen active">
+      <div class="topbar">
+        <h1 class="site-title">
+          <button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+            <img class="site-logo-img" src="../admin/assets/wsv-logo.svg" alt="(VAMRSS) WSV">
+          </button>
+        </h1>
+        <nav class="text-nav">
+          <button class="text-button" type="button" onclick="setListMode('works')" id="navWorksButton">WORKS</button>
+          <button class="text-button" type="button" onclick="setListMode('series')" id="navSeriesButton">SERIES</button>
+          <a class="text-button" href="../admin/">ADMIN</a>
+        </nav>
+      </div>
+
+      <div class="link-list mode-switch" style="margin-bottom: 9px;">
+        <button class="text-button selected" type="button" id="worksModeButton" onclick="setListMode('works')">WORKS</button>
+        <button class="text-button" type="button" id="seriesModeButton" onclick="setListMode('series')">SERIES</button>
+      </div>
+
+      <div class="filter-area" id="worksFilterArea">
+        <div class="link-list bracket-switch" id="techniqueLinks"></div>
+      </div>
+
+      <div class="search-line utility-line">
+        <button class="text-button" type="button" onclick="toggleStatusPanel()" id="statusPanelText">＋</button>
+        <div class="inline-search-wrap" id="inlineSearchWrap">
+          <input id="searchInput" type="search" placeholder="search">
+        </div>
+        <button class="text-button" type="button" onclick="clearFilters()">RESET</button>
+      </div>
+
+      <div class="collapsible" id="statusPanel">
+        <div class="link-list bracket-switch" id="productionLinks"></div>
+        <div class="link-list bracket-switch" id="managementLinks"></div>
+      </div>
+
+      <div class="list-head">
+        <button class="text-button" type="button" onclick="setSort('workNo')">#<span id="sortMarkWorkNo"></span></button>
+        <button class="text-button" type="button" onclick="setSort('title')">TITLE<span id="sortMarkTitle"></span></button>
+        <button class="text-button" type="button" onclick="setSort('year')">DONE<span id="sortMarkYear"></span></button>
+      </div>
+
+      <div id="status" class="portfolio-note">公開作品を読み込み中です。</div>
+      <div id="workList" class="list"></div>
     </section>
-
-    <div class="filters" id="seriesFilters"></div>
-
-    <div class="search-row">
-      <input id="searchInput" type="search" placeholder="Search">
-    </div>
-
-    <section id="status" class="status">公開作品を読み込み中です。</section>
-    <section id="workList" class="work-list"></section>
-
-    <footer class="footer">WSV PORTFOLIO / READ ONLY / v3.0.0</footer>
   </main>
 
   <script>
     const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
     const WSV_ASSET_BUCKET = "wsv-assets";
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const cloudClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
     let works = [];
     let seriesRecords = [];
-    let assets = [];
-    let activeSeries = "ALL";
+    let cloudAssets = [];
+    let activeListMode = "works";
+    let activeTechnique = "ALL";
+    let activeProduction = "ALL";
+    let activeManagement = "ALL";
+    let sortKey = "workNo";
+    let sortDirection = "asc";
+
+    const PRODUCTION_STATUSES = ["制作中", "完成", "制作終了"];
+    const MANAGEMENT_STATUSES = ["保管中", "売却済", "譲渡済", "貸出中", "処分済"];
 
     const workList = document.getElementById("workList");
-    const statusEl = document.getElementById("status");
-    const countEl = document.getElementById("count");
     const searchInput = document.getElementById("searchInput");
-    const seriesFilters = document.getElementById("seriesFilters");
-    const themeButton = document.getElementById("themeButton");
+    const statusEl = document.getElementById("status");
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -464,28 +2117,35 @@
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
 
-    function normalizeNo(value) {
+    function normalizeWorkNo(value) {
       const digits = String(value ?? "").replace(/\D/g, "").slice(0, 4);
       return digits ? digits.padStart(4, "0") : "";
     }
 
-    function publicUrl(path) {
+    function normalizeStatuses(work = {}) {
+      return {
+        productionStatus: work.production_status || work.productionStatus || "",
+        managementStatus: work.management_status || work.managementStatus || ""
+      };
+    }
+
+    function cloudAssetPublicUrl(path) {
       if (!path) return "";
-      const { data } = client.storage.from(WSV_ASSET_BUCKET).getPublicUrl(path);
+      const { data } = cloudClient.storage.from(WSV_ASSET_BUCKET).getPublicUrl(path);
       return data && data.publicUrl ? data.publicUrl : "";
     }
 
     function formatMoney(value) {
       if (value === null || value === undefined || value === "") return "";
-      const number = Number(value);
-      if (!Number.isFinite(number)) return String(value);
-      return "¥" + Math.round(number).toLocaleString("ja-JP");
+      const n = Number(value);
+      if (!Number.isFinite(n)) return String(value);
+      return "¥" + Math.round(n).toLocaleString("ja-JP");
     }
 
-    function formatDimensions(work) {
-      const h = work.size_h ?? "";
-      const w = work.size_w ?? "";
-      const d = work.size_d ?? "";
+    function formatDimensions(work = {}) {
+      const h = work.size_h ?? work.sizeH ?? "";
+      const w = work.size_w ?? work.sizeW ?? "";
+      const d = work.size_d ?? work.sizeD ?? "";
       const parts = [];
       if (h !== "" && h !== null) parts.push("H" + h);
       if (w !== "" && w !== null) parts.push("W" + w);
@@ -493,215 +2153,465 @@
       return parts.length ? parts.join(" × ") + " mm" : "";
     }
 
-    function seriesTitle(series) {
-      if (!series) return "";
-      return series.title || series.title_en || series.code || normalizeNo(series.series_no);
-    }
-
-    function seriesForWork(work) {
-      return seriesRecords.find(series => series.id === work.series_id) || null;
-    }
-
-    function workTitle(work) {
+    function workTitle(work = {}) {
       return work.title || work.title_en || "Untitled";
     }
 
-    function workDescription(work) {
+    function workDescription(work = {}) {
       return work.description || "";
     }
 
-    function workAssets(work, type) {
-      return assets
-        .filter(asset => asset.work_id === work.id && asset.asset_type === type)
+    function normalizeProductionDate(work = {}) {
+      return work.start_date || "";
+    }
+
+    function seriesTitle(series = {}) {
+      return series.title || series.title_en || series.code || normalizeWorkNo(series.series_no) || "";
+    }
+
+    function seriesLabel(series = {}) {
+      if (!series) return "";
+      const code = series.code ? series.code + " / " : "";
+      return code + seriesTitle(series);
+    }
+
+    function getSeriesRecordForWork(work = {}) {
+      return seriesRecords.find(series => series.id === work.series_id) || null;
+    }
+
+    function getSeriesRecordByTitle(title) {
+      return seriesRecords.find(series => seriesTitle(series) === title || seriesLabel(series) === title) || null;
+    }
+
+    function findLogoAsset(kind, record = {}) {
+      if (!record) return null;
+      const assetType = kind === "series" ? "series_logo" : "work_logo";
+      const id = record.logo_asset_id || record.logoAssetId || "";
+      if (id) {
+        const byId = cloudAssets.find(asset => asset.id === id && asset.asset_type === assetType);
+        if (byId) return byId;
+      }
+      if (kind === "series") return cloudAssets.find(asset => asset.series_id === record.id && asset.asset_type === assetType) || null;
+      return cloudAssets.find(asset => asset.work_id === record.id && asset.asset_type === assetType) || null;
+    }
+
+    function findWorkImageAssets(work = {}) {
+      if (!work || !work.id) return [];
+      return cloudAssets
+        .filter(asset => asset.work_id === work.id && asset.asset_type === "work_image")
         .sort((a, b) => {
           if (Boolean(a.is_cover) !== Boolean(b.is_cover)) return a.is_cover ? -1 : 1;
-          return Number(a.sort_order || 0) - Number(b.sort_order || 0);
+          return Number(a.sort_order || 0) - Number(b.sort_order || 0) || String(a.created_at || "").localeCompare(String(b.created_at || ""));
         });
     }
 
-    function logoAsset(work) {
-      const byId = work.logo_asset_id ? assets.find(asset => asset.id === work.logo_asset_id && asset.asset_type === "work_logo") : null;
-      return byId || workAssets(work, "work_logo")[0] || null;
+    function findCoverImageAsset(work = {}) {
+      if (!work) return null;
+      const coverId = work.cover_asset_id || "";
+      if (coverId) {
+        const byId = cloudAssets.find(asset => asset.id === coverId && asset.asset_type === "work_image");
+        if (byId) return byId;
+      }
+      return findWorkImageAssets(work).find(asset => asset.is_cover) || findWorkImageAssets(work)[0] || null;
     }
 
-    function imageAssets(work) {
-      return workAssets(work, "work_image");
-    }
-
-    function coverAsset(work) {
-      const byId = work.cover_asset_id ? assets.find(asset => asset.id === work.cover_asset_id && asset.asset_type === "work_image") : null;
-      return byId || imageAssets(work).find(asset => asset.is_cover) || imageAssets(work)[0] || null;
-    }
-
-    function coverHtml(work) {
-      const asset = coverAsset(work);
-      if (!asset) return "";
-      const url = publicUrl(asset.storage_path);
-      if (!url) return "";
-      return `<div class="cover-row"><img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || workTitle(work))}"></div>`;
-    }
-
-    function logoHtml(work) {
-      const asset = logoAsset(work);
-      if (!asset) return "";
-      const url = publicUrl(asset.storage_path);
+    function coverImageDetailRowHtml(work = {}) {
+      const asset = findCoverImageAsset(work);
+      if (!asset || !asset.storage_path) return "";
+      const url = cloudAssetPublicUrl(asset.storage_path);
       if (!url) return "";
       return `
-        <div class="detail-row logo-row">
-          <div class="detail-key">LOGO</div>
-          <div class="detail-value"><div class="logo-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(workTitle(work) + " logo")}"></div></div>
-        </div>`;
+                <div class="detail-row cover-detail-row">
+                  <div class="detail-value"><img class="cover-detail-image" src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || workTitle(work))}"></div>
+                </div>`;
     }
 
-    function imagesHtml(work) {
-      const cover = coverAsset(work);
-      const images = imageAssets(work).filter(asset => !cover || asset.id !== cover.id);
+    function logoDetailRowHtml(kind, record = {}) {
+      const asset = findLogoAsset(kind, record);
+      const path = asset ? asset.storage_path : "";
+      if (!path) return "";
+      const url = cloudAssetPublicUrl(path);
+      if (!url) return "";
+      return `
+                <div class="detail-row logo-detail-row">
+                  <div class="detail-key">LOGO</div>
+                  <div class="detail-value"><div class="logo-detail-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div></div>
+                </div>`;
+    }
+
+    function workImagesDetailRowHtml(work = {}) {
+      const cover = findCoverImageAsset(work);
+      const images = findWorkImageAssets(work).filter(asset => !cover || asset.id !== cover.id);
       if (!images.length) return "";
       return `
-        <div class="image-row">
-          <div class="image-gallery">
-            ${images.map(asset => {
-              const url = publicUrl(asset.storage_path);
-              if (!url) return "";
-              const caption = asset.caption || "";
-              return `
-                <div class="image-card">
-                  <img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || caption || workTitle(work))}">
-                  ${caption ? `<div class="image-caption">${escapeHtml(caption)}</div>` : ""}
+                <div class="detail-row image-detail-row">
+                  <div class="detail-value">
+                    <div class="work-image-gallery">
+                      ${images.map(asset => {
+                        const url = cloudAssetPublicUrl(asset.storage_path);
+                        if (!url) return "";
+                        const caption = escapeHtml(asset.caption || "");
+                        return `
+                          <div class="work-image-card">
+                            <img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || asset.caption || workTitle(work))}">
+                            ${caption ? `<div class="work-image-caption">${caption}</div>` : ""}
+                          </div>`;
+                      }).join("")}
+                    </div>
+                  </div>
                 </div>`;
-            }).join("")}
-          </div>
-        </div>`;
     }
 
-    function row(label, value) {
+    function row(key, value) {
       if (value === null || value === undefined || String(value).trim() === "") return "";
-      return `<div class="detail-row"><div class="detail-key">${escapeHtml(label)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`;
+      return `<div class="detail-row"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`;
     }
 
-    function detailHtml(work) {
-      const series = seriesForWork(work);
-      const price = work.price_ask ? "ASK" : formatMoney(work.price_amount);
+    function seriesLinkHtml(seriesTitleText) {
+      return escapeHtml(seriesTitleText || "");
+    }
+
+    function workDetailHtml(work = {}) {
+      const statuses = normalizeStatuses(work);
+      const priceText = work.price_ask ? "ASK" : formatMoney(work.price_amount);
+      const costText = formatMoney(work.cost_amount);
+      const workNo = normalizeWorkNo(work.work_no);
+      const series = getSeriesRecordForWork(work);
       return `
-        <div class="detail-grid">
-          ${coverHtml(work)}
-          ${logoHtml(work)}
-          ${row("#", normalizeNo(work.work_no))}
-          ${row("Title", work.title)}
-          ${row("Title EN", work.title_en)}
-          ${row("Start", work.start_date)}
-          ${row("Completed", work.completed_date)}
-          ${row("Series", seriesTitle(series))}
-          ${row("Production", work.production_status)}
-          ${row("Management", work.management_status)}
-          ${row("Technique", work.technique)}
-          ${row("Materials", work.materials)}
-          ${row("Size", formatDimensions(work))}
-          ${row("Price", price)}
-          ${row("Location", work.location)}
-          ${row("Owner", work.holder_name)}
-          ${row("Description", workDescription(work))}
-          ${row("Description EN", work.description_en)}
-          ${imagesHtml(work)}
-        </div>`;
+              <div class="detail-grid">
+                ${coverImageDetailRowHtml(work)}
+                ${logoDetailRowHtml("work", work)}
+                ${row("#", workNo)}
+                ${row("Title", work.title)}
+                ${row("Title EN", work.title_en)}
+                ${row("Start", normalizeProductionDate(work))}
+                ${row("Completed", work.completed_date)}
+                ${row("Series", seriesLabel(series))}
+                ${row("Production", statuses.productionStatus)}
+                ${row("Management", statuses.managementStatus)}
+                ${row("Technique", work.technique)}
+                ${row("Materials", work.materials)}
+                ${row("Size", formatDimensions(work))}
+                ${row("Price", priceText)}
+                ${row("Cost", costText)}
+                ${row("Location", work.location)}
+                ${row("Owner", work.holder_name)}
+                ${row("Description", workDescription(work))}
+                ${row("Description EN", work.description_en)}
+                ${workImagesDetailRowHtml(work)}
+              </div>`;
     }
 
-    function filterWorks() {
-      const query = searchInput.value.trim().toLowerCase();
-      return works
-        .filter(work => activeSeries === "ALL" || work.series_id === activeSeries)
-        .filter(work => {
-          if (!query) return true;
-          const series = seriesForWork(work);
-          return [
-            normalizeNo(work.work_no),
-            work.title,
-            work.title_en,
-            work.start_date,
-            work.completed_date,
-            seriesTitle(series),
-            work.production_status,
-            work.management_status,
-            work.technique,
-            work.materials,
-            formatDimensions(work),
-            work.location,
-            work.holder_name,
-            work.description,
-            work.description_en
-          ].some(value => String(value || "").toLowerCase().includes(query));
-        })
-        .sort((a, b) => normalizeNo(a.work_no).localeCompare(normalizeNo(b.work_no), "ja", { numeric: true }));
+    function compareWorks(a, b) {
+      let av = "";
+      let bv = "";
+      if (sortKey === "workNo") {
+        av = normalizeWorkNo(a.work_no);
+        bv = normalizeWorkNo(b.work_no);
+      } else if (sortKey === "title") {
+        av = workTitle(a);
+        bv = workTitle(b);
+      } else if (sortKey === "year") {
+        av = String(a.completed_date || a.start_date || "");
+        bv = String(b.completed_date || b.start_date || "");
+      }
+      const result = av.localeCompare(bv, "ja", { numeric: true });
+      return sortDirection === "asc" ? result : -result;
     }
 
-    function renderFilters() {
-      const usedSeriesIds = new Set(works.map(work => work.series_id).filter(Boolean));
-      const options = seriesRecords.filter(series => usedSeriesIds.has(series.id));
-      const buttons = [
-        `<button class="text-button ${activeSeries === "ALL" ? "selected" : ""}" type="button" data-series="ALL">ALL</button>`,
-        ...options.map(series => `<button class="text-button ${activeSeries === series.id ? "selected" : ""}" type="button" data-series="${escapeAttr(series.id)}">${escapeHtml(series.code || normalizeNo(series.series_no))}</button>`)
-      ];
-      seriesFilters.innerHTML = buttons.join("");
-      seriesFilters.querySelectorAll("button").forEach(button => {
-        button.addEventListener("click", () => {
-          activeSeries = button.dataset.series || "ALL";
-          render();
-        });
+    function compareSeries(a, b) {
+      let av = "";
+      let bv = "";
+      if (sortKey === "workNo") {
+        av = normalizeWorkNo(a.series_no);
+        bv = normalizeWorkNo(b.series_no);
+      } else if (sortKey === "title") {
+        av = seriesTitle(a);
+        bv = seriesTitle(b);
+      } else if (sortKey === "year") {
+        av = String(a.start_date || "");
+        bv = String(b.start_date || "");
+      }
+      const result = av.localeCompare(bv, "ja", { numeric: true });
+      return sortDirection === "asc" ? result : -result;
+    }
+
+    function renderLinkButtons(id, options, active, handler) {
+      const wrap = document.getElementById(id);
+      if (!wrap) return;
+      wrap.innerHTML = [
+        `<button class="text-button ${active === "ALL" ? "selected" : ""}" type="button" data-value="ALL">ALL</button>`,
+        ...options.map(option => `<button class="text-button ${active === option ? "selected" : ""}" type="button" data-value="${escapeAttr(option)}">${escapeHtml(option)}</button>`)
+      ].join("");
+      wrap.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => handler(button.dataset.value || "ALL"));
       });
     }
 
-    function render() {
-      const filtered = filterWorks();
-      renderFilters();
-      countEl.textContent = String(filtered.length).padStart(2, "0");
-      statusEl.style.display = "none";
+    function renderFilters() {
+      const techniques = Array.from(new Set(works.map(w => w.technique).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ja"));
+      renderLinkButtons("techniqueLinks", techniques, activeTechnique, value => {
+        activeTechnique = value;
+        render();
+      });
+      renderLinkButtons("productionLinks", PRODUCTION_STATUSES, activeProduction, value => {
+        activeProduction = value;
+        render();
+      });
+      renderLinkButtons("managementLinks", MANAGEMENT_STATUSES, activeManagement, value => {
+        activeManagement = value;
+        render();
+      });
+    }
 
+    function renderSortMarks() {
+      const map = {
+        workNo: document.getElementById("sortMarkWorkNo"),
+        title: document.getElementById("sortMarkTitle"),
+        year: document.getElementById("sortMarkYear")
+      };
+      Object.entries(map).forEach(([key, el]) => {
+        if (!el) return;
+        el.className = "sort-mark " + (sortDirection === "desc" ? "desc" : "");
+        el.textContent = sortKey === key ? "△" : "";
+      });
+    }
+
+    function filteredWorks() {
+      const query = searchInput.value.trim().toLowerCase();
+      return works
+        .filter(w => activeTechnique === "ALL" || String(w.technique || "") === activeTechnique)
+        .filter(w => {
+          const statuses = normalizeStatuses(w);
+          return activeProduction === "ALL" || statuses.productionStatus === activeProduction;
+        })
+        .filter(w => {
+          const statuses = normalizeStatuses(w);
+          return activeManagement === "ALL" || statuses.managementStatus === activeManagement;
+        })
+        .filter(w => {
+          if (!query) return true;
+          const statuses = normalizeStatuses(w);
+          const series = getSeriesRecordForWork(w);
+          return [
+            normalizeWorkNo(w.work_no),
+            w.title,
+            w.title_en,
+            w.completed_date,
+            w.start_date,
+            seriesLabel(series),
+            statuses.productionStatus,
+            statuses.managementStatus,
+            w.technique,
+            w.materials,
+            formatDimensions(w),
+            w.location,
+            w.holder_name,
+            w.description,
+            w.description_en
+          ].some(value => String(value || "").toLowerCase().includes(query));
+        })
+        .sort(compareWorks);
+    }
+
+    function renderWorksList() {
+      renderFilters();
+      renderSortMarks();
+      const filtered = filteredWorks();
       if (!filtered.length) {
         workList.innerHTML = '<div class="empty">公開作品がありません。</div>';
         return;
       }
 
-      workList.innerHTML = filtered.map(work => {
-        const no = normalizeNo(work.work_no);
+      workList.innerHTML = filtered.map(w => {
+        const workNo = normalizeWorkNo(w.work_no);
         return `
-          <article class="work" id="work-${escapeAttr(work.id)}">
-            <button class="work-summary" type="button" data-work="${escapeAttr(work.id)}">
-              <div class="work-no">${escapeHtml(no)}</div>
-              <div class="work-title">${escapeHtml(workTitle(work))}</div>
-              <div class="work-year">${escapeHtml(work.completed_date || work.start_date || "")}</div>
+          <article class="work" id="work-${escapeAttr(w.id)}">
+            <button class="work-summary" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">
+              <div class="work-no">${escapeHtml(workNo)}</div>
+              <div class="work-title"><span class="title-scroll">${escapeHtml(workTitle(w))}</span></div>
+              <div class="work-year">${escapeHtml(w.completed_date || "")}</div>
             </button>
-            <div class="work-detail">${detailHtml(work)}</div>
-          </article>`;
+            <div class="work-detail">
+              ${workDetailHtml(w)}
+            </div>
+          </article>
+        `;
       }).join("");
-
-      workList.querySelectorAll(".work-summary").forEach(button => {
-        button.addEventListener("click", () => {
-          const item = document.getElementById("work-" + button.dataset.work);
-          if (item) item.classList.toggle("open");
-        });
-      });
     }
+
+    function renderSeriesList() {
+      renderFilters();
+      renderSortMarks();
+      const query = searchInput.value.trim().toLowerCase();
+      const publicWorkSeriesIds = new Set(works.map(w => w.series_id).filter(Boolean));
+      const filtered = seriesRecords
+        .filter(s => publicWorkSeriesIds.has(s.id))
+        .filter(s => {
+          if (!query) return true;
+          return [
+            normalizeWorkNo(s.series_no),
+            s.code,
+            s.title,
+            s.title_en,
+            s.start_date,
+            s.description,
+            s.description_en
+          ].some(value => String(value || "").toLowerCase().includes(query));
+        })
+        .sort(compareSeries);
+
+      if (!filtered.length) {
+        workList.innerHTML = '<div class="empty">公開シリーズがありません。</div>';
+        return;
+      }
+
+      workList.innerHTML = filtered.map(s => {
+        const no = normalizeWorkNo(s.series_no);
+        const relatedWorks = works
+          .filter(w => w.series_id === s.id)
+          .sort(compareWorks);
+
+        return `
+          <article class="work" id="series-${escapeAttr(s.id)}">
+            <button class="work-summary" type="button" onclick="toggleSeries('${escapeAttr(s.id)}')">
+              <div class="work-no">${escapeHtml(no)}</div>
+              <div class="work-title"><span class="title-scroll">${escapeHtml(s.code ? s.code + " / " : "")}${escapeHtml(seriesTitle(s))}</span></div>
+              <div class="work-year">${escapeHtml(s.start_date || "")}</div>
+            </button>
+            <div class="work-detail">
+              <div class="detail-grid">
+                ${logoDetailRowHtml("series", s)}
+                ${row("#", no)}
+                ${row("Code", s.code)}
+                ${row("Title", s.title)}
+                ${row("Title EN", s.title_en)}
+                ${row("Start", s.start_date)}
+                ${row("Description", s.description)}
+                ${row("Description EN", s.description_en)}
+                ${row("Works", String(relatedWorks.length))}
+              </div>
+              ${relatedWorks.length ? `
+                <div class="detail-grid">
+                  ${relatedWorks.map(w => `
+                    <div class="detail-row">
+                      <div class="detail-key">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
+                      <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('series-${escapeAttr(s.id)}', '${escapeAttr(w.id)}')">${escapeHtml(workTitle(w))}</button></div>
+                    </div>
+                    <div id="series-${escapeAttr(s.id)}-work-${escapeAttr(w.id)}"></div>
+                  `).join("")}
+                </div>
+              ` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function render() {
+      const isSeries = activeListMode === "series";
+      document.getElementById("worksModeButton").classList.toggle("selected", !isSeries);
+      document.getElementById("seriesModeButton").classList.toggle("selected", isSeries);
+      document.getElementById("navWorksButton").classList.toggle("selected", !isSeries);
+      document.getElementById("navSeriesButton").classList.toggle("selected", isSeries);
+      document.getElementById("worksFilterArea").style.display = isSeries ? "none" : "grid";
+      const headerButtons = document.querySelectorAll(".list-head .text-button");
+      if (headerButtons[2]) headerButtons[2].firstChild.nodeValue = isSeries ? "START" : "DONE";
+      const productionLinks = document.getElementById("productionLinks");
+      const managementLinks = document.getElementById("managementLinks");
+      if (productionLinks) productionLinks.style.display = isSeries ? "none" : "flex";
+      if (managementLinks) managementLinks.style.display = isSeries ? "none" : "flex";
+      if (isSeries) renderSeriesList();
+      else renderWorksList();
+    }
+
+    window.toggleWork = function(id) {
+      const target = document.getElementById("work-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.toggleSeries = function(id) {
+      const target = document.getElementById("series-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.toggleNestedWork = function(hostId, workId) {
+      const target = document.getElementById(`${hostId}-work-${workId}`);
+      const w = works.find(item => item.id === workId);
+      if (!target || !w) return;
+
+      if (target.dataset.open === "1") {
+        target.innerHTML = "";
+        target.dataset.open = "";
+        return;
+      }
+
+      target.dataset.open = "1";
+      target.innerHTML = `
+        <div class="inline-expanded" style="margin-top:1em; margin-bottom:1em;">
+          ${workDetailHtml(w)}
+        </div>
+      `;
+    };
+
+    window.setListMode = function(mode) {
+      activeListMode = mode === "series" ? "series" : "works";
+      render();
+    };
+
+    window.setSort = function(key) {
+      if (sortKey === key) sortDirection = sortDirection === "asc" ? "desc" : "asc";
+      else {
+        sortKey = key;
+        sortDirection = "asc";
+      }
+      render();
+    };
+
+    window.toggleStatusPanel = function() {
+      const panel = document.getElementById("statusPanel");
+      const text = document.getElementById("statusPanelText");
+      const open = panel.classList.toggle("open");
+      text.textContent = open ? "−" : "＋";
+    };
+
+    window.clearFilters = function() {
+      activeTechnique = "ALL";
+      activeProduction = "ALL";
+      activeManagement = "ALL";
+      searchInput.value = "";
+      render();
+    };
+
+    window.toggleTheme = function() {
+      const root = document.documentElement;
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("wsvPortfolioTheme", next);
+    };
+
+    searchInput.addEventListener("input", render);
 
     async function loadPortfolio() {
       try {
         statusEl.textContent = "公開作品を読み込み中です。";
 
         const [seriesResult, worksResult, assetsResult] = await Promise.all([
-          client
+          cloudClient
             .from("wsv_series")
-            .select("id,series_no,code,title,title_en,start_date,description,description_en,is_public,sort_order")
+            .select("id,series_no,code,title,title_en,start_date,description,description_en,logo_asset_id,is_public,sort_order")
             .eq("is_public", true)
             .order("series_no", { ascending: true }),
-          client
+          cloudClient
             .from("wsv_works")
-            .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,materials,size_h,size_w,size_d,price_amount,price_ask,location,holder_name,description,description_en,logo_asset_id,cover_asset_id,is_public,sort_order")
+            .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,materials,size_h,size_w,size_d,price_amount,price_ask,cost_amount,location,holder_name,description,description_en,logo_asset_id,cover_asset_id,is_public,sort_order")
             .eq("is_public", true)
             .order("work_no", { ascending: true }),
-          client
+          cloudClient
             .from("wsv_assets")
             .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at")
             .eq("is_public", true)
-            .in("asset_type", ["work_logo", "work_image", "series_logo"])
+            .in("asset_type", ["work_logo", "series_logo", "work_image"])
         ]);
 
         if (seriesResult.error) throw seriesResult.error;
@@ -710,25 +2620,15 @@
 
         seriesRecords = seriesResult.data || [];
         works = worksResult.data || [];
-        assets = assetsResult.data || [];
+        cloudAssets = assetsResult.data || [];
 
+        statusEl.style.display = "none";
         render();
       } catch (error) {
         console.error(error);
-        statusEl.style.display = "block";
-        statusEl.textContent = "公開作品を読み込めませんでした。公開設定またはSupabaseのRLS設定をご確認ください。";
-        countEl.textContent = "Error";
+        statusEl.textContent = "公開作品を読み込めませんでした。公開設定またはRLSをご確認ください。";
       }
     }
-
-    themeButton.addEventListener("click", () => {
-      const root = document.documentElement;
-      const next = root.dataset.theme === "dark" ? "light" : "dark";
-      root.dataset.theme = next;
-      localStorage.setItem("wsvPortfolioTheme", next);
-    });
-
-    searchInput.addEventListener("input", render);
 
     const savedTheme = localStorage.getItem("wsvPortfolioTheme");
     if (savedTheme === "dark" || savedTheme === "light") {

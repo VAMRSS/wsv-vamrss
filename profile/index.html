@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>PROFILE | (VAMRSS) WORKSHEET VAULT SYSTEM</title>
+  <title>ABOUT | (VAMRSS) WORKSHEET VAULT SYSTEM</title>
   <style>
 
 
@@ -2156,12 +2156,40 @@
       color: var(--sub);
     }
 
+    .social-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .social-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 16px;
+      line-height: 1.9;
+    }
+
+    .profile-value-block {
+      gap: 0 !important;
+    }
+
+    .items .item.expanded {
+      border-top: 1px solid var(--line);
+    }
+
+    .items .item.expanded > .item-detail.open {
+      padding-top: 0;
+    }
+
+    .about-first-row {
+      margin-top: 1.9em;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.3.2</div>
+    <div class="fixed-version-mark">v3.3.5</div>
 
     <section id="profileScreen" class="screen active">
       <div class="topbar">
@@ -2176,41 +2204,16 @@
       </div>
 
       <div class="list-head">
-        <span>PROFILE</span>
+        <span>ABOUT</span>
       </div>
 
       <div class="items" id="profileItems">
         <article class="item expanded">
-          <button class="item-summary" type="button" aria-label="Profile">
-            <span class="item-no">0000</span>
-            <span class="item-title">VAMRSS</span>
-          </button>
-
-          <div class="item-detail open">
+<div class="item-detail open">
             <div class="profile-detail-card">
-              <div class="detail-row">
-                <div class="detail-key">#</div>
-                <div class="detail-value">0000</div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">TITLE</div>
-                <div class="detail-value">VAMRSS</div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">T_EN</div>
-                <div class="detail-value">VAMRSS</div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">TYPE</div>
-                <div class="detail-value">PROFILE / ABOUT</div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">START</div>
-                <div class="detail-value">----</div>
+<div class="detail-row about-first-row">
+                <div class="detail-key">NAME</div>
+                <div class="detail-value">しらすサラダ / SHIRASUSALAD</div>
               </div>
 
               <div class="detail-row">
@@ -2219,59 +2222,39 @@
               </div>
 
               <div class="detail-row">
-                <div class="detail-key">MEDIA</div>
-                <div class="detail-value">LED sign / Sculpture / Print / Electronics / Web / Archive</div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">CONTACT</div>
-                <div class="detail-value"><a class="profile-link" href="mailto:web@vamrss.com">web@vamrss.com</a></div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">LINK</div>
-                <div class="detail-value"><span class="profile-muted">Instagram / Website / Other links</span></div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">ABOUT</div>
+                <div class="detail-key">SOCIAL</div>
                 <div class="detail-value">
-                  <div class="profile-value-block">
-                    <p>VAMRSSは、架空の制度、団体、記録、管理システムなどをモチーフに、現実の情報管理やアーカイブの形式を作品として扱うプロジェクトです。</p>
-                    <p>作品は、LEDサイン、立体、印刷物、電子工作、Webシステム、テキストなど、複数の媒体を横断しながら制作されています。</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="detail-row">
-                <div class="detail-key">D_EN</div>
-                <div class="detail-value">
-                  <div class="profile-value-block">
-                    <p>VAMRSS is a project that treats fictional institutions, organizations, records, management systems, and archive formats as artistic materials.</p>
-                    <p>The works span LED signs, sculptural objects, printed matter, electronics, web systems, and text-based practices.</p>
+                  <div class="social-list">
+                    <div class="social-row">
+                      <span>X</span>
+                      <a class="profile-link" href="https://x.com/" target="_blank" rel="noopener noreferrer">https://x.com/</a>
+                    </div>
+                    <div class="social-row">
+                      <span>Instagram</span>
+                      <a class="profile-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">https://www.instagram.com/</a>
+                    </div>
+                    <div class="social-row">
+                      <span>note</span>
+                      <a class="profile-link" href="https://note.com/" target="_blank" rel="noopener noreferrer">https://note.com/</a>
+                    </div>
+                    <div class="social-row">
+                      <span>Blog</span>
+                      <a class="profile-link" href="https://vamrss.com/" target="_blank" rel="noopener noreferrer">https://vamrss.com/</a>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="detail-row">
                 <div class="detail-key">STATEMENT</div>
-                <div class="detail-value">
-                  <div class="profile-value-block">
-                    <p>ここに作家ステートメントを記載します。</p>
-                    <p>作品の背景、関心、制作姿勢、VAMRSSという名称やシステム性についての説明を入れる想定です。</p>
-                  </div>
-                </div>
+                <div class="detail-value">ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。ここに作家ステートメントを記載します。</div>
               </div>
 
               <div class="detail-row">
                 <div class="detail-key">EXHIBITION</div>
-                <div class="detail-value">
-                  <div class="profile-value-block">
-                    <p>2026　個展《Serendipity》 MONKEY GALLERY 東京・代官山</p>
-                    <p><span class="profile-muted">展示歴を追加</span></p>
-                  </div>
-                </div>
+                <div class="detail-value">2026　個展《Serendipity》 MONKEY GALLERY 東京・代官山</div>
               </div>
+
             </div>
           </div>
         </article>

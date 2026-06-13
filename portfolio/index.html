@@ -2172,7 +2172,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.4.1</div>
+    <div class="fixed-version-mark">v3.4.2</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2256,7 +2256,60 @@
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
 
-    function normalizeWorkNo(value) {
+    
+
+    function normalizeUrl(url = "") {
+      const raw = String(url || "").trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw)) return raw;
+      return "https://" + raw;
+    }
+
+    function normalizeRelatedLinks(links = []) {
+      if (!Array.isArray(links)) return [];
+      return links
+        .map((link, index) => {
+          const url = normalizeUrl(link.url || "");
+          if (!url) return null;
+          return {
+            id: link.id || "",
+            title: String(link.title || url).trim(),
+            url,
+            sortOrder: Number.isFinite(Number(link.sort_order ?? link.sortOrder)) ? Number(link.sort_order ?? link.sortOrder) : index,
+            isPublic: Boolean(link.is_public ?? link.isPublic)
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    }
+
+    function relatedLinksForWork(work = {}) {
+      return normalizeRelatedLinks(relatedLinks.filter(link => link.work_id === work.id));
+    }
+
+    function relatedLinksForSeries(series = {}) {
+      return normalizeRelatedLinks(relatedLinks.filter(link => link.series_id === series.id));
+    }
+
+    function relatedLinksSearchText(links = []) {
+      return normalizeRelatedLinks(links).map(link => `${link.title} ${link.url}`).join(" ");
+    }
+
+    function relatedLinksDetailRowHtml(links = []) {
+      const clean = normalizeRelatedLinks(links);
+      if (!clean.length) return "";
+      return `
+                <div class="detail-row">
+                  <div class="detail-key">URL</div>
+                  <div class="detail-value">
+                    <div class="related-link-list">
+                      ${clean.map(link => `<a class="related-link-item" href="${escapeAttr(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)} / ${escapeHtml(link.url)}</a>`).join("")}
+                    </div>
+                  </div>
+                </div>`;
+    }
+
+function normalizeWorkNo(value) {
       const digits = String(value ?? "").replace(/\D/g, "").slice(0, 4);
       return digits ? digits.padStart(4, "0") : "";
     }
@@ -2786,7 +2839,7 @@
         }
 
         statusEl.style.display = "none";
-        render();
+        safeRender();
       } catch (error) {
         console.error(error);
         statusEl.textContent = "公開作品を読み込めませんでした。公開設定またはRLSをご確認ください。";

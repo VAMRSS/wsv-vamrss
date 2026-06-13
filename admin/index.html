@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.3.1.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.4.0.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2007,6 +2007,30 @@
       color: var(--sub) !important;
     }
 
+    .related-link-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .related-link-item {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1.9;
+      word-break: break-all;
+    }
+
+    .related-link-item:hover {
+      text-decoration: underline;
+    }
+
+    .related-link-note {
+      margin: 4px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
   </style>
 </head>
 <body>
@@ -2032,7 +2056,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.3.1</div>
+  <div class="fixed-version-mark">v3.4.0</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -2255,6 +2279,15 @@
             </div>
           </div>
 
+
+          <div class="entry-row">
+            <div class="field">
+              <label for="relatedLinks">URL / 関連記事</label>
+              <textarea id="relatedLinks" placeholder="記事タイトル | https://example.com"></textarea>
+              <p class="related-link-note">1行に1件ずつ「記事タイトル | URL」で登録します。</p>
+            </div>
+          </div>
+
           <textarea id="memo" class="entry-hidden"></textarea>
         </div>
 
@@ -2322,6 +2355,14 @@
             <label for="seriesDescriptionEn">D_EN / 説明文英語</label>
             <textarea id="seriesDescriptionEn" placeholder=""></textarea>
           </div>
+
+
+          <div class="field">
+            <label for="seriesRelatedLinks">URL / 関連記事</label>
+            <textarea id="seriesRelatedLinks" placeholder="記事タイトル | https://example.com"></textarea>
+            <p class="related-link-note">1行に1件ずつ「記事タイトル | URL」で登録します。</p>
+          </div>
+
 
           <input id="seriesTitle" type="hidden" value="">
           <textarea id="seriesDescription" class="entry-hidden"></textarea>
@@ -3039,6 +3080,7 @@
       exhibitionSelect: document.getElementById("exhibitionSelect"),
       description: document.getElementById("description"),
       descriptionEn: document.getElementById("descriptionEn"),
+      relatedLinks: document.getElementById("relatedLinks"),
       memo: document.getElementById("memo")
     };
 
@@ -3060,6 +3102,86 @@
     function escapeAttr(text) {
       return escapeHtml(text).replaceAll("`", "&#096;");
     }
+
+    function normalizeUrl(url = "") {
+      const raw = String(url || "").trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw)) return raw;
+      return "https://" + raw;
+    }
+
+    function parseRelatedLinksText(text = "") {
+      return String(text || "")
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map((line, index) => {
+          let title = "";
+          let url = "";
+          if (line.includes("|")) {
+            const parts = line.split("|");
+            title = parts.shift().trim();
+            url = parts.join("|").trim();
+          } else if (/\s+https?:\/\//i.test(line)) {
+            const match = line.match(/^(.*?)\s+(https?:\/\/.+)$/i);
+            title = match ? match[1].trim() : "";
+            url = match ? match[2].trim() : line;
+          } else {
+            title = line;
+            url = line;
+          }
+          const normalizedUrl = normalizeUrl(url);
+          return normalizedUrl ? {
+            title: title || normalizedUrl,
+            url: normalizedUrl,
+            sortOrder: index,
+            isPublic: true
+          } : null;
+        })
+        .filter(Boolean);
+    }
+
+    function normalizeRelatedLinks(links = []) {
+      if (typeof links === "string") return parseRelatedLinksText(links);
+      if (!Array.isArray(links)) return [];
+      return links
+        .map((link, index) => {
+          const url = normalizeUrl(link.url || link.href || "");
+          if (!url) return null;
+          return {
+            id: link.id || "",
+            title: String(link.title || link.label || url).trim(),
+            url,
+            sortOrder: Number.isFinite(Number(link.sortOrder ?? link.sort_order)) ? Number(link.sortOrder ?? link.sort_order) : index,
+            isPublic: link.isPublic !== undefined ? Boolean(link.isPublic) : (link.is_public !== undefined ? Boolean(link.is_public) : true)
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    }
+
+    function relatedLinksToText(links = []) {
+      return normalizeRelatedLinks(links).map(link => `${link.title} | ${link.url}`).join("\n");
+    }
+
+    function relatedLinksSearchText(links = []) {
+      return normalizeRelatedLinks(links).map(link => `${link.title} ${link.url}`).join(" ");
+    }
+
+    function relatedLinksDetailRowHtml(links = []) {
+      const clean = normalizeRelatedLinks(links);
+      if (!clean.length) return "";
+      return `
+                <div class="detail-row">
+                  <div class="detail-key">URL</div>
+                  <div class="detail-value">
+                    <div class="related-link-list">
+                      ${clean.map(link => `<a class="related-link-item" href="${escapeAttr(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)} / ${escapeHtml(link.url)}</a>`).join("")}
+                    </div>
+                  </div>
+                </div>`;
+    }
+
 
     function workTitle(work = {}) {
       return String(work.title || work.titleJa || work.titleEn || "Untitled");
@@ -3405,6 +3527,22 @@
       if (result.error) throw result.error;
     }
 
+    async function updateRelatedLinksPublicByWorkId(workId, isPublic) {
+      const result = await cloudClient
+        .from("wsv_related_links")
+        .update({ is_public: Boolean(isPublic) })
+        .eq("work_id", workId);
+      if (result.error) throw result.error;
+    }
+
+    async function updateRelatedLinksPublicBySeriesId(seriesId, isPublic) {
+      const result = await cloudClient
+        .from("wsv_related_links")
+        .update({ is_public: Boolean(isPublic) })
+        .eq("series_id", seriesId);
+      if (result.error) throw result.error;
+    }
+
     window.setWorkPublic = async function(id, isPublic) {
       try {
         if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
@@ -3427,6 +3565,7 @@
         if (workResult.error) throw workResult.error;
 
         await updateAssetsPublicByWorkId(refreshedWork.id, isPublic);
+        await updateRelatedLinksPublicByWorkId(refreshedWork.id, isPublic);
 
         if (isPublic) {
           const linkedSeries = getSeriesRecordForWork(refreshedWork);
@@ -3437,6 +3576,7 @@
               .eq("id", linkedSeries.id);
             if (seriesResult.error) throw seriesResult.error;
             await updateAssetsPublicBySeriesId(linkedSeries.id, true);
+            await updateRelatedLinksPublicBySeriesId(linkedSeries.id, true);
             seriesRecords = seriesRecords.map(item => item.id === linkedSeries.id ? { ...item, isPublic: true } : item);
           }
         }
@@ -3479,6 +3619,7 @@
         if (seriesResult.error) throw seriesResult.error;
 
         await updateAssetsPublicBySeriesId(refreshedSeries.id, isPublic);
+        await updateRelatedLinksPublicBySeriesId(refreshedSeries.id, isPublic);
 
         seriesRecords = seriesRecords.map(item => item.id === refreshedSeries.id ? { ...item, isPublic: Boolean(isPublic) } : item);
 
@@ -3978,7 +4119,8 @@
           locationsList,
           exhibitionsList,
           workExhibitionsResult,
-          assetsResult
+          assetsResult,
+          relatedLinksResult
         ] = await Promise.all([
           cloudClient.from("wsv_series").select("*").order("series_no", { ascending: true }),
           cloudClient.from("wsv_works").select("*").order("work_no", { ascending: true }),
@@ -3986,14 +4128,39 @@
           cloudLoadCatalog("wsv_locations"),
           cloudLoadCatalog("wsv_exhibitions"),
           cloudClient.from("wsv_work_exhibitions").select("work_id, exhibition_id, wsv_exhibitions(name)"),
-          cloudClient.from("wsv_assets").select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at").in("asset_type", ["work_logo", "series_logo", "work_image"])
+          cloudClient.from("wsv_assets").select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at").in("asset_type", ["work_logo", "series_logo", "work_image"]),
+          cloudClient.from("wsv_related_links").select("id,target_type,work_id,series_id,title,url,sort_order,is_public,created_at,updated_at").order("sort_order", { ascending: true })
         ]);
 
         if (seriesResult.error) throw seriesResult.error;
         if (worksResult.error) throw worksResult.error;
         if (workExhibitionsResult.error) throw workExhibitionsResult.error;
         if (assetsResult.error) throw assetsResult.error;
+        if (relatedLinksResult.error) throw relatedLinksResult.error;
         cloudAssets = (assetsResult.data || []).map(normalizeCloudAsset);
+
+        const relatedLinksByWorkId = new Map();
+        const relatedLinksBySeriesId = new Map();
+        (relatedLinksResult.data || []).forEach(row => {
+          const link = {
+            id: row.id,
+            title: row.title || row.url || "",
+            url: normalizeUrl(row.url || ""),
+            sortOrder: Number.isFinite(Number(row.sort_order)) ? Number(row.sort_order) : 0,
+            isPublic: Boolean(row.is_public),
+            createdAt: row.created_at || "",
+            updatedAt: row.updated_at || ""
+          };
+          if (!link.url) return;
+          if (row.work_id) {
+            if (!relatedLinksByWorkId.has(row.work_id)) relatedLinksByWorkId.set(row.work_id, []);
+            relatedLinksByWorkId.get(row.work_id).push(link);
+          }
+          if (row.series_id) {
+            if (!relatedLinksBySeriesId.has(row.series_id)) relatedLinksBySeriesId.set(row.series_id, []);
+            relatedLinksBySeriesId.get(row.series_id).push(link);
+          }
+        });
 
         const seriesById = new Map();
         seriesRecords = (seriesResult.data || []).map(row => {
@@ -4007,6 +4174,7 @@
             description: row.description || "",
             descriptionEn: row.description_en || "",
             isPublic: Boolean(row.is_public),
+            relatedLinks: normalizeRelatedLinks(relatedLinksBySeriesId.get(row.id) || []),
             logoAssetId: row.logo_asset_id || "",
             coverAssetId: row.cover_asset_id || "",
             logoStoragePath: "",
@@ -4055,6 +4223,7 @@
             memo: row.description || "",
             exhibitionHistory: (exhibitionMap.get(row.id) || []).join("\n"),
             isPublic: Boolean(row.is_public),
+            relatedLinks: normalizeRelatedLinks(relatedLinksByWorkId.get(row.id) || []),
             logoAssetId: row.logo_asset_id || "",
             coverAssetId: row.cover_asset_id || "",
             logoStoragePath: "",
@@ -4251,6 +4420,49 @@
 
         if (links.length) {
           const { error } = await cloudClient.from("wsv_work_exhibitions").insert(links);
+          if (error) throw error;
+        }
+
+        await cloudClient.from("wsv_related_links").delete().eq("owner_id", cloudUser.id);
+
+        const relatedLinkPayload = [];
+
+        works.forEach(work => {
+          const workId = workIdByNo.get(normalizeWorkNo(work.workNo));
+          if (!workId) return;
+          normalizeRelatedLinks(work.relatedLinks || []).forEach((link, index) => {
+            relatedLinkPayload.push({
+              owner_id: cloudUser.id,
+              target_type: "work",
+              work_id: workId,
+              series_id: null,
+              title: link.title || link.url,
+              url: link.url,
+              sort_order: index,
+              is_public: Boolean(work.isPublic)
+            });
+          });
+        });
+
+        seriesRecords.forEach(series => {
+          const seriesId = seriesIdByNo.get(normalizeWorkNo(series.seriesNo));
+          if (!seriesId) return;
+          normalizeRelatedLinks(series.relatedLinks || []).forEach((link, index) => {
+            relatedLinkPayload.push({
+              owner_id: cloudUser.id,
+              target_type: "series",
+              work_id: null,
+              series_id: seriesId,
+              title: link.title || link.url,
+              url: link.url,
+              sort_order: index,
+              is_public: Boolean(series.isPublic)
+            });
+          });
+        });
+
+        if (relatedLinkPayload.length) {
+          const { error } = await cloudClient.from("wsv_related_links").insert(relatedLinkPayload);
           if (error) throw error;
         }
 
@@ -4696,6 +4908,7 @@
       updateManagementDependentFields();
       fields.priceAsk.checked = false;
       fields.price.disabled = false;
+      if (fields.relatedLinks) fields.relatedLinks.value = "";
       const workLogoFile = document.getElementById("workLogoFile");
       if (workLogoFile) workLogoFile.value = "";
       renderLogoControls("work");
@@ -4754,6 +4967,7 @@
         exhibitionHistory: currentExhibitions.join("\n"),
         description: fields.description.value.trim(),
         descriptionEn: fields.descriptionEn.value.trim(),
+        relatedLinks: parseRelatedLinksText(fields.relatedLinks ? fields.relatedLinks.value : ""),
         memo: fields.description.value.trim(),
         createdAt: existing.createdAt || nowIso(),
         updatedAt: nowIso()
@@ -4865,6 +5079,7 @@
             <div class="detail-row"><div class="detail-key">Cost</div><div class="detail-value">${escapeHtml(costText)}</div></div>
             <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
             <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+            ${relatedLinksDetailRowHtml(w.relatedLinks)}
             ${workImagesDetailRowHtml(w)}
             <div class="detail-actions">
               ${publicActionButtonHtml("work", w)}
@@ -4921,6 +5136,7 @@
             w.exhibitionHistory,
             w.description,
             w.descriptionEn,
+            relatedLinksSearchText(w.relatedLinks),
             w.memo
           ].some(value => String(value || "").toLowerCase().includes(query));
         })
@@ -4964,6 +5180,7 @@
                 <div class="detail-row"><div class="detail-key">Cost</div><div class="detail-value">${escapeHtml(costText)}</div></div>
                 <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
                 <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+                ${relatedLinksDetailRowHtml(w.relatedLinks)}
                 ${workImagesDetailRowHtml(w)}
               </div>
               <div class="detail-actions">
@@ -5036,6 +5253,7 @@
       setCurrentExhibitions(normalizeExhibitions(w.exhibitionHistory));
       fields.description.value = w.description || w.memo || "";
       fields.descriptionEn.value = w.descriptionEn || "";
+      if (fields.relatedLinks) fields.relatedLinks.value = relatedLinksToText(w.relatedLinks || []);
       fields.memo.value = w.description || w.memo || "";
       const workLogoFile = document.getElementById("workLogoFile");
       if (workLogoFile) workLogoFile.value = "";
@@ -5091,7 +5309,8 @@
       startDate: document.getElementById("seriesStartDate"),
       description: document.getElementById("seriesDescription"),
       descriptionJa: document.getElementById("seriesDescriptionJa"),
-      descriptionEn: document.getElementById("seriesDescriptionEn")
+      descriptionEn: document.getElementById("seriesDescriptionEn"),
+      relatedLinks: document.getElementById("seriesRelatedLinks")
     };
 
     function resetSeriesForm() {
@@ -5100,6 +5319,7 @@
       const seriesLogoFile = document.getElementById("seriesLogoFile");
       if (seriesLogoFile) seriesLogoFile.value = "";
       renderLogoControls("series");
+      if (seriesFields.relatedLinks) seriesFields.relatedLinks.value = "";
       document.getElementById("seriesSubmitButton").textContent = "SAVE";
       document.getElementById("seriesCancelButton").style.display = "none";
     }
@@ -5147,6 +5367,7 @@
         description: description || descriptionEn,
         descriptionJa: description,
         descriptionEn,
+        relatedLinks: parseRelatedLinksText(seriesFields.relatedLinks ? seriesFields.relatedLinks.value : ""),
         createdAt: existing.createdAt || nowIso(),
         updatedAt: nowIso()
       };
@@ -5189,7 +5410,8 @@
             s.startDate,
             s.descriptionJa,
             s.descriptionEn,
-            s.description
+            s.description,
+            relatedLinksSearchText(s.relatedLinks)
           ].some(value => String(value || "").toLowerCase().includes(query));
         })
         .sort(compareSeries);
@@ -5222,6 +5444,7 @@
                 <div class="detail-row"><div class="detail-key">Works</div><div class="detail-value">${escapeHtml(String(relatedWorks.length))}</div></div>
                 <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(s.description || s.descriptionJa || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(s.descriptionEn || "")}</div></div>
+                ${relatedLinksDetailRowHtml(s.relatedLinks)}
               </div>
               ${relatedWorks.length ? `
                 <div class="detail-grid">
@@ -5263,6 +5486,7 @@
       seriesFields.startDate.value = s.startDate || "";
       seriesFields.descriptionJa.value = s.description || s.descriptionJa || "";
       seriesFields.descriptionEn.value = s.descriptionEn || "";
+      if (seriesFields.relatedLinks) seriesFields.relatedLinks.value = relatedLinksToText(s.relatedLinks || []);
       const seriesLogoFile = document.getElementById("seriesLogoFile");
       if (seriesLogoFile) seriesLogoFile.value = "";
       renderLogoControls("series");
@@ -5760,7 +5984,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.3.1",
+        version: "minimal-text-v3.4.0",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

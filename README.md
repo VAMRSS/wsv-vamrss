@@ -1,18 +1,21 @@
-# WSV v3.1 Public Toggle
+# WSV v3.4.0 Related URL
 
-- `/admin/` has PUBLIC / PRIVATE buttons.
-- `/portfolio/` remains the admin-style public read-only portfolio.
+## Required first
 
-## PUBLIC behavior
+Run `/sql/wsv_related_links_patch_v3_4_0.sql` in Supabase SQL Editor.
 
-When a work is set to PUBLIC:
-- `wsv_works.is_public = true`
-- linked work logo and work images in `wsv_assets` are set to public
-- linked series is also set to public
-- linked series logo is also set to public
+## Changes
 
-When a work is set to PRIVATE:
-- `wsv_works.is_public = false`
-- linked work logo and work images are set to private
+- Adds URL / related article support for works and series.
+- Admin entry forms accept one URL per line:
+  - `Article title | https://example.com`
+- Admin and public detail views show the field as `URL`.
+- Links open in a new tab.
+- Public portfolio shows URLs only when the linked work/series is public.
 
-Series PUBLIC / PRIVATE controls only the series and series logo.
+## Files
+
+- `/admin/index.html`
+- `/portfolio/index.html`
+- `/profile/index.html`
+- `/sql/wsv_related_links_patch_v3_4_0.sql`

@@ -2124,7 +2124,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.2.0</div>
+    <div class="fixed-version-mark">v3.2.1</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2373,7 +2373,7 @@
                 ${logoDetailRowHtml("work", work)}
                 ${row("#", workNo)}
                 ${row("Title", work.title)}
-                ${row("Title EN", work.title_en)}
+                ${row("T_EN", work.title_en)}
                 ${row("Series", seriesLabel(series))}
                 ${row("Start", normalizeProductionDate(work))}
                 ${row("Completed", work.completed_date)}
@@ -2387,7 +2387,7 @@
                 ${row("Price", "*******")}
                 ${row("Cost", "*******")}
                 ${row("Description", workDescription(work))}
-                ${row("Description EN", work.description_en)}
+                ${row("D_EN", work.description_en)}
                 ${workImagesDetailRowHtml(work)}
               </div>`;
     }
@@ -2463,7 +2463,7 @@
       Object.entries(map).forEach(([key, el]) => {
         if (!el) return;
         el.className = "sort-mark " + (sortDirection === "desc" ? "desc" : "");
-        el.textContent = sortKey === key ? "△" : "";
+        el.textContent = sortKey === key ? "▽" : "";
       });
     }
 
@@ -2573,11 +2573,11 @@
                 ${row("#", no)}
                 ${row("Code", s.code)}
                 ${row("Title", s.title)}
-                ${row("Title EN", s.title_en)}
+                ${row("T_EN", s.title_en)}
                 ${row("Start", s.start_date)}
                 ${row("Works", String(relatedWorks.length))}
                 ${row("Description", s.description)}
-                ${row("Description EN", s.description_en)}
+                ${row("D_EN", s.description_en)}
               </div>
               ${relatedWorks.length ? `
                 <div class="detail-grid">

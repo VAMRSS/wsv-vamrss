@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.2.0.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.2.1.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2032,7 +2032,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.2.0</div>
+  <div class="fixed-version-mark">v3.2.1</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -2108,7 +2108,7 @@
 
           <div class="entry-row">
             <div class="field">
-              <label for="titleEn">Title EN / タイトル英語</label>
+              <label for="titleEn">T_EN / タイトル英語</label>
               <input id="titleEn" type="text" placeholder="">
             </div>
           </div>
@@ -2250,7 +2250,7 @@
 
           <div class="entry-row">
             <div class="field">
-              <label for="descriptionEn">Description EN / 説明文英語</label>
+              <label for="descriptionEn">D_EN / 説明文英語</label>
               <textarea id="descriptionEn" placeholder=""></textarea>
             </div>
           </div>
@@ -2298,7 +2298,7 @@
           </div>
 
           <div class="field">
-            <label for="seriesTitleEn">Title EN / シリーズ名英語</label>
+            <label for="seriesTitleEn">T_EN / シリーズ名英語</label>
             <input id="seriesTitleEn" type="text" placeholder="">
           </div>
 
@@ -2319,7 +2319,7 @@
           </div>
 
           <div class="field">
-            <label for="seriesDescriptionEn">Description EN / 説明文英語</label>
+            <label for="seriesDescriptionEn">D_EN / 説明文英語</label>
             <textarea id="seriesDescriptionEn" placeholder=""></textarea>
           </div>
 
@@ -4848,7 +4848,7 @@
           <div class="detail-grid">
             ${coverImageDetailRowHtml(w)}${logoDetailRowHtml("work", w)}<div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>
             <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(w.title || w.titleJa || "")}</div></div>
-            <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">T_EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
             <div class="detail-row"><div class="detail-key">Series</div><div class="detail-value">${seriesLinkHtml(w.series)}</div></div>
             <div id="inline-series-nested-${escapeAttr(hostId)}-${escapeAttr(w.id)}"></div>
             <div class="detail-row"><div class="detail-key">Start</div><div class="detail-value">${escapeHtml(normalizeProductionDate(w))}</div></div>
@@ -4864,7 +4864,7 @@
             <div class="detail-row"><div class="detail-key">Price</div><div class="detail-value">${escapeHtml(priceText)}</div></div>
             <div class="detail-row"><div class="detail-key">Cost</div><div class="detail-value">${escapeHtml(costText)}</div></div>
             <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
-            <div class="detail-row"><div class="detail-key">Description EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+            <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
             ${workImagesDetailRowHtml(w)}
             <div class="detail-actions">
               ${publicActionButtonHtml("work", w)}
@@ -4947,7 +4947,7 @@
               <div class="detail-grid">
                 ${coverImageDetailRowHtml(w)}${logoDetailRowHtml("work", w)}<div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(workNo)}</div></div>
                 <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(w.title || w.titleJa || "")}</div></div>
-                <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
+                <div class="detail-row"><div class="detail-key">T_EN</div><div class="detail-value">${escapeHtml(w.titleEn || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Series</div><div class="detail-value">${seriesLinkHtml(w.series)}</div></div>
                 <div id="inline-series-${escapeAttr(w.id)}"></div>
                 <div class="detail-row"><div class="detail-key">Start</div><div class="detail-value">${escapeHtml(normalizeProductionDate(w))}</div></div>
@@ -4963,7 +4963,7 @@
                 <div class="detail-row"><div class="detail-key">Price</div><div class="detail-value">${escapeHtml(priceText)}</div></div>
                 <div class="detail-row"><div class="detail-key">Cost</div><div class="detail-value">${escapeHtml(costText)}</div></div>
                 <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
-                <div class="detail-row"><div class="detail-key">Description EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+                <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
                 ${workImagesDetailRowHtml(w)}
               </div>
               <div class="detail-actions">
@@ -5217,11 +5217,11 @@
                 ${logoDetailRowHtml("series", s)}<div class="detail-row"><div class="detail-key">#</div><div class="detail-value">${escapeHtml(no)}</div></div>
                 <div class="detail-row"><div class="detail-key">Code</div><div class="detail-value">${escapeHtml(s.code || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Title</div><div class="detail-value">${escapeHtml(s.title || s.titleJa || "")}</div></div>
-                <div class="detail-row"><div class="detail-key">Title EN</div><div class="detail-value">${escapeHtml(s.titleEn || "")}</div></div>
+                <div class="detail-row"><div class="detail-key">T_EN</div><div class="detail-value">${escapeHtml(s.titleEn || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Start</div><div class="detail-value">${escapeHtml(s.startDate || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">Works</div><div class="detail-value">${escapeHtml(String(relatedWorks.length))}</div></div>
                 <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(s.description || s.descriptionJa || "")}</div></div>
-                <div class="detail-row"><div class="detail-key">Description EN</div><div class="detail-value">${escapeHtml(s.descriptionEn || "")}</div></div>
+                <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(s.descriptionEn || "")}</div></div>
               </div>
               ${relatedWorks.length ? `
                 <div class="detail-grid">
@@ -5760,7 +5760,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.2.0",
+        version: "minimal-text-v3.2.1",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

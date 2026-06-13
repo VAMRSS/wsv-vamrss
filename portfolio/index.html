@@ -2119,12 +2119,20 @@
       color: var(--sub) !important;
     }
 
+    a.nav-text-button,
+    a.nav-button,
+    a.text-button {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.2.1</div>
+    <div class="fixed-version-mark">v3.3.1</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2134,7 +2142,7 @@
           </button>
         </h1>
         <nav class="text-nav">
-          <button class="text-button" type="button" aria-disabled="true" title="Profile page coming later">PROFILE</button>
+          <a class="text-button" type="button" aria-disabled="true" title="Profile page coming later" href="../profile/">PROFILE</a>
         </nav>
       </div>
 

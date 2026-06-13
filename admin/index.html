@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.4.0.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.4.1.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2031,6 +2031,22 @@
       line-height: 1.8;
     }
 
+    .related-link-list {
+      display: grid !important;
+      gap: 0 !important;
+      line-height: inherit !important;
+    }
+
+    .related-link-item {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: inherit !important;
+      color: inherit;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
   </style>
 </head>
 <body>
@@ -2056,7 +2072,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.4.0</div>
+  <div class="fixed-version-mark">v3.4.1</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -5984,7 +6000,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.4.0",
+        version: "minimal-text-v3.4.1",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

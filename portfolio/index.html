@@ -2109,12 +2109,22 @@
       justify-self: end;
     }
 
+    .fixed-copyright-mark,
+    .fixed-version-mark {
+      font-family: var(--font-main) !important;
+      font-size: 10px !important;
+      font-weight: 300 !important;
+      line-height: 1 !important;
+      letter-spacing: 0.04em !important;
+      color: var(--sub) !important;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.1.8</div>
+    <div class="fixed-version-mark">v3.2.0</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2364,18 +2374,18 @@
                 ${row("#", workNo)}
                 ${row("Title", work.title)}
                 ${row("Title EN", work.title_en)}
+                ${row("Series", seriesLabel(series))}
                 ${row("Start", normalizeProductionDate(work))}
                 ${row("Completed", work.completed_date)}
-                ${row("Series", seriesLabel(series))}
                 ${row("Production", statuses.productionStatus)}
                 ${row("Management", statuses.managementStatus)}
+                ${row("Location", work.location)}
+                ${row("Owner", work.holder_name)}
                 ${row("Technique", work.technique)}
                 ${row("Materials", work.materials)}
                 ${row("Size", formatDimensions(work))}
                 ${row("Price", "*******")}
                 ${row("Cost", "*******")}
-                ${row("Location", work.location)}
-                ${row("Owner", work.holder_name)}
                 ${row("Description", workDescription(work))}
                 ${row("Description EN", work.description_en)}
                 ${workImagesDetailRowHtml(work)}
@@ -2565,9 +2575,9 @@
                 ${row("Title", s.title)}
                 ${row("Title EN", s.title_en)}
                 ${row("Start", s.start_date)}
+                ${row("Works", String(relatedWorks.length))}
                 ${row("Description", s.description)}
                 ${row("Description EN", s.description_en)}
-                ${row("Works", String(relatedWorks.length))}
               </div>
               ${relatedWorks.length ? `
                 <div class="detail-grid">

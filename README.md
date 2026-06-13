@@ -1,12 +1,15 @@
-# WSV v3.4.1 Related URL Display Fix
+# WSV v3.4.3 Initial Render / URL Spacing Fix
 
 ## Fixes
 
-- Public portfolio now renders works and series even if URL link loading fails.
-- URL display spacing is compacted to match other detail rows.
-- No SQL change from v3.4.0 is required.
+- Public portfolio renders immediately on first page load.
+- Added missing `safeRender()` function.
+- URL rows no longer preserve template indentation as visible whitespace.
+- URL display is compact and aligned with other detail rows.
 
 ## Replace
 
-- `/admin/index.html`
 - `/portfolio/index.html`
+- `/admin/index.html` only if you also want the compact URL spacing in admin.
+
+No SQL change is required.

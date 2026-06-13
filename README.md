@@ -1,15 +1,20 @@
-# WSV v3.4.3 Initial Render / URL Spacing Fix
+# WSV v3.4.4 ABOUT / Profile Icon
 
-## Fixes
+## Changes
 
-- Public portfolio renders immediately on first page load.
-- Added missing `safeRender()` function.
-- URL rows no longer preserve template indentation as visible whitespace.
-- URL display is compact and aligned with other detail rows.
+- Public portfolio top-right label changed from `PROFILE` to `ABOUT`.
+- Profile page adds `ICON` above `NAME`.
+- Icon source path:
+  - `/profile/assets/profile-icon.svg`
+- Icon width:
+  - 30% of the detail text area
+- Icon is not inverted in dark mode.
 
 ## Replace
 
 - `/portfolio/index.html`
-- `/admin/index.html` only if you also want the compact URL spacing in admin.
+- `/profile/index.html`
 
-No SQL change is required.
+## Add
+
+- `/profile/assets/profile-icon.svg`

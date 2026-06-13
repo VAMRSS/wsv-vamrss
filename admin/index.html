@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.4.3.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.4.4.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2098,7 +2098,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.4.3</div>
+  <div class="fixed-version-mark">v3.4.4</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -6021,7 +6021,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.4.3",
+        version: "minimal-text-v3.4.4",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),
@@ -6134,7 +6134,11 @@
               exhibitionHistory: normalizeExhibitions(w.exhibitionHistory).join("\n"),
               description: String(w.description || w.memo || ""),
               descriptionEn: String(w.descriptionEn || ""),
+              relatedLinks: normalizeRelatedLinks(w.relatedLinks || w.related_links || []),
               memo: String(w.description || w.memo || ""),
+              isPublic: w.isPublic !== undefined ? Boolean(w.isPublic) : (w.is_public !== undefined ? Boolean(w.is_public) : false),
+              logoAssetId: String(w.logoAssetId || w.logo_asset_id || ""),
+              coverAssetId: String(w.coverAssetId || w.cover_asset_id || ""),
               createdAt: w.createdAt || now,
               updatedAt: w.updatedAt || now
             };
@@ -6162,6 +6166,9 @@
               description: String(s.description || s.descriptionJa || s.descriptionEn || ""),
               descriptionJa: String(s.description || s.descriptionJa || ""),
               descriptionEn: String(s.descriptionEn || ""),
+              relatedLinks: normalizeRelatedLinks(s.relatedLinks || s.related_links || []),
+              isPublic: s.isPublic !== undefined ? Boolean(s.isPublic) : (s.is_public !== undefined ? Boolean(s.is_public) : false),
+              logoAssetId: String(s.logoAssetId || s.logo_asset_id || ""),
               createdAt: s.createdAt || now,
               updatedAt: s.updatedAt || now
             };

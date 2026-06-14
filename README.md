@@ -1,20 +1,26 @@
-# WSV v3.4.4 ABOUT / Profile Icon
+# WSV v3.5.0 Open Database
 
-## Changes
+## Concept
 
-- Public portfolio top-right label changed from `PROFILE` to `ABOUT`.
-- Profile page adds `ICON` above `NAME`.
-- Icon source path:
-  - `/profile/assets/profile-icon.svg`
-- Icon width:
-  - 30% of the detail text area
-- Icon is not inverted in dark mode.
+WSV now behaves as an open database:
+- All registered works are public.
+- All registered series are public.
+- Works in progress are public.
+- Uploaded images/logos are public.
+- URL links are public.
+- Cost remains masked on the public portfolio.
+
+## Required first
+
+Run:
+
+`/sql/wsv_open_database_patch_v3_5_0.sql`
+
+in Supabase SQL Editor.
 
 ## Replace
 
+- `/admin/index.html`
 - `/portfolio/index.html`
-- `/profile/index.html`
 
-## Add
-
-- `/profile/assets/profile-icon.svg`
+Profile page is included for convenience.

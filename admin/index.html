@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.4.4.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.5.0.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2098,7 +2098,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.4.4</div>
+  <div class="fixed-version-mark">v3.5.0</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3219,6 +3219,20 @@
       return `<div class="detail-row related-url-row"><div class="detail-key">URL</div><div class="detail-value"><div class="related-link-list">${items}</div></div></div>`;
     }
 
+    function forceOpenDatabaseState() {
+      works = works.map(work => ({
+        ...work,
+        isPublic: true,
+        relatedLinks: normalizeRelatedLinks(work.relatedLinks || []).map(link => ({ ...link, isPublic: true }))
+      }));
+      seriesRecords = seriesRecords.map(series => ({
+        ...series,
+        isPublic: true,
+        relatedLinks: normalizeRelatedLinks(series.relatedLinks || []).map(link => ({ ...link, isPublic: true }))
+      }));
+    }
+
+
 
     function workTitle(work = {}) {
       return String(work.title || work.titleJa || work.titleEn || "Untitled");
@@ -3537,13 +3551,7 @@
 
 
     function publicActionButtonHtml(kind, record = {}) {
-      const isPublic = Boolean(record && record.isPublic);
-      const id = record && record.id ? escapeAttr(record.id) : "";
-      if (!id) return "";
-      if (kind === "series") {
-        return `<button class="text-button ${isPublic ? "danger" : "active"}" type="button" onclick="setSeriesPublic('${id}', ${isPublic ? "false" : "true"})">${isPublic ? "PRIVATE" : "PUBLIC"}</button>`;
-      }
-      return `<button class="text-button ${isPublic ? "danger" : "active"}" type="button" onclick="setWorkPublic('${id}', ${isPublic ? "false" : "true"})">${isPublic ? "PRIVATE" : "PUBLIC"}</button>`;
+      return "";
     }
 
     async function updateAssetsPublicByWorkId(workId, isPublic) {
@@ -3796,7 +3804,7 @@
           caption: toNull(document.getElementById("workImageCaption")?.value || ""),
           sort_order: existingImages.length,
           is_cover: isFirst,
-          is_public: false
+          is_public: true
         };
 
         const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
@@ -4007,7 +4015,7 @@
           mime_type: "image/svg+xml",
           sort_order: 0,
           is_cover: false,
-          is_public: false
+          is_public: true
         };
 
         const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
@@ -4210,8 +4218,8 @@
             startDate: row.start_date || "",
             description: row.description || "",
             descriptionEn: row.description_en || "",
-            isPublic: Boolean(row.is_public),
-            relatedLinks: normalizeRelatedLinks(relatedLinksBySeriesId.get(row.id) || []),
+            isPublic: true,
+            relatedLinks: normalizeRelatedLinks(relatedLinksBySeriesId.get(row.id) || []).map(link => ({ ...link, isPublic: true })),
             logoAssetId: row.logo_asset_id || "",
             coverAssetId: row.cover_asset_id || "",
             logoStoragePath: "",
@@ -4259,8 +4267,8 @@
             descriptionEn: row.description_en || "",
             memo: row.description || "",
             exhibitionHistory: (exhibitionMap.get(row.id) || []).join("\n"),
-            isPublic: Boolean(row.is_public),
-            relatedLinks: normalizeRelatedLinks(relatedLinksByWorkId.get(row.id) || []),
+            isPublic: true,
+            relatedLinks: normalizeRelatedLinks(relatedLinksByWorkId.get(row.id) || []).map(link => ({ ...link, isPublic: true })),
             logoAssetId: row.logo_asset_id || "",
             coverAssetId: row.cover_asset_id || "",
             logoStoragePath: "",
@@ -4334,7 +4342,7 @@
           start_date: normalizeDateOrNull(series.startDate),
           description: toNull(series.description || series.descriptionJa),
           description_en: toNull(series.descriptionEn),
-          is_public: Boolean(series.isPublic),
+          is_public: true,
           sort_order: index
         })).filter(row => row.series_no && row.title && row.code);
 
@@ -4391,7 +4399,7 @@
             holder_name: toNull(work.owner),
             description: toNull(work.description || work.memo),
             description_en: toNull(work.descriptionEn),
-            is_public: Boolean(work.isPublic),
+            is_public: true,
             sort_order: index
           };
         }).filter(row => row.work_no && row.title);
@@ -4476,7 +4484,7 @@
               title: link.title || link.url,
               url: link.url,
               sort_order: index,
-              is_public: Boolean(work.isPublic)
+              is_public: true
             });
           });
         });
@@ -4493,7 +4501,7 @@
               title: link.title || link.url,
               url: link.url,
               sort_order: index,
-              is_public: Boolean(series.isPublic)
+              is_public: true
             });
           });
         });
@@ -4502,6 +4510,10 @@
           const { error } = await cloudClient.from("wsv_related_links").insert(relatedLinkPayload);
           if (error) throw error;
         }
+
+        await cloudClient.from("wsv_assets").update({ is_public: true }).eq("owner_id", cloudUser.id);
+
+        forceOpenDatabaseState();
 
         saveLocalOnly();
         saveSeriesRecordsLocalOnly();
@@ -5004,8 +5016,9 @@
         exhibitionHistory: currentExhibitions.join("\n"),
         description: fields.description.value.trim(),
         descriptionEn: fields.descriptionEn.value.trim(),
-        relatedLinks: parseRelatedLinksText(fields.relatedLinks ? fields.relatedLinks.value : ""),
+        relatedLinks: parseRelatedLinksText(fields.relatedLinks ? fields.relatedLinks.value : "").map(link => ({ ...link, isPublic: true })),
         memo: fields.description.value.trim(),
+        isPublic: true,
         createdAt: existing.createdAt || nowIso(),
         updatedAt: nowIso()
       };
@@ -5118,10 +5131,7 @@
             <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
             ${relatedLinksDetailRowHtml(w.relatedLinks)}
             ${workImagesDetailRowHtml(w)}
-            <div class="detail-actions">
-              ${publicActionButtonHtml("work", w)}
-            </div>
-          </div>
+</div>
         </div>
       `;
     };
@@ -5223,8 +5233,7 @@
               <div class="detail-actions">
                 <button class="text-button" type="button" onclick="startEdit('${escapeAttr(w.id)}')">EDIT</button>
                 <button class="text-button danger" type="button" onclick="deleteWork('${escapeAttr(w.id)}')">DELETE</button>
-                ${publicActionButtonHtml("work", w)}
-              </div>
+                </div>
             </div>
           </article>
         `;
@@ -5233,6 +5242,7 @@
 
 
     function render() {
+      forceOpenDatabaseState();
       const isSeries = activeListMode === "series";
       document.getElementById("worksModeButton").classList.toggle("selected", !isSeries);
       document.getElementById("seriesModeButton").classList.toggle("selected", isSeries);
@@ -5404,7 +5414,8 @@
         description: description || descriptionEn,
         descriptionJa: description,
         descriptionEn,
-        relatedLinks: parseRelatedLinksText(seriesFields.relatedLinks ? seriesFields.relatedLinks.value : ""),
+        relatedLinks: parseRelatedLinksText(seriesFields.relatedLinks ? seriesFields.relatedLinks.value : "").map(link => ({ ...link, isPublic: true })),
+        isPublic: true,
         createdAt: existing.createdAt || nowIso(),
         updatedAt: nowIso()
       };
@@ -5497,7 +5508,6 @@
               <div class="detail-actions">
                 <button class="text-button" type="button" onclick="startSeriesEdit('${escapeAttr(s.id)}')">EDIT</button>
                 <button class="text-button danger" type="button" onclick="deleteSeries('${escapeAttr(s.id)}')">DELETE</button>
-                ${publicActionButtonHtml("series", s)}
               </div>
             </div>
           </article>
@@ -6021,7 +6031,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.4.4",
+        version: "minimal-text-v3.5.0",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),
@@ -6134,9 +6144,9 @@
               exhibitionHistory: normalizeExhibitions(w.exhibitionHistory).join("\n"),
               description: String(w.description || w.memo || ""),
               descriptionEn: String(w.descriptionEn || ""),
-              relatedLinks: normalizeRelatedLinks(w.relatedLinks || w.related_links || []),
+              relatedLinks: normalizeRelatedLinks(w.relatedLinks || w.related_links || []).map(link => ({ ...link, isPublic: true })),
               memo: String(w.description || w.memo || ""),
-              isPublic: w.isPublic !== undefined ? Boolean(w.isPublic) : (w.is_public !== undefined ? Boolean(w.is_public) : false),
+              isPublic: true,
               logoAssetId: String(w.logoAssetId || w.logo_asset_id || ""),
               coverAssetId: String(w.coverAssetId || w.cover_asset_id || ""),
               createdAt: w.createdAt || now,
@@ -6166,8 +6176,8 @@
               description: String(s.description || s.descriptionJa || s.descriptionEn || ""),
               descriptionJa: String(s.description || s.descriptionJa || ""),
               descriptionEn: String(s.descriptionEn || ""),
-              relatedLinks: normalizeRelatedLinks(s.relatedLinks || s.related_links || []),
-              isPublic: s.isPublic !== undefined ? Boolean(s.isPublic) : (s.is_public !== undefined ? Boolean(s.is_public) : false),
+              relatedLinks: normalizeRelatedLinks(s.relatedLinks || s.related_links || []).map(link => ({ ...link, isPublic: true })),
+              isPublic: true,
               logoAssetId: String(s.logoAssetId || s.logo_asset_id || ""),
               createdAt: s.createdAt || now,
               updatedAt: s.updatedAt || now

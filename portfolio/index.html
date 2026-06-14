@@ -2193,12 +2193,62 @@
       text-decoration: underline;
     }
 
+    .detail-link-button {
+      appearance: none;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .detail-link-button:hover {
+      text-decoration: underline;
+    }
+
+    .inline-series-host {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 0;
+    }
+
+    .inline-series-host .inline-expanded {
+      margin-left: 1em;
+      margin-top: 0.5em;
+      margin-bottom: 0.8em;
+    }
+
+    .series-work-row {
+      align-items: start !important;
+    }
+
+    .series-work-row .detail-value {
+      white-space: normal !important;
+      overflow: visible !important;
+    }
+
+    .series-work-row .inline-series-link {
+      display: block !important;
+      width: 100%;
+      white-space: normal !important;
+      overflow: visible !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+      line-height: 2 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.5.0</div>
+    <div class="fixed-version-mark">v3.5.3</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2388,6 +2438,53 @@ function normalizeWorkNo(value) {
       return code + seriesTitle(series);
     }
 
+
+    function seriesLabelHtml(series, hostId = "") {
+      const label = seriesLabel(series);
+      if (!series || !series.id || !label) return escapeHtml(label || "");
+      const safeHostId = hostId || series.id;
+      return `<button class="detail-link-button" type="button" onclick="toggleInlineSeries('${escapeAttr(series.id)}', '${escapeAttr(safeHostId)}')">${escapeHtml(label)}</button>`;
+    }
+
+    function seriesDetailHtml(series = {}) {
+      const no = normalizeWorkNo(series.series_no);
+      const relatedWorks = works
+        .filter(w => w.series_id === series.id)
+        .sort(compareWorks);
+
+      return `
+        <div class="inline-expanded">
+          <div class="detail-grid">
+            ${logoDetailRowHtml("series", series)}
+            ${row("#", no)}
+            ${row("Code", series.code)}
+            ${row("Title", series.title)}
+            ${row("T_EN", series.title_en)}
+            ${row("Start", series.start_date)}
+            ${row("Works", String(relatedWorks.length))}
+            ${row("Description", series.description)}
+            ${row("D_EN", series.description_en)}
+            ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
+          </div>
+        </div>`;
+    }
+
+    window.toggleInlineSeries = function(seriesId, hostId = "") {
+      const safeHostId = hostId || seriesId;
+      const target = document.getElementById(`inline-series-${safeHostId}-${seriesId}`);
+      if (!target) return;
+      if (target.dataset.open === "1") {
+        target.innerHTML = "";
+        target.dataset.open = "";
+        return;
+      }
+      const series = seriesRecords.find(item => item.id === seriesId);
+      if (!series) return;
+      target.dataset.open = "1";
+      target.innerHTML = seriesDetailHtml(series);
+    };
+
+
     function getSeriesRecordForWork(work = {}) {
       return seriesRecords.find(series => series.id === work.series_id) || null;
     }
@@ -2497,7 +2594,11 @@ function normalizeWorkNo(value) {
                 ${row("#", workNo)}
                 ${row("Title", work.title)}
                 ${row("T_EN", work.title_en)}
-                ${row("Series", seriesLabel(series))}
+                <div class="detail-row">
+                  <div class="detail-key">Series</div>
+                  <div class="detail-value">${seriesLabelHtml(series, work.id)}</div>
+                </div>
+                ${series && series.id ? `<div class="inline-series-host" id="inline-series-${escapeAttr(work.id)}-${escapeAttr(series.id)}"></div>` : ""}
                 ${row("Start", normalizeProductionDate(work))}
                 ${row("Completed", work.completed_date)}
                 ${row("Production", statuses.productionStatus)}
@@ -2562,8 +2663,18 @@ function normalizeWorkNo(value) {
       });
     }
 
+
+    function techniqueSortByCount(a, b) {
+      const labelA = String(a || "").trim();
+      const labelB = String(b || "").trim();
+      const countA = works.filter(work => String(work.technique || "").trim() === labelA).length;
+      const countB = works.filter(work => String(work.technique || "").trim() === labelB).length;
+      if (countB !== countA) return countB - countA;
+      return labelA.localeCompare(labelB, "ja", { numeric: true });
+    }
+
     function renderFilters() {
-      const techniques = Array.from(new Set(works.map(w => w.technique).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ja"));
+      const techniques = Array.from(new Set(works.map(w => String(w.technique || "").trim()).filter(Boolean))).sort(techniqueSortByCount);
       renderLinkButtons("techniqueLinks", techniques, activeTechnique, value => {
         activeTechnique = value;
         render();
@@ -2709,7 +2820,7 @@ function normalizeWorkNo(value) {
               ${relatedWorks.length ? `
                 <div class="detail-grid">
                   ${relatedWorks.map(w => `
-                    <div class="detail-row">
+                    <div class="detail-row series-work-row">
                       <div class="detail-key">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
                       <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('series-${escapeAttr(s.id)}', '${escapeAttr(w.id)}')">${escapeHtml(workTitle(w))}</button></div>
                     </div>

@@ -2243,12 +2243,47 @@
       margin: 0 !important;
     }
 
+    .logo-stack {
+      display: grid;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .logo-stack-item {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .logo-stack-item img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      margin: 0;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    .logo-entry-card {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .logo-entry-card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.5.3</div>
+    <div class="fixed-version-mark">v3.6.0</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2493,16 +2528,31 @@ function normalizeWorkNo(value) {
       return seriesRecords.find(series => seriesTitle(series) === title || seriesLabel(series) === title) || null;
     }
 
-    function findLogoAsset(kind, record = {}) {
-      if (!record) return null;
+    function findLogoAssets(kind, record = {}) {
+      if (!record || !record.id) return [];
       const assetType = kind === "series" ? "series_logo" : "work_logo";
+      const assets = cloudAssets
+        .filter(asset => {
+          if (asset.asset_type !== assetType) return false;
+          return kind === "series" ? asset.series_id === record.id : asset.work_id === record.id;
+        })
+        .sort((a, b) => {
+          const ao = Number.isFinite(Number(a.sort_order)) ? Number(a.sort_order) : 0;
+          const bo = Number.isFinite(Number(b.sort_order)) ? Number(b.sort_order) : 0;
+          if (ao !== bo) return ao - bo;
+          return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+        });
+
       const id = record.logo_asset_id || record.logoAssetId || "";
-      if (id) {
-        const byId = cloudAssets.find(asset => asset.id === id && asset.asset_type === assetType);
-        if (byId) return byId;
-      }
-      if (kind === "series") return cloudAssets.find(asset => asset.series_id === record.id && asset.asset_type === assetType) || null;
-      return cloudAssets.find(asset => asset.work_id === record.id && asset.asset_type === assetType) || null;
+      if (!id) return assets;
+      const index = assets.findIndex(asset => asset.id === id);
+      if (index <= 0) return assets;
+      const primary = assets[index];
+      return [primary, ...assets.slice(0, index), ...assets.slice(index + 1)];
+    }
+
+    function findLogoAsset(kind, record = {}) {
+      return findLogoAssets(kind, record)[0] || null;
     }
 
     function findWorkImageAssets(work = {}) {
@@ -2537,15 +2587,21 @@ function normalizeWorkNo(value) {
     }
 
     function logoDetailRowHtml(kind, record = {}) {
-      const asset = findLogoAsset(kind, record);
-      const path = asset ? asset.storage_path : "";
-      if (!path) return "";
-      const url = cloudAssetPublicUrl(path);
-      if (!url) return "";
+      const assets = findLogoAssets(kind, record).filter(asset => asset && asset.storage_path && cloudAssetPublicUrl(asset.storage_path));
+      if (!assets.length) return "";
       return `
                 <div class="detail-row logo-detail-row">
                   <div class="detail-key">LOGO</div>
-                  <div class="detail-value"><div class="logo-detail-preview"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div></div>
+                  <div class="detail-value">
+                    <div class="logo-detail-preview">
+                      <div class="logo-stack">
+                        ${assets.map(asset => {
+                          const url = cloudAssetPublicUrl(asset.storage_path);
+                          return url ? `<div class="logo-stack-item"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div>` : "";
+                        }).join("")}
+                      </div>
+                    </div>
+                  </div>
                 </div>`;
     }
 

@@ -1,26 +1,18 @@
-# WSV v3.5.0 Open Database
+# WSV v3.6.0 Multiple Logos
 
-## Concept
+## Changes
 
-WSV now behaves as an open database:
-- All registered works are public.
-- All registered series are public.
-- Works in progress are public.
-- Uploaded images/logos are public.
-- URL links are public.
-- Cost remains masked on the public portfolio.
-
-## Required first
-
-Run:
-
-`/sql/wsv_open_database_patch_v3_5_0.sql`
-
-in Supabase SQL Editor.
+- Work logos support multiple SVG uploads.
+- Series logos support multiple SVG uploads.
+- Each upload adds a new logo instead of replacing the previous one.
+- Logos are displayed vertically in Admin and Portfolio detail views.
+- Admin preview shows all registered logos vertically.
+- Each logo can be deleted individually from the edit preview.
+- DELETE ALL SVG removes all logos for the current work/series.
 
 ## Replace
 
 - `/admin/index.html`
 - `/portfolio/index.html`
 
-Profile page is included for convenience.
+No SQL change is required.

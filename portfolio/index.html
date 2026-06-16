@@ -2282,12 +2282,43 @@
       color: var(--sub);
     }
 
+    .detail-grid {
+      gap: 0.55em 0 !important;
+      align-items: start !important;
+    }
+
+    .detail-row {
+      align-items: start !important;
+      min-height: 0 !important;
+    }
+
+    .detail-row .detail-key,
+    .detail-row .detail-value {
+      line-height: 1.8 !important;
+      min-height: 0 !important;
+    }
+
+    .detail-row .detail-value {
+      white-space: pre-wrap !important;
+      overflow: visible !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+    }
+
+    .detail-row .detail-value button,
+    .detail-row .detail-value a {
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+      line-height: 1.8 !important;
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.6.1</div>
+    <div class="fixed-version-mark">v3.6.2</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">

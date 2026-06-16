@@ -1,12 +1,14 @@
-# WSV v3.6.1 Title Series Code
+# WSV v3.6.2 Detail Wrap Fix
 
-## Public portfolio fix
+## Fix
 
-- WORKS list titles now display as `Title（SERIES_CODE）`.
-- If a work has no series code, only the title is shown.
+- Long series names in detail rows no longer overlap the row above or below.
+- Detail rows now expand naturally when values wrap to multiple lines.
+- Applied to both Admin and Portfolio.
 
 ## Replace
 
+- `/admin/index.html`
 - `/portfolio/index.html`
 
 No SQL change is required.

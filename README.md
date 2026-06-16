@@ -1,15 +1,19 @@
-# WSV v3.8.3 Content Updated At
+# WSV v3.8.4 Content Update Order
 
 ## Fix
 
-`updated_at` is a technical database timestamp and can become identical for all rows after full sync/upsert.
-This version introduces `content_updated_at` as the public-facing update timestamp.
+- UPDATES no longer uses image/logo asset timestamps for ordering.
+- UPDATES now orders works and series by their own `content_updated_at`.
+- This prevents multiple items from appearing with the same time because their assets share the same technical timestamp.
+- Image/logo uploads still update the parent work/series `content_updated_at` through Admin.
 
 ## Required SQL
 
-Run:
+If you have not already run it, run:
 
 `sql/wsv_content_updated_at_patch_v3_8_3.sql`
+
+If you already ran the v3.8.3 SQL patch, no additional SQL is required.
 
 ## Replace
 
@@ -20,16 +24,12 @@ Run:
 
 ## After replacing
 
-1. Run the SQL patch in Supabase.
-2. Replace the files.
-3. Open Admin.
-4. Edit a work or series and save.
-5. Wait for Supabase sync, or press manual sync.
-6. Refresh `/updates/`.
+1. Open Admin.
+2. Edit and save a work or series.
+3. Wait for Supabase sync, or press manual sync.
+4. Refresh `/updates/`.
 
-## Notes
+## Note
 
-- UPDATES now uses `content_updated_at` for works/series.
-- Image/logo uploads update the parent record's `content_updated_at`.
-- URL changes update the parent record through the normal work/series save timestamp.
-- Technical `updated_at` is no longer used as the main public update order.
+Existing rows may still share the same initial `content_updated_at` if they were initialized at the same time.
+After editing individual records, their `content_updated_at` will diverge.

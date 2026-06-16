@@ -1,19 +1,12 @@
-# WSV v3.8.0 Updates Page
+# WSV v3.8.1 updated_at Sync Fix
 
-## New
+## Fix
 
-- Adds `/updates/` as a standalone public UPDATES page.
-- Portfolio navigation now shows `UPDATES / ABOUT`.
-- Profile navigation now shows `HOME / UPDATES`.
-- Updates page navigation shows `HOME / ABOUT`.
-- UPDATES combines recently edited works and series by `updated_at`, plus public assets and URL link timestamps.
-- Clicking a WORK or SERIES item expands details in the same page.
-- Series updates include related works, and related works can be expanded inline.
-
-## Fix carried forward
-
-- Work number label displays as `№`.
-- Sort icons use `↗` and `↘`; no rotated `↖`.
+- Admin now explicitly syncs `updated_at` for works and series.
+- Admin also syncs `created_at` for works and series from local records.
+- Related URL links use the parent work/series timestamp during full sync, preventing every full sync from becoming a false update.
+- Direct image/logo operations update timestamps where appropriate.
+- Updates page remains `/updates/` and uses the corrected timestamps.
 
 ## Replace
 
@@ -21,5 +14,10 @@
 - `/portfolio/index.html`
 - `/updates/index.html`
 - `/profile/index.html`
+
+## After replacing
+
+Edit a work or series in Admin and run Supabase sync.
+Then refresh `/updates/`.
 
 No SQL change is required.

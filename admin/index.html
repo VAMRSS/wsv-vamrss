@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.8.0.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.8.1.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2266,7 +2266,7 @@
       padding: 0 !important;
     }
 
-    /* v3.8.0 corrected spacing policy */
+    /* v3.8.1 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2350,7 +2350,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.8.0 final media spacing override */
+    /* v3.8.1 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2451,7 +2451,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.0 compact media rendering */
+    /* v3.8.1 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2505,7 +2505,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.8.0 balanced media spacing */
+    /* v3.8.1 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2522,7 +2522,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.0 requested media spacing */
+    /* v3.8.1 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2539,7 +2539,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.0 high-specificity media spacing */
+    /* v3.8.1 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2568,7 +2568,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.0 logo top alignment */
+    /* v3.8.1 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2600,12 +2600,12 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.0 logo visual offset */
+    /* v3.8.1 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.8.0 sort icon direction fix */
+    /* v3.8.1 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
@@ -2638,7 +2638,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.8.0</div>
+  <div class="fixed-version-mark">v3.8.1</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3674,6 +3674,12 @@
 
     function nowIso() { return new Date().toISOString(); }
 
+    function syncTimestamp(value, fallback = nowIso()) {
+      const time = Date.parse(value || "");
+      return Number.isFinite(time) ? new Date(time).toISOString() : fallback;
+    }
+
+
     function escapeHtml(text) {
       return String(text)
         .replaceAll("&", "&amp;")
@@ -4372,7 +4378,7 @@
         if (insertResult.error) throw insertResult.error;
 
         if (isFirst) {
-          const updateResult = await cloudClient.from("wsv_works").update({ cover_asset_id: insertResult.data.id }).eq("id", refreshedRecord.id);
+          const updateResult = await cloudClient.from("wsv_works").update({ cover_asset_id: insertResult.data.id, updated_at: nowIso() }).eq("id", refreshedRecord.id);
           if (updateResult.error) throw updateResult.error;
         }
 
@@ -4398,13 +4404,13 @@
         const record = currentWorkImageRecord();
         if (!record) throw new Error("対象作品がありません。");
 
-        const resetResult = await cloudClient.from("wsv_assets").update({ is_cover: false }).eq("work_id", record.id).eq("asset_type", "work_image");
+        const resetResult = await cloudClient.from("wsv_assets").update({ is_cover: false, updated_at: nowIso() }).eq("work_id", record.id).eq("asset_type", "work_image");
         if (resetResult.error) throw resetResult.error;
 
-        const coverResult = await cloudClient.from("wsv_assets").update({ is_cover: true }).eq("id", assetId);
+        const coverResult = await cloudClient.from("wsv_assets").update({ is_cover: true, updated_at: nowIso() }).eq("id", assetId);
         if (coverResult.error) throw coverResult.error;
 
-        const workResult = await cloudClient.from("wsv_works").update({ cover_asset_id: assetId }).eq("id", record.id);
+        const workResult = await cloudClient.from("wsv_works").update({ cover_asset_id: assetId, updated_at: nowIso() }).eq("id", record.id);
         if (workResult.error) throw workResult.error;
 
         await refreshWorkImageAssets();
@@ -4435,10 +4441,10 @@
           const remaining = findWorkImageAssets(record).filter(item => item.id !== asset.id);
           if (remaining.length) {
             const nextCover = remaining[0];
-            await cloudClient.from("wsv_assets").update({ is_cover: true }).eq("id", nextCover.id);
-            await cloudClient.from("wsv_works").update({ cover_asset_id: nextCover.id }).eq("id", record.id);
+            await cloudClient.from("wsv_assets").update({ is_cover: true, updated_at: nowIso() }).eq("id", nextCover.id);
+            await cloudClient.from("wsv_works").update({ cover_asset_id: nextCover.id, updated_at: nowIso() }).eq("id", record.id);
           } else {
-            await cloudClient.from("wsv_works").update({ cover_asset_id: null }).eq("id", record.id);
+            await cloudClient.from("wsv_works").update({ cover_asset_id: null, updated_at: nowIso() }).eq("id", record.id);
           }
         }
 
@@ -4592,7 +4598,7 @@
         if (insertResult.error) throw insertResult.error;
 
         if (!existingLogos.length || !(refreshedRecord.logoAssetId || refreshedRecord.logo_asset_id)) {
-          const updateResult = await cloudClient.from(table).update({ logo_asset_id: insertResult.data.id }).eq("id", refreshedRecord.id);
+          const updateResult = await cloudClient.from(table).update({ logo_asset_id: insertResult.data.id, updated_at: nowIso() }).eq("id", refreshedRecord.id);
           if (updateResult.error) throw updateResult.error;
         }
 
@@ -4611,7 +4617,7 @@
       const table = kind === "series" ? "wsv_series" : "wsv_works";
       const remaining = findLogoAssets(kind, record);
       const nextPrimaryId = remaining.length ? remaining[0].id : null;
-      const updateResult = await cloudClient.from(table).update({ logo_asset_id: nextPrimaryId }).eq("id", record.id);
+      const updateResult = await cloudClient.from(table).update({ logo_asset_id: nextPrimaryId, updated_at: nowIso() }).eq("id", record.id);
       if (updateResult.error) throw updateResult.error;
     }
 
@@ -4620,7 +4626,7 @@
         if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
         const input = document.getElementById(`logoCaption-${assetId}`);
         const caption = input ? input.value.trim() : "";
-        const updateResult = await cloudClient.from("wsv_assets").update({ caption }).eq("id", assetId);
+        const updateResult = await cloudClient.from("wsv_assets").update({ caption, updated_at: nowIso() }).eq("id", assetId);
         if (updateResult.error) throw updateResult.error;
         const asset = cloudAssets.find(item => item.id === assetId);
         if (asset) asset.caption = caption;
@@ -4672,7 +4678,7 @@
         if (!confirm("登録済みSVGロゴをすべて削除しますか？")) return;
 
         const table = kind === "series" ? "wsv_series" : "wsv_works";
-        const updateResult = await cloudClient.from(table).update({ logo_asset_id: null }).eq("id", record.id);
+        const updateResult = await cloudClient.from(table).update({ logo_asset_id: null, updated_at: nowIso() }).eq("id", record.id);
         if (updateResult.error) throw updateResult.error;
 
         const ids = assets.map(asset => asset.id).filter(Boolean);
@@ -4971,7 +4977,9 @@
           description: toNull(series.description || series.descriptionJa),
           description_en: toNull(series.descriptionEn),
           is_public: true,
-          sort_order: index
+          sort_order: index,
+          created_at: syncTimestamp(series.createdAt || series.updatedAt),
+          updated_at: syncTimestamp(series.updatedAt || series.createdAt)
         })).filter(row => row.series_no && row.title && row.code);
 
         const { data: currentSeries, error: currentSeriesError } = await cloudClient.from("wsv_series").select("id,series_no");
@@ -5028,7 +5036,9 @@
             description: toNull(work.description || work.memo),
             description_en: toNull(work.descriptionEn),
             is_public: true,
-            sort_order: index
+            sort_order: index,
+            created_at: syncTimestamp(work.createdAt || work.updatedAt),
+            updated_at: syncTimestamp(work.updatedAt || work.createdAt)
           };
         }).filter(row => row.work_no && row.title);
 
@@ -5112,7 +5122,11 @@
               title: link.title || link.url,
               url: link.url,
               sort_order: index,
-              is_public: true
+              is_public: true,
+              created_at: syncTimestamp(series.updatedAt || series.createdAt),
+              updated_at: syncTimestamp(series.updatedAt || series.createdAt),
+              created_at: syncTimestamp(work.updatedAt || work.createdAt),
+              updated_at: syncTimestamp(work.updatedAt || work.createdAt)
             });
           });
         });
@@ -6662,7 +6676,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.8.0",
+        version: "minimal-text-v3.8.1",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

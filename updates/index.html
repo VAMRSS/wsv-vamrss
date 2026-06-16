@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV PORTFOLIO</title>
-  <meta name="description" content="(VAMRSS) WORKSHEET VAULT SYSTEM public portfolio.">
+  <title>(VAMRSS) WSV UPDATES</title>
+  <meta name="description" content="(VAMRSS) WORKSHEET VAULT SYSTEM public update log.">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
 
@@ -2784,6 +2784,16 @@
       transform: none !important;
     }
 
+    /* v3.8.0 updates page */
+    #updatesScreen .work-no {
+      font-size: 11px;
+      letter-spacing: 0.02em;
+    }
+
+    #updatesScreen .list-head span {
+      display: block;
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2794,7 +2804,7 @@
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
     <div class="fixed-version-mark">v3.8.0</div>
 
-    <section id="worksScreen" class="screen active">
+    <section id="updatesScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title">
           <button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
@@ -2802,40 +2812,26 @@
           </button>
         </h1>
         <nav class="text-nav">
-          <a class="text-button" href="../updates/">UPDATES</a>
+          <a class="text-button" href="../portfolio/">HOME</a>
           <a class="text-button" href="../profile/">ABOUT</a>
         </nav>
       </div>
 
-      <div class="link-list mode-switch" style="margin-bottom: 9px;">
-        <button class="text-button selected" type="button" id="worksModeButton" onclick="setListMode('works')">WORKS</button>
-        <button class="text-button" type="button" id="seriesModeButton" onclick="setListMode('series')">SERIES</button>
+      <div class="list-head">
+        <span>DATE</span>
+        <span>TITLE</span>
+        <span>TYPE</span>
       </div>
 
-      <div class="filter-area" id="worksFilterArea">
-        <div class="link-list bracket-switch" id="techniqueLinks"></div>
-      </div>
-
-      <div class="portfolio-search-line" id="portfolioSearchLine">
-        <button class="text-button" type="button" onclick="toggleStatusPanel()" id="statusPanelText">＋</button>
+      <div class="portfolio-search-line search-open" id="portfolioSearchLine">
+        <button class="text-button" type="button" id="statusPanelText" aria-hidden="true">＋</button>
         <div class="portfolio-search-wrap" id="inlineSearchWrap">
           <input id="searchInput" type="search" placeholder="SEARCH">
         </div>
         <button class="text-button portfolio-search-reset" type="button" onclick="clearFilters()">RESET</button>
       </div>
 
-      <div class="collapsible" id="statusPanel">
-        <div class="link-list bracket-switch" id="productionLinks"></div>
-        <div class="link-list bracket-switch" id="managementLinks"></div>
-      </div>
-
-      <div class="list-head">
-        <button class="text-button" type="button" onclick="setSort('workNo')">№<span id="sortMarkWorkNo"></span></button>
-        <button class="text-button" type="button" onclick="setSort('title')">TITLE<span id="sortMarkTitle"></span></button>
-        <button class="text-button" type="button" onclick="setSort('year')">DONE<span id="sortMarkYear"></span></button>
-      </div>
-
-      <div id="status" class="portfolio-note">公開作品を読み込み中です。</div>
+      <div id="status" class="portfolio-note">更新情報を読み込み中です。</div>
       <div id="workList" class="list"></div>
     </section>
   </main>
@@ -3502,11 +3498,217 @@ function normalizeWorkNo(value) {
       localStorage.setItem("wsvPortfolioTheme", next);
     };
 
+
+    function timestampFromValue(value) {
+      const time = Date.parse(value || "");
+      return Number.isFinite(time) ? time : 0;
+    }
+
+    function maxTimestamp(values = []) {
+      return values.reduce((max, value) => Math.max(max, timestampFromValue(value)), 0);
+    }
+
+    function isoFromTimestamp(timestamp) {
+      if (!timestamp) return "";
+      return new Date(timestamp).toISOString();
+    }
+
+    function formatUpdateDate(value) {
+      const timestamp = typeof value === "number" ? value : timestampFromValue(value);
+      if (!timestamp) return "----.--.--";
+      const d = new Date(timestamp);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}.${m}.${day}`;
+    }
+
+    function updateTimestampForWork(work = {}) {
+      const assetDates = cloudAssets
+        .filter(asset => asset.work_id === work.id)
+        .flatMap(asset => [asset.updated_at, asset.created_at]);
+      const linkDates = relatedLinks
+        .filter(link => link.work_id === work.id)
+        .flatMap(link => [link.updated_at, link.created_at]);
+      return maxTimestamp([work.updated_at, work.created_at, ...assetDates, ...linkDates]);
+    }
+
+    function updateTimestampForSeries(series = {}) {
+      const assetDates = cloudAssets
+        .filter(asset => asset.series_id === series.id)
+        .flatMap(asset => [asset.updated_at, asset.created_at]);
+      const linkDates = relatedLinks
+        .filter(link => link.series_id === series.id)
+        .flatMap(link => [link.updated_at, link.created_at]);
+      return maxTimestamp([series.updated_at, series.created_at, ...assetDates, ...linkDates]);
+    }
+
+    function updateSeriesDetailHtml(series = {}) {
+      const no = normalizeWorkNo(series.series_no);
+      const relatedWorks = works
+        .filter(w => w.series_id === series.id)
+        .sort(compareWorks);
+
+      return `
+        <div class="detail-grid">
+          ${logoDetailRowHtml("series", series)}
+          ${row("№", no)}
+          ${row("Code", series.code)}
+          ${row("Title", series.title)}
+          ${row("T_EN", series.title_en)}
+          ${row("Start", series.start_date)}
+          ${row("Works", String(relatedWorks.length))}
+          ${row("Description", series.description)}
+          ${row("D_EN", series.description_en)}
+          ${additionalLogoDetailRowHtml("series", series)}
+          ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
+        </div>
+        ${relatedWorks.length ? `
+          <div class="detail-grid">
+            ${relatedWorks.map(w => `
+              <div class="detail-row series-work-row">
+                <div class="detail-key">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
+                <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('updates-series-${escapeAttr(series.id)}', '${escapeAttr(w.id)}')">${escapeHtml(workTitle(w))}</button></div>
+              </div>
+              <div id="updates-series-${escapeAttr(series.id)}-work-${escapeAttr(w.id)}"></div>
+            `).join("")}
+          </div>
+        ` : ""}`;
+    }
+
+    function updateSearchText(item) {
+      if (item.type === "work") {
+        const w = item.record;
+        const statuses = normalizeStatuses(w);
+        const series = getSeriesRecordForWork(w);
+        return [
+          "WORK",
+          normalizeWorkNo(w.work_no),
+          workTitle(w),
+          w.title,
+          w.title_en,
+          seriesLabel(series),
+          statuses.productionStatus,
+          statuses.managementStatus,
+          w.technique,
+          w.materials,
+          w.location,
+          w.holder_name,
+          w.description,
+          w.description_en,
+          relatedLinksSearchText(relatedLinksForWork(w))
+        ].join(" ");
+      }
+
+      const s = item.record;
+      return [
+        "SERIES",
+        normalizeWorkNo(s.series_no),
+        s.code,
+        seriesTitle(s),
+        s.title,
+        s.title_en,
+        s.description,
+        s.description_en,
+        relatedLinksSearchText(relatedLinksForSeries(s))
+      ].join(" ");
+    }
+
+    function updateItems() {
+      const workItems = works.map(work => ({
+        id: `work-${work.id}`,
+        type: "work",
+        label: "WORK",
+        timestamp: updateTimestampForWork(work),
+        record: work
+      }));
+
+      const seriesItems = seriesRecords.map(series => ({
+        id: `series-${series.id}`,
+        type: "series",
+        label: "SERIES",
+        timestamp: updateTimestampForSeries(series),
+        record: series
+      }));
+
+      return [...workItems, ...seriesItems]
+        .filter(item => item.timestamp)
+        .sort((a, b) => b.timestamp - a.timestamp);
+    }
+
+    function renderUpdates() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = updateItems()
+        .filter(item => !query || updateSearchText(item).toLowerCase().includes(query))
+        .slice(0, 60);
+
+      if (!items.length) {
+        workList.innerHTML = '<div class="empty">更新情報がありません。</div>';
+        return;
+      }
+
+      workList.innerHTML = items.map(item => {
+        if (item.type === "work") {
+          const w = item.record;
+          const series = getSeriesRecordForWork(w);
+          return `
+            <article class="work" id="updates-work-${escapeAttr(w.id)}">
+              <button class="work-summary" type="button" onclick="toggleUpdateWork('${escapeAttr(w.id)}')">
+                <div class="work-no">${escapeHtml(formatUpdateDate(item.timestamp))}</div>
+                <div class="work-title"><span class="title-scroll">№ ${escapeHtml(normalizeWorkNo(w.work_no))}　${workListTitleHtml(w)}</span></div>
+                <div class="work-year">WORK</div>
+              </button>
+              <div class="work-detail">${workDetailHtml(w)}</div>
+            </article>`;
+        }
+
+        const s = item.record;
+        return `
+          <article class="work" id="updates-series-${escapeAttr(s.id)}">
+            <button class="work-summary" type="button" onclick="toggleUpdateSeries('${escapeAttr(s.id)}')">
+              <div class="work-no">${escapeHtml(formatUpdateDate(item.timestamp))}</div>
+              <div class="work-title"><span class="title-scroll">${escapeHtml(s.code ? s.code + " / " : "")}${escapeHtml(seriesTitle(s))}</span></div>
+              <div class="work-year">SERIES</div>
+            </button>
+            <div class="work-detail">${updateSeriesDetailHtml(s)}</div>
+          </article>`;
+      }).join("");
+    }
+
+    function render() {
+      renderUpdates();
+    }
+
+    function safeRender() {
+      try {
+        renderUpdates();
+      } catch (renderError) {
+        console.warn("WSV updates render retry without URL links.", renderError);
+        relatedLinks = [];
+        renderUpdates();
+      }
+    }
+
+    window.toggleUpdateWork = function(id) {
+      const target = document.getElementById("updates-work-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.toggleUpdateSeries = function(id) {
+      const target = document.getElementById("updates-series-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.clearFilters = function() {
+      searchInput.value = "";
+      renderUpdates();
+    };
+
     searchInput.addEventListener("input", render);
 
     async function loadPortfolio() {
       try {
-        statusEl.textContent = "公開作品を読み込み中です。";
+        statusEl.textContent = "更新情報を読み込み中です。";
 
         const [seriesResult, worksResult, assetsResult] = await Promise.all([
           cloudClient
@@ -3552,7 +3754,7 @@ function normalizeWorkNo(value) {
         safeRender();
       } catch (error) {
         console.error(error);
-        statusEl.textContent = "公開作品を読み込めませんでした。公開設定またはRLSをご確認ください。";
+        statusEl.textContent = "更新情報を読み込めませんでした。公開設定またはRLSをご確認ください。";
       }
     }
 

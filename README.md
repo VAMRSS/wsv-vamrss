@@ -1,12 +1,12 @@
-# WSV v3.8.1 updated_at Sync Fix
+# WSV v3.8.2 Updates Timestamp Fix
 
 ## Fix
 
-- Admin now explicitly syncs `updated_at` for works and series.
-- Admin also syncs `created_at` for works and series from local records.
-- Related URL links use the parent work/series timestamp during full sync, preventing every full sync from becoming a false update.
-- Direct image/logo operations update timestamps where appropriate.
-- Updates page remains `/updates/` and uses the corrected timestamps.
+- Rebuilds the timestamp sync from v3.8.0 cleanly.
+- Works and series now explicitly sync `created_at` and `updated_at`.
+- Related URL links use the parent work/series timestamp without malformed duplicate fields.
+- Media/logo parent timestamp updates are preserved.
+- Updates page shows `YYYY.MM.DD / HH:MM` to verify ordering.
 
 ## Replace
 
@@ -17,7 +17,9 @@
 
 ## After replacing
 
-Edit a work or series in Admin and run Supabase sync.
-Then refresh `/updates/`.
+1. Open Admin.
+2. Edit a work or series and save.
+3. Wait for Supabase sync, or press manual sync.
+4. Refresh `/updates/`.
 
 No SQL change is required.

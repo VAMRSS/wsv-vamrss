@@ -1,11 +1,11 @@
-# WSV v3.8.4 Content Update Order
+# WSV v3.8.5 Series Edit / No Work Update
 
 ## Fix
 
-- UPDATES no longer uses image/logo asset timestamps for ordering.
-- UPDATES now orders works and series by their own `content_updated_at`.
-- This prevents multiple items from appearing with the same time because their assets share the same technical timestamp.
-- Image/logo uploads still update the parent work/series `content_updated_at` through Admin.
+- Editing a series no longer marks all works in that series as updated.
+- Related works still follow the updated series title for display.
+- Work `content_updated_at` is preserved unless the work itself is edited.
+- UPDATES ordering from v3.8.4 is preserved.
 
 ## Required SQL
 
@@ -22,14 +22,4 @@ If you already ran the v3.8.3 SQL patch, no additional SQL is required.
 - `/updates/index.html`
 - `/profile/index.html`
 
-## After replacing
-
-1. Open Admin.
-2. Edit and save a work or series.
-3. Wait for Supabase sync, or press manual sync.
-4. Refresh `/updates/`.
-
-## Note
-
-Existing rows may still share the same initial `content_updated_at` if they were initialized at the same time.
-After editing individual records, their `content_updated_at` will diverge.
+No additional SQL is required if v3.8.3 patch is already applied.

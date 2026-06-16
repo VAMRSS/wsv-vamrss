@@ -1,12 +1,12 @@
-# WSV v3.8.7 Updates No Search / Date Align
+# WSV v3.8.8 Sort Arrow Reverse
 
 ## Fix
 
-- Removed visible search box from `/updates/`.
-- Removed the `＋` button from `/updates/`.
-- Removed the `RESET` button from `/updates/`.
-- DATE column is aligned to the same right-side column position as the public portfolio `DONE` column.
-- UPDATES columns remain: `№ / TITLE / DATE`.
+- Portfolio sort direction arrows are reversed.
+- Admin sort direction arrows now match Portfolio.
+- Ascending: `↘`
+- Descending: `↗`
+- CSS rotation is disabled so the glyph direction stays consistent.
 
 ## Required SQL
 

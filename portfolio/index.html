@@ -2278,12 +2278,16 @@
       flex-wrap: wrap;
     }
 
+    .title-series-code {
+      color: var(--sub);
+    }
+
   </style>
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.6.0</div>
+    <div class="fixed-version-mark">v3.6.1</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2453,6 +2457,14 @@ function normalizeWorkNo(value) {
 
     function workTitle(work = {}) {
       return work.title || work.title_en || "Untitled";
+    }
+
+    function workListTitleHtml(work = {}) {
+      const title = escapeHtml(workTitle(work));
+      const series = seriesRecords.find(item => item.id === work.series_id);
+      const code = series && series.code ? String(series.code).trim() : "";
+      if (!code) return title;
+      return `${title}<span class="title-series-code">（${escapeHtml(code)}）</span>`;
     }
 
     function workDescription(work = {}) {
@@ -2811,7 +2823,7 @@ function normalizeWorkNo(value) {
           <article class="work" id="work-${escapeAttr(w.id)}">
             <button class="work-summary" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">
               <div class="work-no">${escapeHtml(workNo)}</div>
-              <div class="work-title"><span class="title-scroll">${escapeHtml(workTitle(w))}</span></div>
+              <div class="work-title"><span class="title-scroll">${workListTitleHtml(w)}</span></div>
               <div class="work-year">${escapeHtml(w.completed_date || "")}</div>
             </button>
             <div class="work-detail">

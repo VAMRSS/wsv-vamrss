@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.7.0.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.7.4.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2156,6 +2156,301 @@
       font-family: inherit;
     }
 
+    .logo-stack {
+      gap: 6px !important;
+    }
+
+    .logo-entry-card {
+      gap: 4px !important;
+    }
+
+    .logo-caption,
+    .logo-caption-display {
+      margin-top: 3px !important;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .logo-caption-input {
+      width: 100%;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .detail-row.logo-detail-row {
+      margin-bottom: 0.35em !important;
+    }
+
+    .detail-row.cover-detail-row {
+      margin-bottom: 0.45em !important;
+    }
+
+    .detail-row.image-detail-row {
+      margin-top: 0.35em !important;
+      margin-bottom: 0.35em !important;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery {
+      gap: 0.85em !important;
+    }
+
+    .work-image-caption {
+      margin-top: 3px !important;
+    }
+
+    .logo-detail-preview {
+      line-height: 1.45 !important;
+    }
+
+    .detail-grid {
+      gap: 1.8em 0 !important;
+      align-items: start !important;
+    }
+
+    .detail-row {
+      align-items: start !important;
+      min-height: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .detail-row.logo-detail-row,
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .logo-stack,
+    .work-image-gallery {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    .logo-stack-item,
+    .logo-entry-card,
+    .work-image-item,
+    .work-image-frame,
+    .cover-detail-preview,
+    .logo-detail-preview {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .logo-stack-item img,
+    .logo-entry-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .cover-detail-preview img,
+    .logo-detail-preview img,
+    .detail-row img {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .logo-caption,
+    .logo-caption-display,
+    .work-image-caption {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .profile-icon-img {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* v3.7.4 corrected spacing policy */
+    .detail-grid {
+      gap: 1px !important;
+      align-items: start !important;
+    }
+
+    .detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      min-height: 0 !important;
+      align-items: start !important;
+    }
+
+    .detail-row .detail-key,
+    .detail-row .detail-value {
+      min-height: 0 !important;
+    }
+
+    .detail-row.logo-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-stack,
+    .work-image-gallery {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    .logo-stack-item,
+    .logo-entry-card,
+    .work-image-card,
+    .work-image-item,
+    .work-image-frame,
+    .cover-detail-preview,
+    .logo-detail-preview {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-stack-item img,
+    .logo-entry-card img,
+    .work-image-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .cover-detail-preview img,
+    .cover-detail-image,
+    .logo-detail-preview img,
+    .detail-row img {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-caption,
+    .logo-caption-display,
+    .work-image-caption {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .profile-icon-img {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* v3.7.4 final media spacing override */
+    .detail-grid {
+      gap: 1px 0 !important;
+    }
+
+    .detail-row,
+    .detail-row.logo-detail-row,
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row {
+      display: block !important;
+    }
+
+    .detail-row.image-detail-row .detail-value,
+    .detail-row.logo-detail-row .detail-value,
+    .detail-row.cover-detail-row .detail-value,
+    .detail-row.additional-logo-detail-row .detail-value {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 1.45 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery,
+    .detail-row.logo-detail-row .logo-stack,
+    .detail-row.additional-logo-detail-row .logo-stack,
+    .work-image-gallery,
+    .logo-stack {
+      display: block !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-card,
+    .detail-row.image-detail-row .work-image-item,
+    .detail-row.image-detail-row .work-image-frame,
+    .detail-row.logo-detail-row .logo-stack-item,
+    .detail-row.additional-logo-detail-row .logo-stack-item,
+    .work-image-card,
+    .work-image-item,
+    .work-image-frame,
+    .logo-stack-item,
+    .cover-detail-preview,
+    .logo-detail-preview {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-card + .work-image-card,
+    .detail-row.image-detail-row .work-image-item + .work-image-item,
+    .detail-row.image-detail-row .work-image-frame + .work-image-frame,
+    .detail-row.logo-detail-row .logo-stack-item + .logo-stack-item,
+    .detail-row.additional-logo-detail-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1px !important;
+    }
+
+    .detail-row.image-detail-row img,
+    .detail-row.logo-detail-row img,
+    .detail-row.cover-detail-row img,
+    .detail-row.additional-logo-detail-row img,
+    .work-image-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .logo-stack-item img,
+    .cover-detail-preview img,
+    .logo-detail-preview img,
+    .profile-icon-img {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-caption,
+    .work-image-caption,
+    .logo-caption,
+    .logo-caption-display {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 1.45 !important;
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2184,7 +2479,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.7.0</div>
+  <div class="fixed-version-mark">v3.7.4</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -2270,6 +2565,7 @@
               <label for="workLogoFile">Logo SVGs / 作品ロゴ</label>
               <div id="workLogoPreview" class="logo-entry-preview">No SVG</div>
               <input id="workLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml">
+              <input id="workLogoCaption" class="logo-caption-input" type="text" placeholder="Caption / キャプション">
               <div class="logo-entry-actions">
                 <button class="text-button active" type="button" id="workLogoUploadButton" onclick="uploadEntryLogo('work')">UPLOAD SVG</button>
                 <button class="text-button danger" type="button" id="workLogoDeleteButton" onclick="deleteEntryLogo('work')">DELETE ALL SVG</button>
@@ -2467,6 +2763,7 @@
             <label for="seriesLogoFile">Logo SVGs / シリーズロゴ</label>
             <div id="seriesLogoPreview" class="logo-entry-preview">No SVG</div>
             <input id="seriesLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml">
+            <input id="seriesLogoCaption" class="logo-caption-input" type="text" placeholder="Caption / キャプション">
             <div class="logo-entry-actions">
               <button class="text-button active" type="button" id="seriesLogoUploadButton" onclick="uploadEntryLogo('series')">UPLOAD SVG</button>
               <button class="text-button danger" type="button" id="seriesLogoDeleteButton" onclick="deleteEntryLogo('series')">DELETE ALL SVG</button>
@@ -3581,22 +3878,49 @@
       });
     }
 
+    function logoAssetMarkup(kind, asset, showCaption = true) {
+      if (!asset || !asset.storagePath) return "";
+      const url = cloudAssetPublicUrl(asset.storagePath);
+      if (!url) return "";
+      const caption = showCaption ? escapeHtml(asset.caption || "") : "";
+      return `<div class="logo-stack-item">
+        <img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}">
+        ${caption ? `<div class="logo-caption-display">${caption}</div>` : ""}
+      </div>`;
+    }
+
     function logoDetailRowHtml(kind, record = {}) {
       const assets = findLogoAssets(kind, record).filter(asset => asset && asset.storagePath && cloudAssetPublicUrl(asset.storagePath));
       const fallbackPath = record.logoStoragePath || "";
-      if (!assets.length && !fallbackPath) return "";
+      const primary = assets[0] || null;
       const fallbackUrl = fallbackPath ? cloudAssetPublicUrl(fallbackPath) : "";
-      const urls = assets.length
-        ? assets.map(asset => cloudAssetPublicUrl(asset.storagePath)).filter(Boolean)
-        : (fallbackUrl ? [fallbackUrl] : []);
-      if (!urls.length) return "";
+      const inner = primary
+        ? logoAssetMarkup(kind, primary, false)
+        : (fallbackUrl ? `<div class="logo-stack-item"><img src="${escapeAttr(fallbackUrl)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div>` : "");
+      if (!inner) return "";
       return `
                 <div class="detail-row logo-detail-row">
                   <div class="detail-key">LOGO</div>
                   <div class="detail-value">
                     <div class="logo-detail-preview">
+                      <div class="logo-stack">${inner}</div>
+                    </div>
+                  </div>
+                </div>`;
+    }
+
+    function additionalLogoDetailRowHtml(kind, record = {}) {
+      const assets = findLogoAssets(kind, record)
+        .filter(asset => asset && asset.storagePath && cloudAssetPublicUrl(asset.storagePath))
+        .slice(1);
+      if (!assets.length) return "";
+      return `
+                <div class="detail-row logo-detail-row additional-logo-detail-row">
+                  <div class="detail-key">LOGO</div>
+                  <div class="detail-value">
+                    <div class="logo-detail-preview">
                       <div class="logo-stack">
-                        ${urls.map(url => `<div class="logo-stack-item"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}"></div>`).join("")}
+                        ${assets.map(asset => logoAssetMarkup(kind, asset, true)).join("")}
                       </div>
                     </div>
                   </div>
@@ -3926,6 +4250,7 @@
         }
 
         if (input) input.value = "";
+        if (captionInput) captionInput.value = "";
         const caption = document.getElementById("workImageCaption");
         const alt = document.getElementById("workImageAlt");
         if (caption) caption.value = "";
@@ -4012,6 +4337,7 @@
       const uploadButton = document.getElementById(kind === "series" ? "seriesLogoUploadButton" : "workLogoUploadButton");
       const deleteButton = document.getElementById(kind === "series" ? "seriesLogoDeleteButton" : "workLogoDeleteButton");
       const fileInput = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
+      const captionInput = document.getElementById(kind === "series" ? "seriesLogoCaption" : "workLogoCaption");
       if (!preview) return;
 
       const assets = record ? findLogoAssets(kind, record) : [];
@@ -4019,6 +4345,7 @@
       if (uploadButton) uploadButton.disabled = !enabled;
       if (deleteButton) deleteButton.disabled = !enabled || !assets.length;
       if (fileInput) fileInput.disabled = !enabled;
+      if (captionInput) captionInput.disabled = !enabled;
 
       if (!record) {
         preview.textContent = "Save first";
@@ -4031,14 +4358,17 @@
       }
 
       preview.innerHTML = `<div class="logo-stack">
-        ${assets.map(asset => {
+        ${assets.map((asset, index) => {
           const url = cloudAssetPublicUrl(asset.storagePath);
           if (!url) return "";
           return `<div class="logo-entry-card">
             <img src="${escapeAttr(url + "?t=" + Date.now())}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}">
+            <input class="logo-caption-input" id="logoCaption-${escapeAttr(asset.id)}" type="text" value="${escapeAttr(asset.caption || "")}" placeholder="Caption / キャプション">
             <div class="logo-entry-card-actions">
+              <button class="text-button" type="button" onclick="updateLogoAssetCaption('${escapeAttr(kind)}', '${escapeAttr(asset.id)}')">SAVE CAPTION</button>
               <button class="text-button danger" type="button" onclick="deleteLogoAsset('${escapeAttr(kind)}', '${escapeAttr(asset.id)}')">DELETE</button>
             </div>
+            ${index === 0 ? '<div class="logo-caption">Primary logo / 上部表示</div>' : '<div class="logo-caption">Additional logo / 説明下に表示</div>'}
           </div>`;
         }).join("")}
       </div>`;
@@ -4091,6 +4421,8 @@
         if (!record) throw new Error("新規データは一度SAVEしてからEDIT画面でロゴを登録してください。");
 
         const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
+        const captionInput = document.getElementById(kind === "series" ? "seriesLogoCaption" : "workLogoCaption");
+        const caption = captionInput ? captionInput.value.trim() : "";
         const file = input && input.files ? input.files[0] : null;
         const blob = await validateLogoSvgFile(file);
 
@@ -4124,6 +4456,7 @@
           storage_path: path,
           file_name: file.name,
           mime_type: "image/svg+xml",
+          caption,
           sort_order: existingLogos.length,
           is_cover: false,
           is_public: true
@@ -4155,6 +4488,25 @@
       const updateResult = await cloudClient.from(table).update({ logo_asset_id: nextPrimaryId }).eq("id", record.id);
       if (updateResult.error) throw updateResult.error;
     }
+
+    window.updateLogoAssetCaption = async function(kind, assetId) {
+      try {
+        if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
+        const input = document.getElementById(`logoCaption-${assetId}`);
+        const caption = input ? input.value.trim() : "";
+        const updateResult = await cloudClient.from("wsv_assets").update({ caption }).eq("id", assetId);
+        if (updateResult.error) throw updateResult.error;
+        const asset = cloudAssets.find(item => item.id === assetId);
+        if (asset) asset.caption = caption;
+        renderLogoControls(kind);
+        render();
+        setCloudStatus("SVGキャプションを保存しました。");
+      } catch (error) {
+        console.error(error);
+        setCloudStatus("SVGキャプション保存エラー: " + (error.message || error));
+        alert("SVGキャプション保存エラー: " + (error.message || error));
+      }
+    };
 
     window.deleteLogoAsset = async function(kind, assetId) {
       try {
@@ -5279,6 +5631,7 @@
             <div class="detail-row"><div class="detail-key">Cost</div><div class="detail-value">${escapeHtml(costText)}</div></div>
             <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(workDescription(w))}</div></div>
             <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(w.descriptionEn || "")}</div></div>
+            ${additionalLogoDetailRowHtml("work", w)}
             ${relatedLinksDetailRowHtml(w.relatedLinks)}
             ${workImagesDetailRowHtml(w)}
 </div>
@@ -5642,6 +5995,7 @@
                 <div class="detail-row"><div class="detail-key">Works</div><div class="detail-value">${escapeHtml(String(relatedWorks.length))}</div></div>
                 <div class="detail-row"><div class="detail-key">Description</div><div class="detail-value">${escapeHtml(s.description || s.descriptionJa || "")}</div></div>
                 <div class="detail-row"><div class="detail-key">D_EN</div><div class="detail-value">${escapeHtml(s.descriptionEn || "")}</div></div>
+                ${additionalLogoDetailRowHtml("series", s)}
                 ${relatedLinksDetailRowHtml(s.relatedLinks)}
               </div>
               ${relatedWorks.length ? `
@@ -6181,7 +6535,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.7.0",
+        version: "minimal-text-v3.7.4",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

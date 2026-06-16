@@ -1,10 +1,12 @@
-# WSV v3.7.0 Noto Sans JP
+# WSV v3.7.4 Media Spacing Override
 
-## Changes
+## Fix
 
-- Admin, Portfolio, and Profile now use Google Fonts Noto Sans JP.
-- UI controls, body text, lists, details, buttons, inputs, and textareas use the same font family.
-- Font rendering is more consistent across Windows, macOS, iPhone, Android, and other browsers.
+- Strongly overrides older image-gallery spacing rules.
+- Detail image spacing now matches normal row density.
+- Image and logo elements have zero vertical margin/padding.
+- Multiple images/logos have only a 1px separation.
+- Captions remain close to images.
 
 ## Replace
 

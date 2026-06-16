@@ -2440,7 +2440,7 @@
       padding: 0 !important;
     }
 
-    /* v3.7.4 corrected spacing policy */
+    /* v3.7.9 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2524,7 +2524,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.7.4 final media spacing override */
+    /* v3.7.9 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2625,6 +2625,155 @@
       line-height: 1.45 !important;
     }
 
+    /* v3.7.9 compact media rendering */
+    .detail-row.logo-detail-row .detail-value,
+    .detail-row.additional-logo-detail-row .detail-value,
+    .detail-row.cover-detail-row .detail-value,
+    .detail-row.image-detail-row .detail-value {
+      white-space: normal !important;
+      line-height: 1.45 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+    }
+
+    .media-compact-row,
+    .media-compact-row .detail-value {
+      white-space: normal !important;
+    }
+
+    .media-compact-row img,
+    .media-compact-row .logo-stack,
+    .media-compact-row .logo-stack-item,
+    .media-compact-row .logo-detail-preview,
+    .media-compact-row .work-image-gallery,
+    .media-compact-row .work-image-card,
+    .media-compact-row .cover-detail-preview {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1px !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display {
+      margin: 3px 0 0 0 !important;
+      padding: 0 !important;
+      line-height: 1.45 !important;
+      white-space: pre-wrap !important;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery,
+    .detail-row.logo-detail-row .logo-stack,
+    .detail-row.additional-logo-detail-row .logo-stack {
+      display: block !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    /* v3.7.9 balanced media spacing */
+    .media-compact-row {
+      margin-top: 0.45em !important;
+      margin-bottom: 0.45em !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 0.9em !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* v3.7.9 requested media spacing */
+    .media-compact-row {
+      margin-top: 1em !important;
+      margin-bottom: 1em !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1em !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* v3.7.9 high-specificity media spacing */
+    .detail-row.cover-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
+      margin-top: 1.25em !important;
+      margin-bottom: 1.25em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
+      margin-top: 1.5em !important;
+      margin-bottom: 1.5em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row.media-compact-row .work-image-card + .work-image-card,
+    .detail-row.image-detail-row.media-compact-row .work-image-item + .work-image-item,
+    .detail-row.logo-detail-row.media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1.5em !important;
+    }
+
+    .detail-row.image-detail-row.media-compact-row .work-image-caption,
+    .detail-row.logo-detail-row.media-compact-row .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* v3.7.9 logo top alignment */
+    .detail-row.logo-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
+      align-items: start !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row > .detail-key,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row > .detail-key {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row > .detail-value,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row > .detail-value {
+      align-self: start !important;
+      line-height: 0 !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row .logo-detail-preview,
+    .detail-row.logo-detail-row.media-compact-row .logo-stack,
+    .detail-row.logo-detail-row.media-compact-row .logo-stack-item,
+    .detail-row.logo-detail-row.media-compact-row img {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row .logo-caption-display {
+      line-height: 1.45 !important;
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2633,7 +2782,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.7.4</div>
+    <div class="fixed-version-mark">v3.7.9</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2939,10 +3088,7 @@ function normalizeWorkNo(value) {
       if (!asset || !asset.storage_path) return "";
       const url = cloudAssetPublicUrl(asset.storage_path);
       if (!url) return "";
-      return `
-                <div class="detail-row cover-detail-row">
-                  <div class="detail-value"><img class="cover-detail-image" src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || workTitle(work))}"></div>
-                </div>`;
+      return `<div class="detail-row cover-detail-row media-compact-row"><div class="detail-value"><img class="cover-detail-image" src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || workTitle(work))}"></div></div>`;
     }
 
     function logoAssetMarkup(kind, asset, showCaption = true) {
@@ -2950,25 +3096,14 @@ function normalizeWorkNo(value) {
       const url = cloudAssetPublicUrl(asset.storage_path);
       if (!url) return "";
       const caption = showCaption ? escapeHtml(asset.caption || "") : "";
-      return `<div class="logo-stack-item">
-        <img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}">
-        ${caption ? `<div class="logo-caption-display">${caption}</div>` : ""}
-      </div>`;
+      return `<div class="logo-stack-item"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}">${caption ? `<div class="logo-caption-display">${caption}</div>` : ""}</div>`;
     }
 
     function logoDetailRowHtml(kind, record = {}) {
       const assets = findLogoAssets(kind, record).filter(asset => asset && asset.storage_path && cloudAssetPublicUrl(asset.storage_path));
       const primary = assets[0] || null;
       if (!primary) return "";
-      return `
-                <div class="detail-row logo-detail-row">
-                  <div class="detail-key">LOGO</div>
-                  <div class="detail-value">
-                    <div class="logo-detail-preview">
-                      <div class="logo-stack">${logoAssetMarkup(kind, primary, false)}</div>
-                    </div>
-                  </div>
-                </div>`;
+      return `<div class="detail-row logo-detail-row media-compact-row"><div class="detail-key">LOGO</div><div class="detail-value"><div class="logo-detail-preview"><div class="logo-stack">${logoAssetMarkup(kind, primary, false)}</div></div></div></div>`;
     }
 
     function additionalLogoDetailRowHtml(kind, record = {}) {
@@ -2976,40 +3111,20 @@ function normalizeWorkNo(value) {
         .filter(asset => asset && asset.storage_path && cloudAssetPublicUrl(asset.storage_path))
         .slice(1);
       if (!assets.length) return "";
-      return `
-                <div class="detail-row logo-detail-row additional-logo-detail-row">
-                  <div class="detail-key">LOGO</div>
-                  <div class="detail-value">
-                    <div class="logo-detail-preview">
-                      <div class="logo-stack">
-                        ${assets.map(asset => logoAssetMarkup(kind, asset, true)).join("")}
-                      </div>
-                    </div>
-                  </div>
-                </div>`;
+      return `<div class="detail-row logo-detail-row additional-logo-detail-row media-compact-row"><div class="detail-key">LOGO</div><div class="detail-value"><div class="logo-detail-preview"><div class="logo-stack">${assets.map(asset => logoAssetMarkup(kind, asset, true)).join("")}</div></div></div></div>`;
     }
 
     function workImagesDetailRowHtml(work = {}) {
       const cover = findCoverImageAsset(work);
       const images = findWorkImageAssets(work).filter(asset => !cover || asset.id !== cover.id);
       if (!images.length) return "";
-      return `
-                <div class="detail-row image-detail-row">
-                  <div class="detail-value">
-                    <div class="work-image-gallery">
-                      ${images.map(asset => {
-                        const url = cloudAssetPublicUrl(asset.storage_path);
-                        if (!url) return "";
-                        const caption = escapeHtml(asset.caption || "");
-                        return `
-                          <div class="work-image-card">
-                            <img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || asset.caption || workTitle(work))}">
-                            ${caption ? `<div class="work-image-caption">${caption}</div>` : ""}
-                          </div>`;
-                      }).join("")}
-                    </div>
-                  </div>
-                </div>`;
+      const items = images.map(asset => {
+        const url = cloudAssetPublicUrl(asset.storage_path);
+        if (!url) return "";
+        const caption = escapeHtml(asset.caption || "");
+        return `<div class="work-image-card"><img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || asset.caption || workTitle(work))}">${caption ? `<div class="work-image-caption">${caption}</div>` : ""}</div>`;
+      }).join("");
+      return `<div class="detail-row image-detail-row media-compact-row"><div class="detail-value"><div class="work-image-gallery">${items}</div></div></div>`;
     }
 
     function row(key, value) {

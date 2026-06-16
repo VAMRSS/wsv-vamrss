@@ -1,12 +1,10 @@
-# WSV v3.7.4 Media Spacing Override
+# WSV v3.7.9 Logo Top Align
 
 ## Fix
 
-- Strongly overrides older image-gallery spacing rules.
-- Detail image spacing now matches normal row density.
-- Image and logo elements have zero vertical margin/padding.
-- Multiple images/logos have only a 1px separation.
-- Captions remain close to images.
+- TOP LOGO and lower LOGO image top edges are aligned with the LOGO label.
+- Applies to both Admin and Portfolio.
+- Media spacing from v3.7.8 is otherwise preserved.
 
 ## Replace
 

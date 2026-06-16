@@ -1,11 +1,12 @@
-# WSV v3.8.5 Series Edit / No Work Update
+# WSV v3.8.7 Updates No Search / Date Align
 
 ## Fix
 
-- Editing a series no longer marks all works in that series as updated.
-- Related works still follow the updated series title for display.
-- Work `content_updated_at` is preserved unless the work itself is edited.
-- UPDATES ordering from v3.8.4 is preserved.
+- Removed visible search box from `/updates/`.
+- Removed the `＋` button from `/updates/`.
+- Removed the `RESET` button from `/updates/`.
+- DATE column is aligned to the same right-side column position as the public portfolio `DONE` column.
+- UPDATES columns remain: `№ / TITLE / DATE`.
 
 ## Required SQL
 
@@ -21,5 +22,3 @@ If you already ran the v3.8.3 SQL patch, no additional SQL is required.
 - `/portfolio/index.html`
 - `/updates/index.html`
 - `/profile/index.html`
-
-No additional SQL is required if v3.8.3 patch is already applied.

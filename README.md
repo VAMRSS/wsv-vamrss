@@ -1,12 +1,11 @@
-# WSV v3.7.11 Image Upload Fix
+# WSV v3.7.13 Number / Sort Icon Fix
 
 ## Fix
 
-- Fixes the image upload error: `Can't find variable: captionInput`.
-- The upload success cleanup now references the caption input safely.
-- Japanese filenames are also handled more safely:
-  - Storage path filenames are converted to safe ASCII.
-  - If the converted basename becomes empty, `image` is used.
+- Work number display changed from `#` to `№`.
+- Any remaining ascending sort icon `↖` is corrected to `↗`.
+- Descending sort icon remains `↘`.
+- Applied to both Admin and Portfolio.
 
 ## Replace
 

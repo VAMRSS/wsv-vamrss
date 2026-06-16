@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.8.2.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.8.3.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2266,7 +2266,7 @@
       padding: 0 !important;
     }
 
-    /* v3.8.2 corrected spacing policy */
+    /* v3.8.3 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2350,7 +2350,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.8.2 final media spacing override */
+    /* v3.8.3 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2451,7 +2451,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.2 compact media rendering */
+    /* v3.8.3 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2505,7 +2505,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.8.2 balanced media spacing */
+    /* v3.8.3 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2522,7 +2522,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.2 requested media spacing */
+    /* v3.8.3 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2539,7 +2539,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.2 high-specificity media spacing */
+    /* v3.8.3 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2568,7 +2568,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.2 logo top alignment */
+    /* v3.8.3 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2600,12 +2600,12 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.2 logo visual offset */
+    /* v3.8.3 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.8.2 sort icon direction fix */
+    /* v3.8.3 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
@@ -2638,7 +2638,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.8.2</div>
+  <div class="fixed-version-mark">v3.8.3</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -4377,10 +4377,11 @@
         const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
         if (insertResult.error) throw insertResult.error;
 
-        if (isFirst) {
-          const updateResult = await cloudClient.from("wsv_works").update({ cover_asset_id: insertResult.data.id, updated_at: nowIso() }).eq("id", refreshedRecord.id);
-          if (updateResult.error) throw updateResult.error;
-        }
+        const parentUpdatePayload = isFirst
+          ? { cover_asset_id: insertResult.data.id, content_updated_at: nowIso() }
+          : { content_updated_at: nowIso() };
+        const parentUpdateResult = await cloudClient.from("wsv_works").update(parentUpdatePayload).eq("id", refreshedRecord.id);
+        if (parentUpdateResult.error) throw parentUpdateResult.error;
 
         if (input) input.value = "";
         const caption = document.getElementById("workImageCaption");
@@ -4410,7 +4411,7 @@
         const coverResult = await cloudClient.from("wsv_assets").update({ is_cover: true, updated_at: nowIso() }).eq("id", assetId);
         if (coverResult.error) throw coverResult.error;
 
-        const workResult = await cloudClient.from("wsv_works").update({ cover_asset_id: assetId, updated_at: nowIso() }).eq("id", record.id);
+        const workResult = await cloudClient.from("wsv_works").update({ cover_asset_id: assetId, content_updated_at: nowIso() }).eq("id", record.id);
         if (workResult.error) throw workResult.error;
 
         await refreshWorkImageAssets();
@@ -4442,9 +4443,9 @@
           if (remaining.length) {
             const nextCover = remaining[0];
             await cloudClient.from("wsv_assets").update({ is_cover: true, updated_at: nowIso() }).eq("id", nextCover.id);
-            await cloudClient.from("wsv_works").update({ cover_asset_id: nextCover.id, updated_at: nowIso() }).eq("id", record.id);
+            await cloudClient.from("wsv_works").update({ cover_asset_id: nextCover.id, content_updated_at: nowIso() }).eq("id", record.id);
           } else {
-            await cloudClient.from("wsv_works").update({ cover_asset_id: null, updated_at: nowIso() }).eq("id", record.id);
+            await cloudClient.from("wsv_works").update({ cover_asset_id: null, content_updated_at: nowIso() }).eq("id", record.id);
           }
         }
 
@@ -4597,10 +4598,11 @@
         const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
         if (insertResult.error) throw insertResult.error;
 
-        if (!existingLogos.length || !(refreshedRecord.logoAssetId || refreshedRecord.logo_asset_id)) {
-          const updateResult = await cloudClient.from(table).update({ logo_asset_id: insertResult.data.id, updated_at: nowIso() }).eq("id", refreshedRecord.id);
-          if (updateResult.error) throw updateResult.error;
-        }
+        const logoParentPayload = (!existingLogos.length || !(refreshedRecord.logoAssetId || refreshedRecord.logo_asset_id))
+          ? { logo_asset_id: insertResult.data.id, content_updated_at: nowIso() }
+          : { content_updated_at: nowIso() };
+        const updateResult = await cloudClient.from(table).update(logoParentPayload).eq("id", refreshedRecord.id);
+        if (updateResult.error) throw updateResult.error;
 
         if (input) input.value = "";
         await refreshCloudAssets();
@@ -4617,7 +4619,7 @@
       const table = kind === "series" ? "wsv_series" : "wsv_works";
       const remaining = findLogoAssets(kind, record);
       const nextPrimaryId = remaining.length ? remaining[0].id : null;
-      const updateResult = await cloudClient.from(table).update({ logo_asset_id: nextPrimaryId, updated_at: nowIso() }).eq("id", record.id);
+      const updateResult = await cloudClient.from(table).update({ logo_asset_id: nextPrimaryId, content_updated_at: nowIso() }).eq("id", record.id);
       if (updateResult.error) throw updateResult.error;
     }
 
@@ -4629,7 +4631,15 @@
         const updateResult = await cloudClient.from("wsv_assets").update({ caption, updated_at: nowIso() }).eq("id", assetId);
         if (updateResult.error) throw updateResult.error;
         const asset = cloudAssets.find(item => item.id === assetId);
-        if (asset) asset.caption = caption;
+        if (asset) {
+          asset.caption = caption;
+          const table = asset.seriesId ? "wsv_series" : "wsv_works";
+          const parentId = asset.seriesId || asset.workId;
+          if (parentId) {
+            const parentUpdate = await cloudClient.from(table).update({ content_updated_at: nowIso() }).eq("id", parentId);
+            if (parentUpdate.error) throw parentUpdate.error;
+          }
+        }
         renderLogoControls(kind);
         render();
         setCloudStatus("SVGキャプションを保存しました。");
@@ -4678,7 +4688,7 @@
         if (!confirm("登録済みSVGロゴをすべて削除しますか？")) return;
 
         const table = kind === "series" ? "wsv_series" : "wsv_works";
-        const updateResult = await cloudClient.from(table).update({ logo_asset_id: null, updated_at: nowIso() }).eq("id", record.id);
+        const updateResult = await cloudClient.from(table).update({ logo_asset_id: null, content_updated_at: nowIso() }).eq("id", record.id);
         if (updateResult.error) throw updateResult.error;
 
         const ids = assets.map(asset => asset.id).filter(Boolean);
@@ -4859,7 +4869,7 @@
             logoStoragePath: "",
             logoFileName: "",
             createdAt: row.created_at || nowIso(),
-            updatedAt: row.updated_at || nowIso()
+            updatedAt: row.content_updated_at || row.updated_at || nowIso()
           };
           seriesById.set(row.id, record);
           return record;
@@ -4908,7 +4918,7 @@
             logoStoragePath: "",
             logoFileName: "",
             createdAt: row.created_at || nowIso(),
-            updatedAt: row.updated_at || nowIso()
+            updatedAt: row.content_updated_at || row.updated_at || nowIso()
           };
         });
 
@@ -4978,8 +4988,7 @@
           description_en: toNull(series.descriptionEn),
           is_public: true,
           sort_order: index,
-          created_at: syncTimestamp(series.createdAt || series.updatedAt),
-          updated_at: syncTimestamp(series.updatedAt || series.createdAt)
+          content_updated_at: syncTimestamp(series.updatedAt || series.createdAt)
         })).filter(row => row.series_no && row.title && row.code);
 
         const { data: currentSeries, error: currentSeriesError } = await cloudClient.from("wsv_series").select("id,series_no");
@@ -5037,8 +5046,7 @@
             description_en: toNull(work.descriptionEn),
             is_public: true,
             sort_order: index,
-            created_at: syncTimestamp(work.createdAt || work.updatedAt),
-            updated_at: syncTimestamp(work.updatedAt || work.createdAt)
+            content_updated_at: syncTimestamp(work.updatedAt || work.createdAt)
           };
         }).filter(row => row.work_no && row.title);
 
@@ -5113,7 +5121,6 @@
         works.forEach(work => {
           const workId = workIdByNo.get(normalizeWorkNo(work.workNo));
           if (!workId) return;
-          const timestamp = syncTimestamp(work.updatedAt || work.createdAt);
           normalizeRelatedLinks(work.relatedLinks || []).forEach((link, index) => {
             relatedLinkPayload.push({
               owner_id: cloudUser.id,
@@ -5123,9 +5130,7 @@
               title: link.title || link.url,
               url: link.url,
               sort_order: index,
-              is_public: true,
-              created_at: timestamp,
-              updated_at: timestamp
+              is_public: true
             });
           });
         });
@@ -5133,7 +5138,6 @@
         seriesRecords.forEach(series => {
           const seriesId = seriesIdByNo.get(normalizeWorkNo(series.seriesNo));
           if (!seriesId) return;
-          const timestamp = syncTimestamp(series.updatedAt || series.createdAt);
           normalizeRelatedLinks(series.relatedLinks || []).forEach((link, index) => {
             relatedLinkPayload.push({
               owner_id: cloudUser.id,
@@ -5143,9 +5147,7 @@
               title: link.title || link.url,
               url: link.url,
               sort_order: index,
-              is_public: true,
-              created_at: timestamp,
-              updated_at: timestamp
+              is_public: true
             });
           });
         });
@@ -6678,7 +6680,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.8.2",
+        version: "minimal-text-v3.8.3",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

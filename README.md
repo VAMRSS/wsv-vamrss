@@ -1,10 +1,11 @@
-# WSV v3.7.9 Logo Top Align
+# WSV v3.7.10 Logo Down / Lower Logo Fix
 
 ## Fix
 
-- TOP LOGO and lower LOGO image top edges are aligned with the LOGO label.
-- Applies to both Admin and Portfolio.
-- Media spacing from v3.7.8 is otherwise preserved.
+- TOP LOGO and lower LOGO visual content is moved down by 0.5em.
+- Bottom spacing is preserved by using visual transform rather than changing row margin.
+- Admin WORK detail now displays the lower/additional LOGO below D_EN.
+- Portfolio and Profile inherit the same logo offset.
 
 ## Replace
 

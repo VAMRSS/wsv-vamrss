@@ -2313,12 +2313,32 @@
       line-height: 1.8 !important;
     }
 
+    :root {
+      --font-main: "Noto Sans JP", sans-serif !important;
+    }
+
+    html,
+    body,
+    button,
+    input,
+    textarea,
+    select {
+      font-family: var(--font-main) !important;
+    }
+
+    * {
+      font-family: inherit;
+    }
+
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.6.2</div>
+    <div class="fixed-version-mark">v3.7.0</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">

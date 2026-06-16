@@ -1,14 +1,15 @@
-# WSV v3.6.2 Detail Wrap Fix
+# WSV v3.7.0 Noto Sans JP
 
-## Fix
+## Changes
 
-- Long series names in detail rows no longer overlap the row above or below.
-- Detail rows now expand naturally when values wrap to multiple lines.
-- Applied to both Admin and Portfolio.
+- Admin, Portfolio, and Profile now use Google Fonts Noto Sans JP.
+- UI controls, body text, lists, details, buttons, inputs, and textareas use the same font family.
+- Font rendering is more consistent across Windows, macOS, iPhone, Android, and other browsers.
 
 ## Replace
 
 - `/admin/index.html`
 - `/portfolio/index.html`
+- `/profile/index.html`
 
 No SQL change is required.

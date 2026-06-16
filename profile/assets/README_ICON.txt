@@ -1,1 +1,1 @@
-Place your color SVG icon here as: profile-icon.svg
+Place profile icon SVG here as: profile-icon.svg

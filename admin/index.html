@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.8.8.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.8.9.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2266,7 +2266,7 @@
       padding: 0 !important;
     }
 
-    /* v3.8.8 corrected spacing policy */
+    /* v3.8.9 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2350,7 +2350,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.8.8 final media spacing override */
+    /* v3.8.9 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2451,7 +2451,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.8 compact media rendering */
+    /* v3.8.9 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2505,7 +2505,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.8.8 balanced media spacing */
+    /* v3.8.9 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2522,7 +2522,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.8 requested media spacing */
+    /* v3.8.9 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2539,7 +2539,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.8 high-specificity media spacing */
+    /* v3.8.9 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2568,7 +2568,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.8 logo top alignment */
+    /* v3.8.9 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2600,20 +2600,26 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.8 logo visual offset */
+    /* v3.8.9 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.8.8 sort icon direction fix */
+    /* v3.8.9 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.8.8 unified reversed sort arrows */
+    /* v3.8.9 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
+    }
+
+    /* v3.8.9 multiple upload previews */
+    .selected-upload-card {
+      outline: 1px dashed var(--line-strong);
+      outline-offset: -1px;
     }
 
   </style>
@@ -2644,7 +2650,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.8.8</div>
+  <div class="fixed-version-mark">v3.8.9</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -2729,13 +2735,13 @@
             <div class="field">
               <label for="workLogoFile">Logo SVGs / 作品ロゴ</label>
               <div id="workLogoPreview" class="logo-entry-preview">No SVG</div>
-              <input id="workLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml">
+              <input id="workLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml" multiple>
               <input id="workLogoCaption" class="logo-caption-input" type="text" placeholder="Caption / キャプション">
               <div class="logo-entry-actions">
-                <button class="text-button active" type="button" id="workLogoUploadButton" onclick="uploadEntryLogo('work')">UPLOAD SVG</button>
+                <button class="text-button active" type="button" id="workLogoUploadButton" onclick="uploadEntryLogo('work')">UPLOAD SVG(S)</button>
                 <button class="text-button danger" type="button" id="workLogoDeleteButton" onclick="deleteEntryLogo('work')">DELETE ALL SVG</button>
               </div>
-              <p class="logo-entry-note">保存済み作品のEDIT画面で追加登録できます。新規作品は一度SAVEしてから登録してください。</p>
+              <p class="logo-entry-note">保存済み作品のEDIT画面で複数画像を追加登録できます。新規作品は一度SAVEしてから登録してください。</p>
             </div>
           </div>
 
@@ -2743,13 +2749,13 @@
             <div class="field">
               <label for="workImageFile">Images / 作品画像</label>
               <div id="workImagePreview" class="image-entry-preview">No images</div>
-              <input id="workImageFile" class="image-file-input" type="file" accept="image/jpeg,image/png,image/webp">
+              <input id="workImageFile" class="image-file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple>
               <input id="workImageCaption" type="text" placeholder="Caption / キャプション">
               <textarea id="workImageAlt" placeholder="Alt Text / 画像説明"></textarea>
               <div class="image-entry-actions">
-                <button class="text-button active" type="button" id="workImageUploadButton" onclick="uploadWorkImage()">UPLOAD IMAGE</button>
+                <button class="text-button active" type="button" id="workImageUploadButton" onclick="uploadWorkImage()">UPLOAD IMAGE(S)</button>
               </div>
-              <p class="image-entry-note">保存済み作品のEDIT画面で追加登録できます。新規作品は一度SAVEしてから登録してください。</p>
+              <p class="image-entry-note">保存済み作品のEDIT画面で複数画像を追加登録できます。新規作品は一度SAVEしてから登録してください。</p>
             </div>
           </div>
 
@@ -2927,10 +2933,10 @@
           <div class="field">
             <label for="seriesLogoFile">Logo SVGs / シリーズロゴ</label>
             <div id="seriesLogoPreview" class="logo-entry-preview">No SVG</div>
-            <input id="seriesLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml">
+            <input id="seriesLogoFile" class="logo-file-input" type="file" accept=".svg,image/svg+xml" multiple>
             <input id="seriesLogoCaption" class="logo-caption-input" type="text" placeholder="Caption / キャプション">
             <div class="logo-entry-actions">
-              <button class="text-button active" type="button" id="seriesLogoUploadButton" onclick="uploadEntryLogo('series')">UPLOAD SVG</button>
+              <button class="text-button active" type="button" id="seriesLogoUploadButton" onclick="uploadEntryLogo('series')">UPLOAD SVG(S)</button>
               <button class="text-button danger" type="button" id="seriesLogoDeleteButton" onclick="deleteEntryLogo('series')">DELETE ALL SVG</button>
             </div>
             <p class="logo-entry-note">保存済みシリーズのEDIT画面で追加登録できます。新規シリーズは一度SAVEしてから登録してください。</p>
@@ -4339,8 +4345,9 @@
         if (!record) throw new Error("新規作品は一度SAVEしてからEDIT画面で画像を登録してください。");
 
         const input = document.getElementById("workImageFile");
-        const file = input && input.files ? input.files[0] : null;
-        validateWorkImageFile(file);
+        const files = input && input.files ? Array.from(input.files) : [];
+        if (!files.length) throw new Error("画像ファイルを選択してください。");
+        files.forEach(validateWorkImageFile);
 
         await cloudSyncAll(false);
 
@@ -4349,42 +4356,50 @@
         if (!refreshedRecord || !refreshedRecord.id) throw new Error("対象作品をSupabase上で確認できませんでした。");
 
         const existingImages = findWorkImageAssets(refreshedRecord);
-        const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14);
-        const ext = imageExtension(file.type);
-        const safeName = safeAssetFileName(file.name);
-        const rawBaseName = safeName.replace(/\.[a-z0-9]+$/, "").replace(/^\.+$/, "").replace(/^-|-$/g, "");
-        const baseName = rawBaseName || "image";
-        const path = `${cloudUser.id}/works/${no}/images/${timestamp}-${baseName}.${ext}`;
+        const captionValue = toNull(document.getElementById("workImageCaption")?.value || "");
+        const altValue = toNull(document.getElementById("workImageAlt")?.value || "");
+        const batchTimestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14);
 
-        setCloudStatus("作品画像をSupabase Storageへ保存中です。");
-        const uploadResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).upload(path, file, {
-          contentType: file.type,
-          upsert: false
-        });
-        if (uploadResult.error) throw uploadResult.error;
+        setCloudStatus(`作品画像 ${files.length}件をSupabase Storageへ保存中です。`);
 
-        const isFirst = existingImages.length === 0;
-        const payload = {
-          owner_id: cloudUser.id,
-          work_id: refreshedRecord.id,
-          series_id: null,
-          asset_type: "work_image",
-          storage_bucket: WSV_ASSET_BUCKET,
-          storage_path: path,
-          file_name: file.name,
-          mime_type: file.type,
-          alt_text: toNull(document.getElementById("workImageAlt")?.value || ""),
-          caption: toNull(document.getElementById("workImageCaption")?.value || ""),
-          sort_order: existingImages.length,
-          is_cover: isFirst,
-          is_public: true
-        };
+        let firstInsertedId = null;
+        for (const [index, file] of files.entries()) {
+          const ext = imageExtension(file.type);
+          const safeName = safeAssetFileName(file.name);
+          const rawBaseName = safeName.replace(/\.[a-z0-9]+$/, "").replace(/^\.+$/, "").replace(/^-|-$/g, "");
+          const baseName = rawBaseName || "image";
+          const path = `${cloudUser.id}/works/${no}/images/${batchTimestamp}-${String(index + 1).padStart(2, "0")}-${baseName}.${ext}`;
 
-        const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
-        if (insertResult.error) throw insertResult.error;
+          const uploadResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).upload(path, file, {
+            contentType: file.type,
+            upsert: false
+          });
+          if (uploadResult.error) throw uploadResult.error;
 
-        const parentUpdatePayload = isFirst
-          ? { cover_asset_id: insertResult.data.id, content_updated_at: nowIso() }
+          const isFirst = existingImages.length === 0 && index === 0;
+          const payload = {
+            owner_id: cloudUser.id,
+            work_id: refreshedRecord.id,
+            series_id: null,
+            asset_type: "work_image",
+            storage_bucket: WSV_ASSET_BUCKET,
+            storage_path: path,
+            file_name: file.name,
+            mime_type: file.type,
+            alt_text: altValue,
+            caption: captionValue,
+            sort_order: existingImages.length + index,
+            is_cover: isFirst,
+            is_public: true
+          };
+
+          const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
+          if (insertResult.error) throw insertResult.error;
+          if (isFirst) firstInsertedId = insertResult.data.id;
+        }
+
+        const parentUpdatePayload = firstInsertedId
+          ? { cover_asset_id: firstInsertedId, content_updated_at: nowIso() }
           : { content_updated_at: nowIso() };
         const parentUpdateResult = await cloudClient.from("wsv_works").update(parentUpdatePayload).eq("id", refreshedRecord.id);
         if (parentUpdateResult.error) throw parentUpdateResult.error;
@@ -4396,12 +4411,10 @@
         if (alt) alt.value = "";
 
         await refreshWorkImageAssets();
-        setCloudStatus("作品画像を保存しました。");
-        alert("作品画像を保存しました。");
+        setCloudStatus(`作品画像 ${files.length}件を保存しました。`);
       } catch (error) {
         console.error(error);
         setCloudStatus("作品画像保存エラー: " + (error.message || error));
-        alert("作品画像保存エラー: " + (error.message || error));
       }
     };
 
@@ -4516,13 +4529,26 @@
     async function previewSelectedSvg(kind) {
       const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
       const preview = document.getElementById(kind === "series" ? "seriesLogoPreview" : "workLogoPreview");
-      if (!input || !preview || !input.files || !input.files[0]) return;
-      const file = input.files[0];
-      if (!file.name.toLowerCase().endsWith(".svg")) return;
-      const text = await file.text();
-      if (!/<svg[\s>]/i.test(text.slice(0, 2000))) return;
-      const objectUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
-      preview.innerHTML = `<img src="${escapeAttr(objectUrl)}" alt="Selected SVG preview">`;
+      if (!input || !preview || !input.files || !input.files.length) return;
+      const files = Array.from(input.files).filter(file => file.name.toLowerCase().endsWith(".svg"));
+      if (!files.length) return;
+
+      const cards = [];
+      for (const file of files) {
+        const text = await file.text();
+        if (!/<svg[\s>]/i.test(text.slice(0, 2000))) continue;
+        const objectUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
+        cards.push(`
+          <div class="logo-entry-card selected-upload-card">
+            <img src="${escapeAttr(objectUrl)}" alt="Selected SVG preview">
+            <div class="logo-caption">${escapeHtml(file.name)}</div>
+          </div>
+        `);
+      }
+
+      if (cards.length) {
+        preview.innerHTML = `<div class="logo-stack">${cards.join("")}</div>`;
+      }
     }
 
     async function validateLogoSvgFile(file) {
@@ -4562,8 +4588,13 @@
         const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
         const captionInput = document.getElementById(kind === "series" ? "seriesLogoCaption" : "workLogoCaption");
         const caption = captionInput ? captionInput.value.trim() : "";
-        const file = input && input.files ? input.files[0] : null;
-        const blob = await validateLogoSvgFile(file);
+        const files = input && input.files ? Array.from(input.files) : [];
+        if (!files.length) throw new Error("SVGファイルを選択してください。");
+
+        const validated = [];
+        for (const file of files) {
+          validated.push({ file, blob: await validateLogoSvgFile(file) });
+        }
 
         await cloudSyncAll(false);
 
@@ -4576,48 +4607,56 @@
         const assetType = kind === "series" ? "series_logo" : "work_logo";
         const table = kind === "series" ? "wsv_series" : "wsv_works";
         const existingLogos = findLogoAssets(kind, refreshedRecord);
-        const safeFileName = String(file.name || "logo.svg").replace(/[^a-zA-Z0-9._-]+/g, "-");
-        const path = `${cloudUser.id}/${kind === "series" ? "series" : "works"}/${no}/logos/${Date.now()}-${safeFileName}`;
+        const folder = kind === "series" ? "series" : "works";
+        const batchTimestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14);
 
-        setCloudStatus("SVGをSupabase Storageへ保存中です。");
-        const uploadResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).upload(path, blob, {
-          contentType: "image/svg+xml",
-          upsert: false
-        });
-        if (uploadResult.error) throw uploadResult.error;
+        setCloudStatus(`SVGロゴ ${validated.length}件をSupabase Storageへ保存中です。`);
 
-        const payload = {
-          owner_id: cloudUser.id,
-          work_id: kind === "work" ? refreshedRecord.id : null,
-          series_id: kind === "series" ? refreshedRecord.id : null,
-          asset_type: assetType,
-          storage_bucket: WSV_ASSET_BUCKET,
-          storage_path: path,
-          file_name: file.name,
-          mime_type: "image/svg+xml",
-          caption,
-          sort_order: existingLogos.length,
-          is_cover: false,
-          is_public: true
-        };
+        let firstInsertedId = null;
+        for (const [index, item] of validated.entries()) {
+          const safeFileName = String(item.file.name || "logo.svg").replace(/[^a-zA-Z0-9._-]+/g, "-") || "logo.svg";
+          const path = `${cloudUser.id}/${folder}/${no}/logos/${batchTimestamp}-${String(index + 1).padStart(2, "0")}-${safeFileName}`;
 
-        const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
-        if (insertResult.error) throw insertResult.error;
+          const uploadResult = await cloudClient.storage.from(WSV_ASSET_BUCKET).upload(path, item.blob, {
+            contentType: "image/svg+xml",
+            upsert: false
+          });
+          if (uploadResult.error) throw uploadResult.error;
 
-        const logoParentPayload = (!existingLogos.length || !(refreshedRecord.logoAssetId || refreshedRecord.logo_asset_id))
-          ? { logo_asset_id: insertResult.data.id, content_updated_at: nowIso() }
+          const payload = {
+            owner_id: cloudUser.id,
+            work_id: kind === "work" ? refreshedRecord.id : null,
+            series_id: kind === "series" ? refreshedRecord.id : null,
+            asset_type: assetType,
+            storage_bucket: WSV_ASSET_BUCKET,
+            storage_path: path,
+            file_name: item.file.name,
+            mime_type: "image/svg+xml",
+            caption,
+            sort_order: existingLogos.length + index,
+            is_cover: false,
+            is_public: true
+          };
+
+          const insertResult = await cloudClient.from("wsv_assets").insert(payload).select("id").single();
+          if (insertResult.error) throw insertResult.error;
+          if (index === 0) firstInsertedId = insertResult.data.id;
+        }
+
+        const needsPrimaryLogo = !existingLogos.length || !(refreshedRecord.logoAssetId || refreshedRecord.logo_asset_id);
+        const logoParentPayload = needsPrimaryLogo && firstInsertedId
+          ? { logo_asset_id: firstInsertedId, content_updated_at: nowIso() }
           : { content_updated_at: nowIso() };
         const updateResult = await cloudClient.from(table).update(logoParentPayload).eq("id", refreshedRecord.id);
         if (updateResult.error) throw updateResult.error;
 
         if (input) input.value = "";
+        if (captionInput) captionInput.value = "";
         await refreshCloudAssets();
-        setCloudStatus("SVGロゴを追加しました。");
-        alert("SVGロゴを追加しました。");
+        setCloudStatus(`SVGロゴ ${validated.length}件を追加しました。`);
       } catch (error) {
         console.error(error);
         setCloudStatus("SVG保存エラー: " + (error.message || error));
-        alert("SVG保存エラー: " + (error.message || error));
       }
     };
 
@@ -5991,11 +6030,20 @@
     const workImageFileInput = document.getElementById("workImageFile");
     if (workImageFileInput) workImageFileInput.addEventListener("change", () => {
       const preview = document.getElementById("workImagePreview");
-      const file = workImageFileInput.files && workImageFileInput.files[0];
-      if (!preview || !file) return;
-      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return;
-      const objectUrl = URL.createObjectURL(file);
-      preview.innerHTML = `<img src="${escapeAttr(objectUrl)}" alt="Selected image preview">`;
+      const files = workImageFileInput.files ? Array.from(workImageFileInput.files) : [];
+      if (!preview || !files.length) return;
+      const cards = files
+        .filter(file => ["image/jpeg", "image/png", "image/webp"].includes(file.type))
+        .map(file => {
+          const objectUrl = URL.createObjectURL(file);
+          return `<div class="work-image-card selected-upload-card">
+            <img src="${escapeAttr(objectUrl)}" alt="Selected image preview">
+            <div class="work-image-caption">${escapeHtml(file.name)}</div>
+          </div>`;
+        });
+      if (cards.length) {
+        preview.innerHTML = `<div class="work-image-gallery">${cards.join("")}</div>`;
+      }
     });
 
 
@@ -6686,7 +6734,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.8.8",
+        version: "minimal-text-v3.8.9",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

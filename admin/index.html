@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.8.9.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.8.10.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2266,7 +2266,7 @@
       padding: 0 !important;
     }
 
-    /* v3.8.9 corrected spacing policy */
+    /* v3.8.10 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2350,7 +2350,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.8.9 final media spacing override */
+    /* v3.8.10 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2451,7 +2451,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.9 compact media rendering */
+    /* v3.8.10 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2505,7 +2505,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.8.9 balanced media spacing */
+    /* v3.8.10 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2522,7 +2522,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.9 requested media spacing */
+    /* v3.8.10 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2539,7 +2539,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.9 high-specificity media spacing */
+    /* v3.8.10 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2568,7 +2568,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.9 logo top alignment */
+    /* v3.8.10 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2600,26 +2600,39 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.9 logo visual offset */
+    /* v3.8.10 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.8.9 sort icon direction fix */
+    /* v3.8.10 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.8.9 unified reversed sort arrows */
+    /* v3.8.10 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.8.9 multiple upload previews */
+    /* v3.8.10 multiple upload previews */
     .selected-upload-card {
       outline: 1px dashed var(--line-strong);
       outline-offset: -1px;
+    }
+
+    /* v3.8.10 desktop multiple upload queue */
+    .upload-queue-note {
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .upload-drag-over {
+      border-color: var(--ink) !important;
+      background: rgba(7, 28, 22, 0.04) !important;
     }
 
   </style>
@@ -2650,7 +2663,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.8.9</div>
+  <div class="fixed-version-mark">v3.8.10</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3081,6 +3094,124 @@
     let cloudSyncing = false;
     const WSV_ASSET_BUCKET = "wsv-assets";
     let cloudAssets = [];
+
+    const pendingUploadFiles = {
+      workImage: [],
+      workLogo: [],
+      seriesLogo: []
+    };
+
+    function uploadFileIdentity(file) {
+      return [file.name, file.size, file.lastModified, file.type].join("::");
+    }
+
+    function addPendingUploadFiles(key, files) {
+      const validFiles = Array.from(files || []).filter(Boolean);
+      if (!pendingUploadFiles[key]) pendingUploadFiles[key] = [];
+      const seen = new Set(pendingUploadFiles[key].map(uploadFileIdentity));
+      validFiles.forEach(file => {
+        const id = uploadFileIdentity(file);
+        if (!seen.has(id)) {
+          pendingUploadFiles[key].push(file);
+          seen.add(id);
+        }
+      });
+      renderPendingUploadPreview(key);
+    }
+
+    function getPendingUploadFiles(key, input) {
+      const queued = pendingUploadFiles[key] || [];
+      if (queued.length) return queued;
+      return input && input.files ? Array.from(input.files) : [];
+    }
+
+    function clearPendingUploadFiles(key) {
+      if (pendingUploadFiles[key]) pendingUploadFiles[key] = [];
+      const info = uploadInputInfo(key);
+      const input = info ? document.getElementById(info.inputId) : null;
+      if (input) input.value = "";
+    }
+
+    function uploadInputInfo(key) {
+      if (key === "workImage") return { inputId: "workImageFile", previewId: "workImagePreview", type: "image" };
+      if (key === "workLogo") return { inputId: "workLogoFile", previewId: "workLogoPreview", type: "svg" };
+      if (key === "seriesLogo") return { inputId: "seriesLogoFile", previewId: "seriesLogoPreview", type: "svg" };
+      return null;
+    }
+
+    function renderPendingUploadPreview(key) {
+      const info = uploadInputInfo(key);
+      if (!info) return;
+      const preview = document.getElementById(info.previewId);
+      if (!preview) return;
+      const files = pendingUploadFiles[key] || [];
+      if (!files.length) return;
+
+      if (info.type === "image") {
+        const cards = files
+          .filter(file => ["image/jpeg", "image/png", "image/webp"].includes(file.type))
+          .map(file => {
+            const objectUrl = URL.createObjectURL(file);
+            return `<div class="work-image-card selected-upload-card">
+              <img src="${escapeAttr(objectUrl)}" alt="Selected image preview">
+              <div class="work-image-caption">${escapeHtml(file.name)}</div>
+            </div>`;
+          });
+        preview.innerHTML = `
+          <div class="upload-queue-note">Selected ${files.length} file(s). You can add more files before uploading.</div>
+          <div class="work-image-gallery">${cards.join("")}</div>
+          <button class="text-button" type="button" onclick="clearPendingUploadFiles('workImage'); renderWorkImageControls();">CLEAR SELECTED</button>
+        `;
+        return;
+      }
+
+      const cards = files
+        .filter(file => file.name.toLowerCase().endsWith(".svg") || file.type === "image/svg+xml")
+        .map(file => {
+          const objectUrl = URL.createObjectURL(file);
+          return `<div class="logo-entry-card selected-upload-card">
+            <img src="${escapeAttr(objectUrl)}" alt="Selected SVG preview">
+            <div class="logo-caption">${escapeHtml(file.name)}</div>
+          </div>`;
+        });
+      preview.innerHTML = `
+        <div class="upload-queue-note">Selected ${files.length} file(s). You can add more files before uploading.</div>
+        <div class="logo-stack">${cards.join("")}</div>
+        <button class="text-button" type="button" onclick="clearPendingUploadFiles('${key}'); renderLogoControls('${key === "seriesLogo" ? "series" : "work"}');">CLEAR SELECTED</button>
+      `;
+    }
+
+    function setupUploadDropZone(key) {
+      const info = uploadInputInfo(key);
+      if (!info) return;
+      const preview = document.getElementById(info.previewId);
+      if (!preview) return;
+
+      ["dragenter", "dragover"].forEach(type => {
+        preview.addEventListener(type, event => {
+          event.preventDefault();
+          event.stopPropagation();
+          preview.classList.add("upload-drag-over");
+        });
+      });
+
+      ["dragleave", "dragend"].forEach(type => {
+        preview.addEventListener(type, event => {
+          event.preventDefault();
+          event.stopPropagation();
+          preview.classList.remove("upload-drag-over");
+        });
+      });
+
+      preview.addEventListener("drop", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        preview.classList.remove("upload-drag-over");
+        const files = event.dataTransfer ? Array.from(event.dataTransfer.files || []) : [];
+        if (files.length) addPendingUploadFiles(key, files);
+      });
+    }
+
 
     const DEFAULT_CATEGORIES = [];
     const DEFAULT_TECHNIQUES = [];
@@ -4336,6 +4467,8 @@
       renderWorkImageControls();
     }
 
+    window.clearPendingUploadFiles = clearPendingUploadFiles;
+
     window.uploadWorkImage = async function() {
       try {
         if (!cloudReady || !cloudUser) throw new Error("SupabaseにSIGN INしてください。");
@@ -4345,7 +4478,7 @@
         if (!record) throw new Error("新規作品は一度SAVEしてからEDIT画面で画像を登録してください。");
 
         const input = document.getElementById("workImageFile");
-        const files = input && input.files ? Array.from(input.files) : [];
+        const files = getPendingUploadFiles("workImage", input);
         if (!files.length) throw new Error("画像ファイルを選択してください。");
         files.forEach(validateWorkImageFile);
 
@@ -4404,7 +4537,7 @@
         const parentUpdateResult = await cloudClient.from("wsv_works").update(parentUpdatePayload).eq("id", refreshedRecord.id);
         if (parentUpdateResult.error) throw parentUpdateResult.error;
 
-        if (input) input.value = "";
+        clearPendingUploadFiles("workImage");
         const caption = document.getElementById("workImageCaption");
         const alt = document.getElementById("workImageAlt");
         if (caption) caption.value = "";
@@ -4528,27 +4661,9 @@
 
     async function previewSelectedSvg(kind) {
       const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
-      const preview = document.getElementById(kind === "series" ? "seriesLogoPreview" : "workLogoPreview");
-      if (!input || !preview || !input.files || !input.files.length) return;
-      const files = Array.from(input.files).filter(file => file.name.toLowerCase().endsWith(".svg"));
-      if (!files.length) return;
-
-      const cards = [];
-      for (const file of files) {
-        const text = await file.text();
-        if (!/<svg[\s>]/i.test(text.slice(0, 2000))) continue;
-        const objectUrl = URL.createObjectURL(new Blob([text], { type: "image/svg+xml" }));
-        cards.push(`
-          <div class="logo-entry-card selected-upload-card">
-            <img src="${escapeAttr(objectUrl)}" alt="Selected SVG preview">
-            <div class="logo-caption">${escapeHtml(file.name)}</div>
-          </div>
-        `);
-      }
-
-      if (cards.length) {
-        preview.innerHTML = `<div class="logo-stack">${cards.join("")}</div>`;
-      }
+      if (!input || !input.files || !input.files.length) return;
+      addPendingUploadFiles(kind === "series" ? "seriesLogo" : "workLogo", Array.from(input.files));
+      input.value = "";
     }
 
     async function validateLogoSvgFile(file) {
@@ -4588,7 +4703,8 @@
         const input = document.getElementById(kind === "series" ? "seriesLogoFile" : "workLogoFile");
         const captionInput = document.getElementById(kind === "series" ? "seriesLogoCaption" : "workLogoCaption");
         const caption = captionInput ? captionInput.value.trim() : "";
-        const files = input && input.files ? Array.from(input.files) : [];
+        const uploadKey = kind === "series" ? "seriesLogo" : "workLogo";
+        const files = getPendingUploadFiles(uploadKey, input);
         if (!files.length) throw new Error("SVGファイルを選択してください。");
 
         const validated = [];
@@ -4650,7 +4766,7 @@
         const updateResult = await cloudClient.from(table).update(logoParentPayload).eq("id", refreshedRecord.id);
         if (updateResult.error) throw updateResult.error;
 
-        if (input) input.value = "";
+        clearPendingUploadFiles(uploadKey);
         if (captionInput) captionInput.value = "";
         await refreshCloudAssets();
         setCloudStatus(`SVGロゴ ${validated.length}件を追加しました。`);
@@ -6029,21 +6145,10 @@
 
     const workImageFileInput = document.getElementById("workImageFile");
     if (workImageFileInput) workImageFileInput.addEventListener("change", () => {
-      const preview = document.getElementById("workImagePreview");
       const files = workImageFileInput.files ? Array.from(workImageFileInput.files) : [];
-      if (!preview || !files.length) return;
-      const cards = files
-        .filter(file => ["image/jpeg", "image/png", "image/webp"].includes(file.type))
-        .map(file => {
-          const objectUrl = URL.createObjectURL(file);
-          return `<div class="work-image-card selected-upload-card">
-            <img src="${escapeAttr(objectUrl)}" alt="Selected image preview">
-            <div class="work-image-caption">${escapeHtml(file.name)}</div>
-          </div>`;
-        });
-      if (cards.length) {
-        preview.innerHTML = `<div class="work-image-gallery">${cards.join("")}</div>`;
-      }
+      if (!files.length) return;
+      addPendingUploadFiles("workImage", files);
+      workImageFileInput.value = "";
     });
 
 
@@ -6065,6 +6170,7 @@
     function resetSeriesForm() {
       editingSeriesId = null;
       seriesForm.reset();
+      clearPendingUploadFiles("seriesLogo");
       const seriesLogoFile = document.getElementById("seriesLogoFile");
       if (seriesLogoFile) seriesLogoFile.value = "";
       renderLogoControls("series");
@@ -6266,6 +6372,10 @@
 
     const seriesLogoFileInput = document.getElementById("seriesLogoFile");
     if (seriesLogoFileInput) seriesLogoFileInput.addEventListener("change", () => previewSelectedSvg("series"));
+
+    setupUploadDropZone("workImage");
+    setupUploadDropZone("workLogo");
+    setupUploadDropZone("seriesLogo");
 
     seriesForm.addEventListener("submit", event => {
       event.preventDefault();
@@ -6734,7 +6844,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.8.9",
+        version: "minimal-text-v3.8.10",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

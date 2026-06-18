@@ -1,4 +1,4 @@
-# WSV v3.8.10 Desktop Multiple Upload Queue
+# WSV v3.8.11 Desktop Multiple Upload Queue
 
 ## Fix
 
@@ -26,3 +26,10 @@ If you already ran the v3.8.3 SQL patch, no additional SQL is required.
 - `/portfolio/index.html`
 - `/updates/index.html`
 - `/profile/index.html`
+
+
+## v3.8.11
+
+- iPhone Safari optimized max width and horizontal padding.
+- Unified typography around Noto Sans JP weight 400.
+- Added min-width safeguards for form controls and grid/flex layouts.

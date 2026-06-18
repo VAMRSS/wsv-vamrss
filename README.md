@@ -1,16 +1,39 @@
-# WSV v3.8.11 Desktop Multiple Upload Queue
+# WSV v3.8.11 Work to Series Conversion
 
 ## Fix
 
-- Desktop Chrome can now accumulate multiple selected files in an inline upload queue.
-- Repeated file selections are appended instead of replacing the previous selection.
-- Drag and drop is supported on the preview area for:
-  - Work images
-  - Work logo SVGs
-  - Series logo SVGs
-- Selected files are displayed inline before upload.
-- `CLEAR SELECTED` clears the pending upload queue.
-- Upload success/error feedback remains inline without alert dialogs.
+- Added `CONVERT TO SERIES` to the Work EDIT screen.
+- A saved work can be converted into a series from its edit screen.
+- The converted work is removed from Works and added to Series.
+- The original work number is reused as the series number when possible.
+- If the number conflicts, a new available series number is generated.
+- Series CODE is auto-generated from the series number.
+- After conversion, the list switches to SERIES mode.
+
+## Carried over
+
+- Number
+- Title
+- T_EN
+- Start date
+- Description
+- D_EN
+- URL / related links
+
+## Not carried over
+
+- Technique
+- Done date
+- Production status
+- Management status
+- Location
+- Owner
+- Materials
+- Dimensions
+- Price
+- Cost
+- Exhibition history
+- Work images
 
 ## Required SQL
 
@@ -26,10 +49,3 @@ If you already ran the v3.8.3 SQL patch, no additional SQL is required.
 - `/portfolio/index.html`
 - `/updates/index.html`
 - `/profile/index.html`
-
-
-## v3.8.11
-
-- iPhone Safari optimized max width and horizontal padding.
-- Unified typography around Noto Sans JP weight 400.
-- Added min-width safeguards for form controls and grid/flex layouts.

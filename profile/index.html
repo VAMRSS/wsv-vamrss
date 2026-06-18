@@ -42,7 +42,7 @@
       background: var(--bg);
       font-family: var(--font-main);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
       letter-spacing: 0.01em;
     }
@@ -73,7 +73,7 @@
       z-index: 20;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 1;
       pointer-events: none;
     }
@@ -95,7 +95,7 @@
       grid-area: logo;
       margin: 0;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.11em;
       white-space: nowrap;
       overflow: visible;
@@ -161,7 +161,7 @@
 
     .version-mark {
       color: var(--muted);
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.08em;
     }
 
@@ -188,7 +188,7 @@
       padding: 0 2px;
       color: var(--sub);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
       letter-spacing: 0.09em;
       text-transform: uppercase;
@@ -211,7 +211,7 @@
       padding: 2px 8px;
       outline: none;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
       text-align: left;
     }
@@ -423,7 +423,7 @@
       padding: 2px 8px;
       outline: none;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
       text-align: left;
     }
@@ -444,7 +444,7 @@
       padding: 2px 0;
       outline: none;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
     }
 
@@ -493,7 +493,7 @@
       margin: 16px 0 5px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.13em;
       text-transform: uppercase;
     }
@@ -677,7 +677,7 @@
       padding: 2px 0 9px 0;
       color: var(--sub);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
     }
 
@@ -934,7 +934,7 @@
     label {
       color: var(--muted);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.09em;
       text-transform: uppercase;
     }
@@ -959,7 +959,7 @@
     .sub-field label:not(.ask-line) {
       color: var(--muted);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.09em;
       text-transform: uppercase;
     }
@@ -972,7 +972,7 @@
       margin-top: 1px;
       color: var(--sub);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
@@ -1108,7 +1108,7 @@
       margin: 0 0 7px;
       color: var(--muted);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.13em;
       text-transform: uppercase;
     }
@@ -1128,7 +1128,7 @@
       text-align: left;
       color: inherit;
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
     }
 
@@ -2004,7 +2004,7 @@
     .portfolio-note {
       color: var(--sub);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 300;
       line-height: 2;
     }
 
@@ -2112,7 +2112,7 @@
     .fixed-version-mark {
       font-family: var(--font-main) !important;
       font-size: 10px !important;
-      font-weight: 400 !important;
+      font-weight: 300 !important;
       line-height: 1 !important;
       letter-spacing: 0.04em !important;
       color: var(--sub) !important;
@@ -2726,76 +2726,10 @@
       transform: none !important;
     }
 
-
-    /* v3.8.11 iPhone Safari optimized layout */
-    :root {
-      --wsv-app-max: 430px;
-      --wsv-page-pad-x: 16px;
-    }
-
-    body,
-    button,
-    input,
-    textarea,
-    select,
-    label,
-    .text-button {
-      font-weight: 400 !important;
-    }
-
-    .app {
-      max-width: var(--wsv-app-max) !important;
-      padding-left: var(--wsv-page-pad-x) !important;
-      padding-right: var(--wsv-page-pad-x) !important;
-    }
-
-    .fixed-copyright-mark {
-      left: var(--wsv-page-pad-x) !important;
-    }
-
-    .fixed-version-mark {
-      right: var(--wsv-page-pad-x) !important;
-    }
-
-    button,
-    input,
-    textarea,
-    select,
-    .topbar,
-    .text-nav,
-    .search-line,
-    .portfolio-search-line,
-    .entry-row,
-    .form-grid,
-    .detail-row,
-    .work-summary,
-    .list-head {
-      min-width: 0;
-      box-sizing: border-box;
-    }
-
-    input:not([type="checkbox"]),
-    textarea,
-    select,
-    #searchInput,
-    .inline-search-wrap #searchInput,
-    .portfolio-search-wrap input {
-      width: 100%;
-      max-width: 100% !important;
-      min-width: 0 !important;
-      box-sizing: border-box !important;
-    }
-
-    @media (max-width: 380px) {
-      :root {
-        --wsv-page-pad-x: 14px;
-      }
-    }
-
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <main class="app">

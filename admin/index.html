@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.8.11.9.1</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.8.12.9.1</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2266,7 +2266,7 @@
       padding: 0 !important;
     }
 
-    /* v3.8.11 corrected spacing policy */
+    /* v3.8.12 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2350,7 +2350,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.8.11 final media spacing override */
+    /* v3.8.12 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2451,7 +2451,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.11 compact media rendering */
+    /* v3.8.12 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2505,7 +2505,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.8.11 balanced media spacing */
+    /* v3.8.12 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2522,7 +2522,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.11 requested media spacing */
+    /* v3.8.12 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2539,7 +2539,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.11 high-specificity media spacing */
+    /* v3.8.12 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2568,7 +2568,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.11 logo top alignment */
+    /* v3.8.12 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2600,29 +2600,29 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.11 logo visual offset */
+    /* v3.8.12 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.8.11 sort icon direction fix */
+    /* v3.8.12 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.8.11 unified reversed sort arrows */
+    /* v3.8.12 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.8.11 multiple upload previews */
+    /* v3.8.12 multiple upload previews */
     .selected-upload-card {
       outline: 1px dashed var(--line-strong);
       outline-offset: -1px;
     }
 
-    /* v3.8.11 desktop multiple upload queue */
+    /* v3.8.12 desktop multiple upload queue */
     .upload-queue-note {
       color: var(--sub);
       font-size: 11px;
@@ -2635,8 +2635,19 @@
       background: rgba(7, 28, 22, 0.04) !important;
     }
 
-    /* v3.8.11 work to series conversion */
+    /* v3.8.12 work to series conversion */
     #convertToSeriesButton {
+      color: var(--sub);
+    }
+
+    /* v3.8.12 expanded detail close button */
+    .detail-close-row {
+      margin-top: 1.5em;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .detail-close-button {
       color: var(--sub);
     }
 
@@ -2668,7 +2679,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-  <div class="fixed-version-mark">v3.8.11</div>
+  <div class="fixed-version-mark">v3.8.12</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -6109,7 +6120,10 @@
               <div class="detail-actions">
                 <button class="text-button" type="button" onclick="startEdit('${escapeAttr(w.id)}')">EDIT</button>
                 <button class="text-button danger" type="button" onclick="deleteWork('${escapeAttr(w.id)}')">DELETE</button>
-                </div>
+              </div>
+              <div class="detail-close-row">
+                <button class="text-button detail-close-button" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">CLOSE</button>
+              </div>
             </div>
           </article>
         `;
@@ -6966,7 +6980,7 @@
         app: "(VAMRSS) WORKSHEET VAULT SYSTEM",
         abbreviation: "WSV",
         schemaVersion: 9,
-        version: "minimal-text-v3.8.11",
+        version: "minimal-text-v3.8.12",
         exportedAt: nowIso(),
         data: {
           works: works.map(w => ({ ...w })),

@@ -2440,7 +2440,7 @@
       padding: 0 !important;
     }
 
-    /* v3.8.11 corrected spacing policy */
+    /* v3.8.12 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2524,7 +2524,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.8.11 final media spacing override */
+    /* v3.8.12 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2625,7 +2625,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.11 compact media rendering */
+    /* v3.8.12 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2679,7 +2679,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.8.11 balanced media spacing */
+    /* v3.8.12 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2696,7 +2696,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.11 requested media spacing */
+    /* v3.8.12 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2713,7 +2713,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.11 high-specificity media spacing */
+    /* v3.8.12 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2742,7 +2742,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.8.11 logo top alignment */
+    /* v3.8.12 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2774,20 +2774,31 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.8.11 logo visual offset */
+    /* v3.8.12 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.8.11 sort icon direction fix */
+    /* v3.8.12 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.8.11 unified reversed sort arrows */
+    /* v3.8.12 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
+    }
+
+    /* v3.8.12 expanded detail close button */
+    .detail-close-row {
+      margin-top: 1.5em;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .detail-close-button {
+      color: var(--sub);
     }
 
   </style>
@@ -2798,7 +2809,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.8.11</div>
+    <div class="fixed-version-mark">v3.8.12</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -3333,6 +3344,9 @@ function normalizeWorkNo(value) {
             </button>
             <div class="work-detail">
               ${workDetailHtml(w)}
+              <div class="detail-close-row">
+                <button class="text-button detail-close-button" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">CLOSE</button>
+              </div>
             </div>
           </article>
         `;

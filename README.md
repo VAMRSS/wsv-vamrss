@@ -1,39 +1,12 @@
-# WSV v3.8.11 Work to Series Conversion
+# WSV v3.8.12 Detail Close Button
 
 ## Fix
 
-- Added `CONVERT TO SERIES` to the Work EDIT screen.
-- A saved work can be converted into a series from its edit screen.
-- The converted work is removed from Works and added to Series.
-- The original work number is reused as the series number when possible.
-- If the number conflicts, a new available series number is generated.
-- Series CODE is auto-generated from the series number.
-- After conversion, the list switches to SERIES mode.
-
-## Carried over
-
-- Number
-- Title
-- T_EN
-- Start date
-- Description
-- D_EN
-- URL / related links
-
-## Not carried over
-
-- Technique
-- Done date
-- Production status
-- Management status
-- Location
-- Owner
-- Materials
-- Dimensions
-- Price
-- Cost
-- Exhibition history
-- Work images
+- Added a `CLOSE` button at the bottom of expanded work details.
+- Applied to Admin work list.
+- Applied to public Portfolio work list.
+- Also applied to nested work details inside a series on the public Portfolio page.
+- The button collapses the currently expanded work detail.
 
 ## Required SQL
 

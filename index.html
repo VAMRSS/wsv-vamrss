@@ -2441,7 +2441,7 @@
       padding: 0 !important;
     }
 
-    /* v3.9.0 corrected spacing policy */
+    /* v3.9.1 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2525,7 +2525,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.9.0 final media spacing override */
+    /* v3.9.1 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2626,7 +2626,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.0 compact media rendering */
+    /* v3.9.1 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2680,7 +2680,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.9.0 balanced media spacing */
+    /* v3.9.1 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2697,7 +2697,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.0 requested media spacing */
+    /* v3.9.1 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2714,7 +2714,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.0 high-specificity media spacing */
+    /* v3.9.1 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2743,7 +2743,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.0 logo top alignment */
+    /* v3.9.1 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2775,23 +2775,23 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.0 logo visual offset */
+    /* v3.9.1 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.9.0 sort icon direction fix */
+    /* v3.9.1 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.0 unified reversed sort arrows */
+    /* v3.9.1 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.0 expanded detail close button */
+    /* v3.9.1 expanded detail close button */
     .detail-close-row {
       margin-top: 1.5em;
       display: flex;
@@ -2799,6 +2799,19 @@
     }
 
     .detail-close-button {
+      color: var(--sub);
+    }
+
+    /* v3.9.1 share and individual page actions */
+    .share-action-row {
+      margin-top: 1.5em;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.25em;
+      flex-wrap: wrap;
+    }
+
+    .share-action-row .text-button {
       color: var(--sub);
     }
 
@@ -2810,7 +2823,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.9.0</div>
+    <div class="fixed-version-mark">v3.9.1</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -3325,6 +3338,43 @@ function normalizeWorkNo(value) {
         .sort(compareWorks);
     }
 
+    function siteBaseUrl() {
+      const path = location.pathname || "/";
+      const lower = path.toLowerCase();
+      let basePath = path;
+      ["/work/", "/series/", "/updates/", "/profile/", "/admin/", "/portfolio/"].forEach(segment => {
+        const index = lower.indexOf(segment);
+        if (index >= 0) basePath = path.slice(0, index + 1);
+      });
+      return location.origin + basePath;
+    }
+
+    function detailUrl(type, no) {
+      const cleanNo = normalizeWorkNo(no);
+      const folder = type === "series" ? "series" : "work";
+      return `${siteBaseUrl()}${folder}/?no=${encodeURIComponent(cleanNo)}`;
+    }
+
+    async function shareDetail(type, no, title) {
+      const url = detailUrl(type, no);
+      const shareTitle = title ? `VAMRSS / ${title}` : "VAMRSS";
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: shareTitle, text: shareTitle, url });
+          return;
+        }
+      } catch (error) {
+        if (error && error.name === "AbortError") return;
+      }
+      try {
+        await navigator.clipboard.writeText(url);
+        const status = document.getElementById("statusText");
+        if (status) status.textContent = "Share URL copied.";
+      } catch (error) {
+        window.prompt("Copy share URL", url);
+      }
+    }
+
     function renderWorksList() {
       renderFilters();
       renderSortMarks();
@@ -3345,7 +3395,9 @@ function normalizeWorkNo(value) {
             </button>
             <div class="work-detail">
               ${workDetailHtml(w)}
-              <div class="detail-close-row">
+              <div class="share-action-row">
+                <button class="text-button" type="button" onclick="shareDetail('work', '${escapeAttr(workNo)}', '${escapeAttr(workTitle(w))}')">SHARE</button>
+                <button class="text-button" type="button" onclick="location.href=detailUrl('work', '${escapeAttr(workNo)}')">OPEN PAGE</button>
                 <button class="text-button detail-close-button" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">CLOSE</button>
               </div>
             </div>
@@ -3405,6 +3457,11 @@ function normalizeWorkNo(value) {
                 ${row("D_EN", s.description_en)}
                 ${additionalLogoDetailRowHtml("series", s)}
                 ${relatedLinksDetailRowHtml(relatedLinksForSeries(s))}
+              </div>
+              <div class="share-action-row">
+                <button class="text-button" type="button" onclick="shareDetail('series', '${escapeAttr(no)}', '${escapeAttr(seriesTitle(s))}')">SHARE</button>
+                <button class="text-button" type="button" onclick="location.href=detailUrl('series', '${escapeAttr(no)}')">OPEN PAGE</button>
+                <button class="text-button detail-close-button" type="button" onclick="toggleSeries('${escapeAttr(s.id)}')">CLOSE</button>
               </div>
               ${relatedWorks.length ? `
                 <div class="detail-grid">

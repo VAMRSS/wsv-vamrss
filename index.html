@@ -2441,7 +2441,7 @@
       padding: 0 !important;
     }
 
-    /* v3.9.5 corrected spacing policy */
+    /* v3.9.6 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2525,7 +2525,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.9.5 final media spacing override */
+    /* v3.9.6 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2626,7 +2626,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.5 compact media rendering */
+    /* v3.9.6 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2680,7 +2680,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.9.5 balanced media spacing */
+    /* v3.9.6 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2697,7 +2697,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.5 requested media spacing */
+    /* v3.9.6 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2714,7 +2714,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.5 high-specificity media spacing */
+    /* v3.9.6 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2743,7 +2743,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.5 logo top alignment */
+    /* v3.9.6 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2775,23 +2775,23 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.5 logo visual offset */
+    /* v3.9.6 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.9.5 sort icon direction fix */
+    /* v3.9.6 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.5 unified reversed sort arrows */
+    /* v3.9.6 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.5 expanded detail close button */
+    /* v3.9.6 expanded detail close button */
     .detail-close-row {
       margin-top: 1.5em;
       display: flex;
@@ -2802,7 +2802,7 @@
       color: var(--sub);
     }
 
-    /* v3.9.5 share and individual page actions */
+    /* v3.9.6 share and individual page actions */
     .share-action-row {
       margin-top: 1.5em;
       display: flex;
@@ -2815,14 +2815,14 @@
       color: var(--sub);
     }
 
-    /* v3.9.5 lightweight list and lazy detail loading */
+    /* v3.9.6 lightweight list and lazy detail loading */
     .detail-loading {
       color: var(--sub);
       font-size: 12px;
       padding: 4px 0 10px;
     }
 
-    /* v3.9.5 selected number marker */
+    /* v3.9.6 selected number marker */
     .work.is-current .work-no,
     .series-work-row.is-current .detail-key {
       display: inline-block;
@@ -2842,7 +2842,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.9.5</div>
+    <div class="fixed-version-mark">v3.9.6</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -3194,8 +3194,14 @@ function normalizeWorkNo(value) {
       return `<div class="detail-row image-detail-row media-compact-row"><div class="detail-value"><div class="work-image-gallery">${items}</div></div></div>`;
     }
 
+    function hasDisplayValue(value) {
+      if (value === null || value === undefined) return false;
+      if (Array.isArray(value)) return value.length > 0;
+      return String(value).trim() !== "";
+    }
+
     function row(key, value) {
-      if (value === null || value === undefined || String(value).trim() === "") return "";
+      if (!hasDisplayValue(value)) return "";
       return `<div class="detail-row"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`;
     }
 
@@ -3214,10 +3220,10 @@ function normalizeWorkNo(value) {
                 ${row("№", workNo)}
                 ${row("Title", work.title)}
                 ${row("T_EN", work.title_en)}
-                <div class="detail-row">
+                ${hasDisplayValue(seriesLabelHtml(series, work.id)) ? `<div class="detail-row">
                   <div class="detail-key">Series</div>
                   <div class="detail-value">${seriesLabelHtml(series, work.id)}</div>
-                </div>
+                </div>` : ""}
                 ${series && series.id ? `<div class="inline-series-host" id="inline-series-${escapeAttr(work.id)}-${escapeAttr(series.id)}"></div>` : ""}
                 ${row("Start", normalizeProductionDate(work))}
                 ${row("Completed", work.completed_date)}
@@ -3228,8 +3234,6 @@ function normalizeWorkNo(value) {
                 ${row("Technique", work.technique)}
                 ${row("Materials", work.materials)}
                 ${row("Size", formatDimensions(work))}
-                ${row("Price", "*******")}
-                ${row("Cost", "*******")}
                 ${row("Description", workDescription(work))}
                 ${row("D_EN", work.description_en)}
                 ${additionalLogoDetailRowHtml("work", work)}

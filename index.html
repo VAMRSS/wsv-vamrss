@@ -2441,7 +2441,7 @@
       padding: 0 !important;
     }
 
-    /* v3.9.2 corrected spacing policy */
+    /* v3.9.3 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2525,7 +2525,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.9.2 final media spacing override */
+    /* v3.9.3 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2626,7 +2626,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.2 compact media rendering */
+    /* v3.9.3 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2680,7 +2680,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.9.2 balanced media spacing */
+    /* v3.9.3 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2697,7 +2697,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.2 requested media spacing */
+    /* v3.9.3 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2714,7 +2714,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.2 high-specificity media spacing */
+    /* v3.9.3 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2743,7 +2743,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.2 logo top alignment */
+    /* v3.9.3 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2775,23 +2775,23 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.2 logo visual offset */
+    /* v3.9.3 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.9.2 sort icon direction fix */
+    /* v3.9.3 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.2 unified reversed sort arrows */
+    /* v3.9.3 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.2 expanded detail close button */
+    /* v3.9.3 expanded detail close button */
     .detail-close-row {
       margin-top: 1.5em;
       display: flex;
@@ -2802,7 +2802,7 @@
       color: var(--sub);
     }
 
-    /* v3.9.2 share and individual page actions */
+    /* v3.9.3 share and individual page actions */
     .share-action-row {
       margin-top: 1.5em;
       display: flex;
@@ -2815,6 +2815,13 @@
       color: var(--sub);
     }
 
+    /* v3.9.3 lightweight list and lazy detail loading */
+    .detail-loading {
+      color: var(--sub);
+      font-size: 12px;
+      padding: 4px 0 10px;
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2823,7 +2830,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 VAMRSS</div>
-    <div class="fixed-version-mark">v3.9.2</div>
+    <div class="fixed-version-mark">v3.9.3</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -3054,7 +3061,7 @@ function normalizeWorkNo(value) {
         </div>`;
     }
 
-    window.toggleInlineSeries = function(seriesId, hostId = "") {
+    window.toggleInlineSeries = async function(seriesId, hostId = "") {
       const safeHostId = hostId || seriesId;
       const target = document.getElementById(`inline-series-${safeHostId}-${seriesId}`);
       if (!target) return;
@@ -3063,10 +3070,15 @@ function normalizeWorkNo(value) {
         target.dataset.open = "";
         return;
       }
-      const series = seriesRecords.find(item => item.id === seriesId);
-      if (!series) return;
       target.dataset.open = "1";
-      target.innerHTML = seriesDetailHtml(series);
+      target.innerHTML = '<div class="detail-loading">Loading detail...</div>';
+      try {
+        const series = await loadPublicSeriesDetail(seriesId);
+        target.innerHTML = seriesDetailHtml(series);
+      } catch (error) {
+        console.error(error);
+        target.innerHTML = '<div class="detail-loading">Detail could not be loaded.</div>';
+      }
     };
 
 
@@ -3180,8 +3192,6 @@ function normalizeWorkNo(value) {
 
     function workDetailHtml(work = {}) {
       const statuses = normalizeStatuses(work);
-      const priceText = work.price_ask ? "ASK" : formatMoney(work.price_amount);
-      const costText = formatMoney(work.cost_amount);
       const workNo = normalizeWorkNo(work.work_no);
       const series = getSeriesRecordForWork(work);
       return `
@@ -3325,14 +3335,7 @@ function normalizeWorkNo(value) {
             seriesLabel(series),
             statuses.productionStatus,
             statuses.managementStatus,
-            w.technique,
-            w.materials,
-            formatDimensions(w),
-            w.location,
-            w.holder_name,
-            w.description,
-            w.description_en,
-            relatedLinksSearchText(relatedLinksForWork(w))
+            w.technique
           ].some(value => String(value || "").toLowerCase().includes(query));
         })
         .sort(compareWorks);
@@ -3368,11 +3371,174 @@ function normalizeWorkNo(value) {
       }
       try {
         await navigator.clipboard.writeText(url);
-        const status = document.getElementById("statusText");
-        if (status) status.textContent = "Share URL copied.";
+        const status = document.getElementById("status");
+        if (status) { status.style.display = "block"; status.textContent = "Share URL copied."; }
       } catch (error) {
         window.prompt("Copy share URL", url);
       }
+    }
+
+    function replaceById(list, item) {
+      const index = list.findIndex(existing => existing.id === item.id);
+      if (index >= 0) list[index] = { ...list[index], ...item };
+      else list.push(item);
+    }
+
+    function replaceAssetsFor(type, id, assets) {
+      cloudAssets = cloudAssets.filter(asset => {
+        if (type === "work") return asset.work_id !== id;
+        return asset.series_id !== id;
+      });
+      cloudAssets.push(...(assets || []));
+    }
+
+    function replaceLinksFor(type, id, links) {
+      relatedLinks = relatedLinks.filter(link => {
+        if (type === "work") return link.work_id !== id;
+        return link.series_id !== id;
+      });
+      relatedLinks.push(...(links || []));
+    }
+
+    async function loadPublicWorkDetail(id) {
+      const current = works.find(work => work.id === id);
+      if (current && current._detailLoaded) return current;
+
+      const [workResult, assetResult] = await Promise.all([
+        cloudClient
+          .from("wsv_works")
+          .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,materials,size_h,size_w,size_d,location,holder_name,description,description_en,logo_asset_id,cover_asset_id,is_public,sort_order,created_at,updated_at,content_updated_at")
+          .eq("id", id)
+          .eq("is_public", true)
+          .maybeSingle(),
+        cloudClient
+          .from("wsv_assets")
+          .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at")
+          .eq("work_id", id)
+          .eq("is_public", true)
+          .in("asset_type", ["work_logo", "work_image"])
+          .order("sort_order", { ascending: true })
+      ]);
+
+      if (workResult.error) throw workResult.error;
+      if (assetResult.error) throw assetResult.error;
+      if (!workResult.data) throw new Error("WORK_NOT_FOUND");
+
+      let links = [];
+      try {
+        const linkResult = await cloudClient
+          .from("wsv_related_links")
+          .select("id,target_type,work_id,series_id,title,url,sort_order,is_public,created_at,updated_at")
+          .eq("target_type", "work")
+          .eq("work_id", id)
+          .eq("is_public", true)
+          .order("sort_order", { ascending: true });
+        if (linkResult.error) throw linkResult.error;
+        links = linkResult.data || [];
+      } catch (error) {
+        console.warn("WSV work URL links could not be loaded.", error);
+        links = [];
+      }
+
+      const fullWork = { ...(current || {}), ...workResult.data, _detailLoaded: true };
+      replaceById(works, fullWork);
+      replaceAssetsFor("work", id, assetResult.data || []);
+      replaceLinksFor("work", id, links);
+      return fullWork;
+    }
+
+    async function loadPublicSeriesDetail(id) {
+      const current = seriesRecords.find(series => series.id === id);
+      if (current && current._detailLoaded) return current;
+
+      const [seriesResult, assetResult] = await Promise.all([
+        cloudClient
+          .from("wsv_series")
+          .select("id,series_no,code,title,title_en,start_date,description,description_en,logo_asset_id,is_public,sort_order,created_at,updated_at,content_updated_at")
+          .eq("id", id)
+          .eq("is_public", true)
+          .maybeSingle(),
+        cloudClient
+          .from("wsv_assets")
+          .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at")
+          .eq("series_id", id)
+          .eq("is_public", true)
+          .eq("asset_type", "series_logo")
+          .order("sort_order", { ascending: true })
+      ]);
+
+      if (seriesResult.error) throw seriesResult.error;
+      if (assetResult.error) throw assetResult.error;
+      if (!seriesResult.data) throw new Error("SERIES_NOT_FOUND");
+
+      let links = [];
+      try {
+        const linkResult = await cloudClient
+          .from("wsv_related_links")
+          .select("id,target_type,work_id,series_id,title,url,sort_order,is_public,created_at,updated_at")
+          .eq("target_type", "series")
+          .eq("series_id", id)
+          .eq("is_public", true)
+          .order("sort_order", { ascending: true });
+        if (linkResult.error) throw linkResult.error;
+        links = linkResult.data || [];
+      } catch (error) {
+        console.warn("WSV series URL links could not be loaded.", error);
+        links = [];
+      }
+
+      const fullSeries = { ...(current || {}), ...seriesResult.data, _detailLoaded: true };
+      replaceById(seriesRecords, fullSeries);
+      replaceAssetsFor("series", id, assetResult.data || []);
+      replaceLinksFor("series", id, links);
+      return fullSeries;
+    }
+
+    function workDetailContentHtml(work) {
+      const no = normalizeWorkNo(work.work_no);
+      return `${workDetailHtml(work)}
+              <div class="share-action-row">
+                <button class="text-button" type="button" onclick="shareDetail('work', '${escapeAttr(no)}', '${escapeAttr(workTitle(work))}')">SHARE</button>
+                <button class="text-button" type="button" onclick="location.href=detailUrl('work', '${escapeAttr(no)}')">OPEN PAGE</button>
+                <button class="text-button detail-close-button" type="button" onclick="toggleWork('${escapeAttr(work.id)}')">CLOSE</button>
+              </div>`;
+    }
+
+    function seriesDetailContentHtml(series) {
+      const no = normalizeWorkNo(series.series_no);
+      const relatedWorks = works
+        .filter(work => work.series_id === series.id)
+        .sort(compareWorks);
+      return `
+              <div class="detail-grid">
+                ${logoDetailRowHtml("series", series)}
+                ${row("№", no)}
+                ${row("Code", series.code)}
+                ${row("Title", series.title)}
+                ${row("T_EN", series.title_en)}
+                ${row("Start", series.start_date)}
+                ${row("Works", String(relatedWorks.length))}
+                ${row("Description", series.description)}
+                ${row("D_EN", series.description_en)}
+                ${additionalLogoDetailRowHtml("series", series)}
+                ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
+              </div>
+              <div class="share-action-row">
+                <button class="text-button" type="button" onclick="shareDetail('series', '${escapeAttr(no)}', '${escapeAttr(seriesTitle(series))}')">SHARE</button>
+                <button class="text-button" type="button" onclick="location.href=detailUrl('series', '${escapeAttr(no)}')">OPEN PAGE</button>
+                <button class="text-button detail-close-button" type="button" onclick="toggleSeries('${escapeAttr(series.id)}')">CLOSE</button>
+              </div>
+              ${relatedWorks.length ? `
+                <div class="detail-grid">
+                  ${relatedWorks.map(work => `
+                    <div class="detail-row series-work-row">
+                      <div class="detail-key">${escapeHtml(normalizeWorkNo(work.work_no))}</div>
+                      <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('series-${escapeAttr(series.id)}', '${escapeAttr(work.id)}')">${escapeHtml(workTitle(work))}</button></div>
+                    </div>
+                    <div id="series-${escapeAttr(series.id)}-work-${escapeAttr(work.id)}"></div>
+                  `).join("")}
+                </div>
+              ` : ""}`;
     }
 
     function renderWorksList() {
@@ -3393,13 +3559,8 @@ function normalizeWorkNo(value) {
               <div class="work-title"><span class="title-scroll">${workListTitleHtml(w)}</span></div>
               <div class="work-year">${escapeHtml(w.completed_date || "")}</div>
             </button>
-            <div class="work-detail">
-              ${workDetailHtml(w)}
-              <div class="share-action-row">
-                <button class="text-button" type="button" onclick="shareDetail('work', '${escapeAttr(workNo)}', '${escapeAttr(workTitle(w))}')">SHARE</button>
-                <button class="text-button" type="button" onclick="location.href=detailUrl('work', '${escapeAttr(workNo)}')">OPEN PAGE</button>
-                <button class="text-button detail-close-button" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">CLOSE</button>
-              </div>
+            <div class="work-detail" id="work-detail-${escapeAttr(w.id)}" data-loaded="">
+              <div class="detail-loading">Detail will load when opened.</div>
             </div>
           </article>
         `;
@@ -3418,10 +3579,7 @@ function normalizeWorkNo(value) {
             s.code,
             s.title,
             s.title_en,
-            s.start_date,
-            s.description,
-            s.description_en,
-            relatedLinksSearchText(relatedLinksForSeries(s))
+            s.start_date
           ].some(value => String(value || "").toLowerCase().includes(query));
         })
         .sort(compareSeries);
@@ -3444,36 +3602,8 @@ function normalizeWorkNo(value) {
               <div class="work-title"><span class="title-scroll">${escapeHtml(s.code ? s.code + " / " : "")}${escapeHtml(seriesTitle(s))}</span></div>
               <div class="work-year">${escapeHtml(s.start_date || "")}</div>
             </button>
-            <div class="work-detail">
-              <div class="detail-grid">
-                ${logoDetailRowHtml("series", s)}
-                ${row("№", no)}
-                ${row("Code", s.code)}
-                ${row("Title", s.title)}
-                ${row("T_EN", s.title_en)}
-                ${row("Start", s.start_date)}
-                ${row("Works", String(relatedWorks.length))}
-                ${row("Description", s.description)}
-                ${row("D_EN", s.description_en)}
-                ${additionalLogoDetailRowHtml("series", s)}
-                ${relatedLinksDetailRowHtml(relatedLinksForSeries(s))}
-              </div>
-              <div class="share-action-row">
-                <button class="text-button" type="button" onclick="shareDetail('series', '${escapeAttr(no)}', '${escapeAttr(seriesTitle(s))}')">SHARE</button>
-                <button class="text-button" type="button" onclick="location.href=detailUrl('series', '${escapeAttr(no)}')">OPEN PAGE</button>
-                <button class="text-button detail-close-button" type="button" onclick="toggleSeries('${escapeAttr(s.id)}')">CLOSE</button>
-              </div>
-              ${relatedWorks.length ? `
-                <div class="detail-grid">
-                  ${relatedWorks.map(w => `
-                    <div class="detail-row series-work-row">
-                      <div class="detail-key">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
-                      <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('series-${escapeAttr(s.id)}', '${escapeAttr(w.id)}')">${escapeHtml(workTitle(w))}</button></div>
-                    </div>
-                    <div id="series-${escapeAttr(s.id)}-work-${escapeAttr(w.id)}"></div>
-                  `).join("")}
-                </div>
-              ` : ""}
+            <div class="work-detail" id="series-detail-${escapeAttr(s.id)}" data-loaded="">
+              <div class="detail-loading">Detail will load when opened.</div>
             </div>
           </article>
         `;
@@ -3509,20 +3639,51 @@ function normalizeWorkNo(value) {
       }
     }
 
-    window.toggleWork = function(id) {
-      const target = document.getElementById("work-" + id);
-      if (target) target.classList.toggle("open");
+    window.toggleWork = async function(id) {
+      const article = document.getElementById("work-" + id);
+      const detail = document.getElementById("work-detail-" + id);
+      if (!article || !detail) return;
+      if (article.classList.contains("open")) {
+        article.classList.remove("open");
+        return;
+      }
+      article.classList.add("open");
+      if (detail.dataset.loaded === "1") return;
+      detail.innerHTML = '<div class="detail-loading">Loading detail...</div>';
+      try {
+        const work = await loadPublicWorkDetail(id);
+        detail.dataset.loaded = "1";
+        detail.innerHTML = workDetailContentHtml(work);
+      } catch (error) {
+        console.error(error);
+        detail.innerHTML = '<div class="detail-loading">Detail could not be loaded.</div>';
+      }
     };
 
-    window.toggleSeries = function(id) {
-      const target = document.getElementById("series-" + id);
-      if (target) target.classList.toggle("open");
+    window.toggleSeries = async function(id) {
+      const article = document.getElementById("series-" + id);
+      const detail = document.getElementById("series-detail-" + id);
+      if (!article || !detail) return;
+      if (article.classList.contains("open")) {
+        article.classList.remove("open");
+        return;
+      }
+      article.classList.add("open");
+      if (detail.dataset.loaded === "1") return;
+      detail.innerHTML = '<div class="detail-loading">Loading detail...</div>';
+      try {
+        const series = await loadPublicSeriesDetail(id);
+        detail.dataset.loaded = "1";
+        detail.innerHTML = seriesDetailContentHtml(series);
+      } catch (error) {
+        console.error(error);
+        detail.innerHTML = '<div class="detail-loading">Detail could not be loaded.</div>';
+      }
     };
 
-    window.toggleNestedWork = function(hostId, workId) {
+    window.toggleNestedWork = async function(hostId, workId) {
       const target = document.getElementById(`${hostId}-work-${workId}`);
-      const w = works.find(item => item.id === workId);
-      if (!target || !w) return;
+      if (!target) return;
 
       if (target.dataset.open === "1") {
         target.innerHTML = "";
@@ -3531,11 +3692,23 @@ function normalizeWorkNo(value) {
       }
 
       target.dataset.open = "1";
-      target.innerHTML = `
-        <div class="inline-expanded" style="margin-top:1em; margin-bottom:1em;">
-          ${workDetailHtml(w)}
-        </div>
-      `;
+      target.innerHTML = '<div class="inline-expanded detail-loading" style="margin-top:1em; margin-bottom:1em;">Loading detail...</div>';
+      try {
+        const work = await loadPublicWorkDetail(workId);
+        target.innerHTML = `
+          <div class="inline-expanded" style="margin-top:1em; margin-bottom:1em;">
+            ${workDetailHtml(work)}
+            <div class="share-action-row">
+              <button class="text-button" type="button" onclick="shareDetail('work', '${escapeAttr(normalizeWorkNo(work.work_no))}', '${escapeAttr(workTitle(work))}')">SHARE</button>
+              <button class="text-button" type="button" onclick="location.href=detailUrl('work', '${escapeAttr(normalizeWorkNo(work.work_no))}')">OPEN PAGE</button>
+              <button class="text-button detail-close-button" type="button" onclick="toggleNestedWork('${escapeAttr(hostId)}', '${escapeAttr(work.id)}')">CLOSE</button>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error(error);
+        target.innerHTML = '<div class="inline-expanded detail-loading" style="margin-top:1em; margin-bottom:1em;">Detail could not be loaded.</div>';
+      }
     };
 
     window.setListMode = function(mode) {
@@ -3584,53 +3757,34 @@ function normalizeWorkNo(value) {
 
     async function loadPortfolio() {
       try {
-        statusEl.textContent = "公開作品を読み込み中です。";
+        statusEl.textContent = "公開一覧を読み込み中です。";
 
-        const [seriesResult, worksResult, assetsResult] = await Promise.all([
+        const [seriesResult, worksResult] = await Promise.all([
           cloudClient
             .from("wsv_series")
-            .select("id,series_no,code,title,title_en,start_date,description,description_en,logo_asset_id,is_public,sort_order,created_at,updated_at,content_updated_at")
+            .select("id,series_no,code,title,title_en,start_date,is_public,sort_order,created_at,updated_at,content_updated_at")
             .eq("is_public", true)
             .order("series_no", { ascending: true }),
           cloudClient
             .from("wsv_works")
-            .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,materials,size_h,size_w,size_d,price_amount,price_ask,cost_amount,location,holder_name,description,description_en,logo_asset_id,cover_asset_id,is_public,sort_order,created_at,updated_at,content_updated_at")
+            .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,is_public,sort_order,created_at,updated_at,content_updated_at")
             .eq("is_public", true)
-            .order("work_no", { ascending: true }),
-          cloudClient
-            .from("wsv_assets")
-            .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at")
-            .eq("is_public", true)
-            .in("asset_type", ["work_logo", "series_logo", "work_image"])
+            .order("work_no", { ascending: true })
         ]);
 
         if (seriesResult.error) throw seriesResult.error;
         if (worksResult.error) throw worksResult.error;
-        if (assetsResult.error) throw assetsResult.error;
 
         seriesRecords = seriesResult.data || [];
         works = worksResult.data || [];
-        cloudAssets = assetsResult.data || [];
-
-        try {
-          const relatedLinksResult = await cloudClient
-            .from("wsv_related_links")
-            .select("id,target_type,work_id,series_id,title,url,sort_order,is_public,created_at,updated_at")
-            .eq("is_public", true)
-            .order("sort_order", { ascending: true });
-
-          if (relatedLinksResult.error) throw relatedLinksResult.error;
-          relatedLinks = relatedLinksResult.data || [];
-        } catch (relatedError) {
-          console.warn("WSV related URL links could not be loaded.", relatedError);
-          relatedLinks = [];
-        }
+        cloudAssets = [];
+        relatedLinks = [];
 
         statusEl.style.display = "none";
         safeRender();
       } catch (error) {
         console.error(error);
-        statusEl.textContent = "公開作品を読み込めませんでした。公開設定またはRLSをご確認ください。";
+        statusEl.textContent = "公開一覧を読み込めませんでした。公開設定またはRLSをご確認ください。";
       }
     }
 

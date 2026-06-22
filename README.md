@@ -1,15 +1,15 @@
-# WSV / www.vamrss.com Launch Build v3.9.14
+# WSV / www.vamrss.com Launch Build v3.9.15
 
-## DOS Header for Individual Pages
+## DOS Update Header
 
 Changed:
 
-- Individual work page and individual series page now start with `DOCUMENT ORDER SYSTEM V2.0.0`.
-- The attached DOS logo is placed below the system title and centered.
-- Work pages show `WORKS ID:XXXX`.
-- Series pages show `SERIES ID:XXXX`.
-- `ORDER:YYYY/MM/DD` and `PRINTING:YYYY/MM/DD` are shown side by side in thin bordered boxes.
-- Dates are generated from the current browser date.
-- Existing text size, weight, and line-height principles are preserved.
+- Individual work and series pages only.
+- DOS logo width is now full internal content width.
+- The ABOUT link in the DOS header has been removed.
+- The right side of the top line now displays `PAGE 1/1`.
+- The date row now has three boxed columns: `UPDATE`, `ORDER`, and `PRINTING`.
+- UPDATE uses the record's `content_updated_at` value, falling back to `updated_at` or `created_at`.
+- ORDER and PRINTING use the current browser date.
 
 No additional SQL is required if the v3.8.3 SQL patch has already been applied.

@@ -1,14 +1,13 @@
-# WSV / www.vamrss.com Launch Build v3.9.6
+# WSV / www.vamrss.com Launch Build v3.9.7
 
-## Hide Empty Public Fields
+## Individual Page Public Style Alignment
 
 Changed:
 
-- Public top page expanded details hide unregistered fields.
-- Individual work page hides unregistered fields.
-- Individual series page hides unregistered fields.
-- Empty labels are no longer shown for blank values.
-- Price and Cost are not shown on public/detail pages because public pages do not fetch those values.
-- Admin page remains unchanged so missing inputs can still be checked while editing.
+- Individual work page now uses almost the same typography as the public top page.
+- Individual series page now uses almost the same typography as the public top page.
+- Text size, line-height, font weight, detail rows, action buttons, and spacing are aligned with the public top page.
+- Large individual-page title styling has been removed.
+- WORK DETAIL / SERIES DETAIL caption is hidden to keep the same quiet header style.
 
 No additional SQL is required if the v3.8.3 SQL patch has already been applied.

@@ -1,12 +1,15 @@
-# WSV / www.vamrss.com Launch Build v3.9.13
+# WSV / www.vamrss.com Launch Build v3.9.14
 
-## Individual Detail Spacing
+## DOS Header for Individual Pages
 
 Changed:
 
-- Individual work and series pages now remove extra spacing between ordinary detail items.
-- Detail labels and values use the same compact rhythm as the public top page.
-- Images and SVG logos keep bottom-only one-line spacing.
-- Other pages are unchanged except version numbering.
+- Individual work page and individual series page now start with `DOCUMENT ORDER SYSTEM V2.0.0`.
+- The attached DOS logo is placed below the system title and centered.
+- Work pages show `WORKS ID:XXXX`.
+- Series pages show `SERIES ID:XXXX`.
+- `ORDER:YYYY/MM/DD` and `PRINTING:YYYY/MM/DD` are shown side by side in thin bordered boxes.
+- Dates are generated from the current browser date.
+- Existing text size, weight, and line-height principles are preserved.
 
 No additional SQL is required if the v3.8.3 SQL patch has already been applied.

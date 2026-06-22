@@ -2435,7 +2435,7 @@
       padding: 0 !important;
     }
 
-    /* v3.9.11 corrected spacing policy */
+    /* v3.9.13 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2519,7 +2519,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.9.11 final media spacing override */
+    /* v3.9.13 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2620,7 +2620,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.11 compact media rendering */
+    /* v3.9.13 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2674,7 +2674,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.9.11 balanced media spacing */
+    /* v3.9.13 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2691,7 +2691,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.11 requested media spacing */
+    /* v3.9.13 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2708,7 +2708,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.11 high-specificity media spacing */
+    /* v3.9.13 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2737,7 +2737,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.11 logo top alignment */
+    /* v3.9.13 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2769,23 +2769,23 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.11 logo visual offset */
+    /* v3.9.13 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.9.11 sort icon direction fix */
+    /* v3.9.13 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.11 unified reversed sort arrows */
+    /* v3.9.13 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.11 expanded detail close button */
+    /* v3.9.13 expanded detail close button */
     .detail-close-row {
       margin-top: 1.5em;
       display: flex;
@@ -2796,7 +2796,7 @@
       color: var(--sub);
     }
 
-    /* v3.9.11 share and individual page actions */
+    /* v3.9.13 share and individual page actions */
     .share-action-row {
       margin-top: 1.5em;
       display: flex;
@@ -2809,14 +2809,14 @@
       color: var(--sub);
     }
 
-    /* v3.9.11 lightweight list and lazy detail loading */
+    /* v3.9.13 lightweight list and lazy detail loading */
     .detail-loading {
       color: var(--sub);
       font-size: 12px;
       padding: 4px 0 10px;
     }
 
-    /* v3.9.11 selected number marker */
+    /* v3.9.13 selected number marker */
     .work.is-current .work-no,
     .series-work-row.is-current .detail-key {
       display: inline-block;
@@ -2829,7 +2829,7 @@
     }
 
   
-    /* v3.9.11 individual pages aligned with public top page */
+    /* v3.9.13 individual pages aligned with public top page */
     .brand-caption {
       display: none;
     }
@@ -2956,7 +2956,7 @@
       text-align: right;
     }
 
-    /* v3.9.11 individual page logo and media layout */
+    /* v3.9.13 individual page logo and media layout */
     .brand {
       grid-area: logo;
       display: block;
@@ -3085,7 +3085,7 @@
       text-align: left;
     }
 
-    /* v3.9.11 individual detail layout correction */
+    /* v3.9.13 individual detail layout correction */
     .topbar {
       display: grid !important;
       grid-template-columns: auto 1fr !important;
@@ -3246,7 +3246,7 @@
       border-top: 0 !important;
     }
 
-    /* v3.9.11 individual page media one-line spacing */
+    /* v3.9.13 individual page media one-line spacing */
     .detail-row.top-image-row,
     .detail-row.top-logo-row,
     .detail-row.bottom-image-row,
@@ -3279,7 +3279,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.11 individual media + single-column detail layout */
+    /* v3.9.13 individual media + single-column detail layout */
     .detail-grid {
       display: grid !important;
       grid-template-columns: minmax(0, 1fr) !important;
@@ -3452,7 +3452,251 @@
       border-top: 0 !important;
     }
 
-  </style></head><body><main class="app"><header class="topbar"><div class="brand"><a href="../"><img src="../assets/detail-logo.svg" alt="VAMRSS"></a><div class="brand-caption">WORK DETAIL</div></div><nav class="nav"><a href="../profile/">ABOUT</a></nav></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.11</div></main><script>
+
+    /* v3.9.13 media-bottom-only spacing */
+    .detail-grid {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 10px !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row,
+    .detail-row:not(.media-compact-row),
+    .detail-row.logo-detail-row,
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row .detail-key,
+    .detail-row .detail-value {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .media-compact-row,
+    .detail-row.cover-detail-row.media-compact-row,
+    .detail-row.image-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .media-compact-row .work-image-gallery,
+    .media-compact-row .logo-stack,
+    .detail-row.image-detail-row .work-image-gallery,
+    .detail-row.logo-detail-row .logo-stack,
+    .detail-row.additional-logo-detail-row .logo-stack {
+      display: block !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .media-compact-row .work-image-card,
+    .media-compact-row .work-image-item,
+    .media-compact-row .work-image-frame,
+    .media-compact-row .cover-detail-preview,
+    .media-compact-row .logo-detail-preview,
+    .media-compact-row .logo-stack-item,
+    .detail-row.image-detail-row .work-image-card,
+    .detail-row.image-detail-row .work-image-item,
+    .detail-row.image-detail-row .work-image-frame,
+    .detail-row.cover-detail-row .cover-detail-preview,
+    .detail-row.logo-detail-row .logo-detail-preview,
+    .detail-row.logo-detail-row .logo-stack-item,
+    .detail-row.additional-logo-detail-row .logo-detail-preview,
+    .detail-row.additional-logo-detail-row .logo-stack-item {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 1em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .work-image-item + .work-image-item,
+    .media-compact-row .work-image-frame + .work-image-frame,
+    .media-compact-row .logo-stack-item + .logo-stack-item,
+    .detail-row.image-detail-row .work-image-card + .work-image-card,
+    .detail-row.image-detail-row .work-image-item + .work-image-item,
+    .detail-row.image-detail-row .work-image-frame + .work-image-frame,
+    .detail-row.logo-detail-row .logo-stack-item + .logo-stack-item,
+    .detail-row.additional-logo-detail-row .logo-stack-item + .logo-stack-item {
+      margin-top: 0 !important;
+    }
+
+    .media-compact-row img,
+    .detail-row.image-detail-row img,
+    .detail-row.cover-detail-row img,
+    .detail-row.logo-detail-row img,
+    .detail-row.additional-logo-detail-row img,
+    .work-image-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .cover-detail-preview img,
+    .logo-detail-preview img,
+    .logo-stack-item img {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row .logo-detail-preview,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row .logo-detail-preview {
+      transform: none !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display,
+    .detail-row.image-detail-row .work-image-caption,
+    .detail-row.logo-detail-row .logo-caption-display,
+    .detail-row.additional-logo-detail-row .logo-caption-display,
+    .work-image-caption,
+    .logo-caption,
+    .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* v3.9.13 individual detail spacing aligned with public top */
+    .detail-grid {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 10px !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row,
+    .detail-row:not(.top-image-row):not(.top-logo-row):not(.bottom-image-row):not(.bottom-logo-row):not(.works-row),
+    .detail-row.works-row {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row:not(.top-image-row):not(.top-logo-row):not(.bottom-image-row):not(.bottom-logo-row) > .detail-key,
+    .detail-row:not(.top-image-row):not(.top-logo-row):not(.bottom-image-row):not(.bottom-logo-row) > .detail-value,
+    .detail-key,
+    .detail-value {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 2 !important;
+    }
+
+    .section,
+    .section-title {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .work-list,
+    .work-link-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .top-image-row,
+    .top-logo-row,
+    .bottom-image-row,
+    .bottom-logo-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .top-image-row > .detail-key,
+    .top-logo-row > .detail-key,
+    .bottom-image-row > .detail-key,
+    .bottom-logo-row > .detail-key {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 2 !important;
+    }
+
+    .top-image-row > .detail-value,
+    .top-logo-row > .detail-value,
+    .bottom-image-row > .detail-value,
+    .bottom-logo-row > .detail-value {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 0 !important;
+    }
+
+    .top-image-stack,
+    .top-logo-stack,
+    .bottom-image-stack,
+    .bottom-logo-stack {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .top-image-stack figure,
+    .top-logo-stack figure,
+    .bottom-image-stack figure,
+    .bottom-logo-stack figure {
+      margin-top: 0 !important;
+      margin-bottom: 1em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .top-image-stack figure:last-child,
+    .top-logo-stack figure:last-child,
+    .bottom-image-stack figure:last-child,
+    .bottom-logo-stack figure:last-child {
+      margin-bottom: 1em !important;
+    }
+
+    .caption {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 1.7 !important;
+    }
+
+  </style></head><body><main class="app"><header class="topbar"><div class="brand"><a href="../"><img src="../assets/detail-logo.svg" alt="VAMRSS"></a><div class="brand-caption">WORK DETAIL</div></div><nav class="nav"><a href="../profile/">ABOUT</a></nav></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.13</div></main><script>
     const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
     const SUPABASE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
     function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }

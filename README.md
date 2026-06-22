@@ -1,15 +1,12 @@
-# WSV / www.vamrss.com Launch Build v3.9.11
+# WSV / www.vamrss.com Launch Build v3.9.13
 
-## Single-column detail rows + media sizing
+## Individual Detail Spacing
 
 Changed:
 
-- Individual work page detail rows now use a single-column layout: label, then content.
-- Individual series page detail rows now use the same single-column layout.
-- All visible fields still show their field label.
-- Images use the full internal content width.
-- SVG logos use half of the internal content width.
-- SVG logos are left-aligned.
-- Existing public top page, admin page, updates page, and profile page are otherwise unchanged.
+- Individual work and series pages now remove extra spacing between ordinary detail items.
+- Detail labels and values use the same compact rhythm as the public top page.
+- Images and SVG logos keep bottom-only one-line spacing.
+- Other pages are unchanged except version numbering.
 
-No additional SQL is required.
+No additional SQL is required if the v3.8.3 SQL patch has already been applied.

@@ -1,14 +1,13 @@
-# WSV / www.vamrss.com Launch Build v3.9.21
+# WSV / www.vamrss.com Launch Build v3.9.23
 
-## Asset Swap + Fixed Controls
+## Inner Document Frame
 
 Changed:
 
-- Replaced the DOSUP asset with the uploaded `DOSUP2.svg`.
-- Replaced the DOS logo asset with the uploaded `dos-logo2.svg`.
-- Added visible fixed `×` button to the top right of individual work and series pages.
-- Added visible fixed `SHARE` button to the bottom right of individual work and series pages.
-- The fixed controls scroll with the viewport and remain visible on PC and iPhone.
-- The close button tries to close the tab/window. If the browser blocks that, it goes back or returns to the list.
+- Individual work page now has a thin visible frame inside the screen instead of directly on the viewport edge.
+- Individual series page uses the same inner visible frame.
+- The visible frame uses the previous document frame width.
+- The actual content area is inset further inside the visible frame, creating an invisible inner frame.
+- Existing DOS header, CODE128 barcode, fixed close button, and fixed share button are preserved.
 
 No additional SQL is required.

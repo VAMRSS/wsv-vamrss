@@ -1,11 +1,15 @@
-# WSV / www.vamrss.com Launch Build v3.9.10
+# WSV / www.vamrss.com Launch Build v3.9.11
 
-## Individual Media Spacing
+## Single-column detail rows + media sizing
 
 Changed:
 
-- Individual work page images and SVG logos now have one line of vertical spacing above and below.
-- Individual series page SVG logos now have one line of vertical spacing above and below.
-- The main public page, admin page, updates page, and profile page are otherwise unchanged from v3.9.9 except version text.
+- Individual work page detail rows now use a single-column layout: label, then content.
+- Individual series page detail rows now use the same single-column layout.
+- All visible fields still show their field label.
+- Images use the full internal content width.
+- SVG logos use half of the internal content width.
+- SVG logos are left-aligned.
+- Existing public top page, admin page, updates page, and profile page are otherwise unchanged.
 
-No additional SQL is required if the v3.8.3 SQL patch has already been applied.
+No additional SQL is required.

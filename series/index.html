@@ -2435,7 +2435,7 @@
       padding: 0 !important;
     }
 
-    /* v3.9.8 corrected spacing policy */
+    /* v3.9.9 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2519,7 +2519,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.9.8 final media spacing override */
+    /* v3.9.9 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2620,7 +2620,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.8 compact media rendering */
+    /* v3.9.9 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2674,7 +2674,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.9.8 balanced media spacing */
+    /* v3.9.9 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2691,7 +2691,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.8 requested media spacing */
+    /* v3.9.9 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2708,7 +2708,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.8 high-specificity media spacing */
+    /* v3.9.9 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2737,7 +2737,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.8 logo top alignment */
+    /* v3.9.9 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2769,23 +2769,23 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.8 logo visual offset */
+    /* v3.9.9 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.9.8 sort icon direction fix */
+    /* v3.9.9 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.8 unified reversed sort arrows */
+    /* v3.9.9 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.8 expanded detail close button */
+    /* v3.9.9 expanded detail close button */
     .detail-close-row {
       margin-top: 1.5em;
       display: flex;
@@ -2796,7 +2796,7 @@
       color: var(--sub);
     }
 
-    /* v3.9.8 share and individual page actions */
+    /* v3.9.9 share and individual page actions */
     .share-action-row {
       margin-top: 1.5em;
       display: flex;
@@ -2809,14 +2809,14 @@
       color: var(--sub);
     }
 
-    /* v3.9.8 lightweight list and lazy detail loading */
+    /* v3.9.9 lightweight list and lazy detail loading */
     .detail-loading {
       color: var(--sub);
       font-size: 12px;
       padding: 4px 0 10px;
     }
 
-    /* v3.9.8 selected number marker */
+    /* v3.9.9 selected number marker */
     .work.is-current .work-no,
     .series-work-row.is-current .detail-key {
       display: inline-block;
@@ -2829,7 +2829,7 @@
     }
 
   
-    /* v3.9.8 individual pages aligned with public top page */
+    /* v3.9.9 individual pages aligned with public top page */
     .brand-caption {
       display: none;
     }
@@ -2956,7 +2956,7 @@
       text-align: right;
     }
 
-    /* v3.9.8 individual page logo and media layout */
+    /* v3.9.9 individual page logo and media layout */
     .brand {
       grid-area: logo;
       display: block;
@@ -3085,7 +3085,168 @@
       text-align: left;
     }
 
-  </style></head><body><main class="app"><header class="topbar"><div class="brand"><a href="../"><img src="../assets/detail-logo.svg" alt="VAMRSS"></a><div class="brand-caption">SERIES DETAIL</div></div><nav class="nav"><a href="../profile/">ABOUT</a></nav></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.8</div></main><script>
+    /* v3.9.9 individual detail layout correction */
+    .topbar {
+      display: grid !important;
+      grid-template-columns: auto 1fr !important;
+      align-items: start !important;
+      gap: 20px !important;
+    }
+
+    .brand,
+    .brand a {
+      display: block !important;
+      width: 150px !important;
+      max-width: 150px !important;
+      min-width: 150px !important;
+      line-height: 0 !important;
+    }
+
+    .brand img {
+      display: block !important;
+      width: 150px !important;
+      max-width: 150px !important;
+      height: auto !important;
+      max-height: none !important;
+      object-fit: contain !important;
+    }
+
+    .nav {
+      display: flex !important;
+      justify-content: flex-end !important;
+      align-items: flex-start !important;
+      gap: 0 !important;
+      white-space: nowrap !important;
+      text-align: right !important;
+      line-height: 2 !important;
+    }
+
+    .detail-grid {
+      display: grid !important;
+      gap: 1px !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: 0 !important;
+    }
+
+    .detail-row {
+      display: grid !important;
+      grid-template-columns: 88px minmax(0, 1fr) !important;
+      gap: 10px !important;
+      align-items: start !important;
+      padding: 1px 0 !important;
+    }
+
+    .detail-key {
+      grid-column: 1 !important;
+      color: var(--muted) !important;
+      font-size: 12px !important;
+      font-weight: 300 !important;
+      line-height: 2 !important;
+      letter-spacing: 0.08em !important;
+      text-transform: uppercase !important;
+      white-space: nowrap !important;
+    }
+
+    .detail-value {
+      grid-column: 2 !important;
+      color: var(--ink) !important;
+      font-size: 12px !important;
+      font-weight: 300 !important;
+      line-height: 2 !important;
+      min-width: 0 !important;
+      overflow-wrap: anywhere !important;
+    }
+
+    .detail-value figure {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .detail-row.top-image-row,
+    .detail-row.top-logo-row,
+    .detail-row.bottom-image-row,
+    .detail-row.bottom-logo-row,
+    .detail-row.works-row {
+      margin: 0 !important;
+    }
+
+    .top-image-stack,
+    .bottom-image-stack,
+    .top-logo-stack,
+    .bottom-logo-stack,
+    .work-list {
+      display: grid !important;
+      gap: 1.5em !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .top-image-stack img {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+    }
+
+    .bottom-image-stack img {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      margin: 0 !important;
+    }
+
+    .top-logo-stack img,
+    .bottom-logo-stack img {
+      display: block !important;
+      width: 50% !important;
+      max-width: 240px !important;
+      height: auto !important;
+      margin: 0 !important;
+    }
+
+    .caption {
+      margin-top: 0.35em !important;
+      color: var(--sub) !important;
+      font-size: 11px !important;
+      font-weight: 300 !important;
+      line-height: 1.7 !important;
+    }
+
+    .work-link-row {
+      display: grid !important;
+      grid-template-columns: 4.5em minmax(0, 1fr) 7.5em !important;
+      gap: 1em !important;
+      align-items: baseline !important;
+      padding: 1px 0 !important;
+      color: var(--ink) !important;
+      text-decoration: none !important;
+    }
+
+    .work-link-row span:nth-child(1),
+    .work-link-row span:nth-child(3) {
+      color: var(--sub) !important;
+      font-variant-numeric: tabular-nums !important;
+      white-space: nowrap !important;
+    }
+
+    .work-link-row span:nth-child(3) {
+      text-align: right !important;
+    }
+
+    .action-row {
+      display: flex !important;
+      justify-content: flex-end !important;
+      gap: 1.25em !important;
+      flex-wrap: wrap !important;
+      margin-top: 18px !important;
+      padding-top: 0 !important;
+      border-top: 0 !important;
+    }
+
+  </style></head><body><main class="app"><header class="topbar"><div class="brand"><a href="../"><img src="../assets/detail-logo.svg" alt="VAMRSS"></a><div class="brand-caption">SERIES DETAIL</div></div><nav class="nav"><a href="../profile/">ABOUT</a></nav></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.9</div></main><script>
     const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
     const SUPABASE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
     function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }
@@ -3105,8 +3266,13 @@
     function hasDisplayValue(value) { if(value===null||value===undefined) return false; if(Array.isArray(value)) return value.length>0; return String(value).trim()!==""; }
     function row(key,value) { if(!hasDisplayValue(value)) return ""; return `<div class="detail-row"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`; }
     function linksHtml(links) { return (links||[]).filter(l=>l&&hasDisplayValue(l.url)).map(l=>`<div class="detail-row"><div class="detail-key">URL</div><div class="detail-value"><a href="${escapeAttr(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.title||l.url)}</a></div></div>`).join(""); }
-    function logoHtml(assets) { const logos=(assets||[]).filter(a=>a.asset_type==="work_logo"||a.asset_type==="series_logo"); if(!logos.length) return ""; return `<div class="logo-stack">${logos.map(a=>`<figure><img src="${escapeAttr(publicAssetUrl(a))}" alt="${escapeAttr(a.alt_text||a.file_name||"Logo")}">${a.caption?`<figcaption class="caption">${escapeHtml(a.caption)}</figcaption>`:""}</figure>`).join("")}</div>`; }
-    function coverImageHtml(assets) { const imgs=(assets||[]).filter(a=>a.asset_type==="work_image"); if(!imgs.length) return ""; const c=imgs.find(a=>a.is_cover)||imgs[0]; return `<figure class="hero-media"><img src="${escapeAttr(publicAssetUrl(c))}" alt="${escapeAttr(c.alt_text||c.file_name||"Work image")}">${c.caption?`<figcaption class="caption">${escapeHtml(c.caption)}</figcaption>`:""}</figure>`; }
+    function assetFigureHtml(asset, fallbackAlt) { return `<figure><img src="${escapeAttr(publicAssetUrl(asset))}" alt="${escapeAttr(asset.alt_text||asset.file_name||fallbackAlt)}">${asset.caption?`<figcaption class="caption">${escapeHtml(asset.caption)}</figcaption>`:""}</figure>`; }
+    function seriesLogos(assets) { return (assets||[]).filter(a=>a.asset_type==="series_logo"||a.asset_type==="work_logo"); }
+    function firstLogoAsset(assets) { const logos=seriesLogos(assets); return logos.length ? logos[0] : null; }
+    function mediaRow(key, className, innerHtml) { return hasDisplayValue(innerHtml) ? `<div class="detail-row ${className}"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${innerHtml}</div></div>` : ""; }
+    function topLogoRowHtml(assets) { const logo=firstLogoAsset(assets); if(!logo) return ""; return mediaRow("Logo", "top-logo-row", `<div class="top-logo-stack">${assetFigureHtml(logo,"Logo")}</div>`); }
+    function bottomLogosRowHtml(assets) { const first=firstLogoAsset(assets); const logos=seriesLogos(assets).filter(a=>!first || a.id!==first.id); if(!logos.length) return ""; return mediaRow("Logo", "bottom-logo-row", `<div class="bottom-logo-stack">${logos.map(a=>assetFigureHtml(a,"Logo")).join("")}</div>`); }
+    function worksRowHtml(works) { if(!works.length) return ""; return mediaRow("Works", "works-row", `<div class="work-list">${works.map(w=>`<a class="work-link-row" href="../work/?no=${encodeURIComponent(normalizeNo(w.work_no))}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(normalizeNo(w.work_no))}</span><span>${escapeHtml(workTitle(w))}</span><span>${escapeHtml(w.completed_date||"")}</span></a>`).join("")}</div>`); }
 
     async function loadSeriesPage() {
       const no=getQueryNo();
@@ -3121,9 +3287,8 @@
           supabaseGet("wsv_related_links",{select:"*",target_type:"eq.series",series_id:`eq.${series.id}`,is_public:"eq.true",order:"sort_order.asc,created_at.asc"})
         ]);
         const title=seriesTitle(series); document.title=`VAMRSS / ${title}`;
-        const worksHtml=works.length?`<section class="section"><div class="section-title">WORKS</div><div class="work-list">${works.map(w=>`<a class="work-link-row" href="../work/?no=${encodeURIComponent(normalizeNo(w.work_no))}" target="_blank" rel="noopener noreferrer"><span>${escapeHtml(normalizeNo(w.work_no))}</span><span>${escapeHtml(workTitle(w))}</span><span>${escapeHtml(w.completed_date||"")}</span></a>`).join("")}</div></section>`:"";
         document.getElementById("detailHost").classList.remove("empty");
-        document.getElementById("detailHost").innerHTML=`<div class="type-label">[SERIES]</div><h1 class="title">${escapeHtml(series.code?series.code+" / "+title:title)}</h1>${series.title_en?`<div class="sub-title">${escapeHtml(series.title_en)}</div>`:""}<div class="detail-grid">${row("№",normalizeNo(series.series_no))}${row("Code",series.code)}${row("Start",series.start_date)}${row("Works",String(works.length))}${row("Description",series.description)}${row("D_EN",series.description_en)}${linksHtml(links)}</div>${worksHtml}${logoHtml(assets)?`<section class="lower-media">${logoHtml(assets)}</section>`:""}<div class="action-row"><button class="text-button" type="button" onclick="shareCurrent('series','${escapeAttr(no)}','${escapeAttr(title)}')">SHARE</button><a class="text-button" href="../">BACK TO LIST</a></div>`;
+        document.getElementById("detailHost").innerHTML=`<div class="detail-grid">${topLogoRowHtml(assets)}${row("Type","[SERIES]")}${row("№",normalizeNo(series.series_no))}${row("Code",series.code)}${row("Title",title)}${row("T_EN",series.title_en)}${row("Start",series.start_date)}${row("Count",String(works.length))}${row("Description",series.description)}${row("D_EN",series.description_en)}${linksHtml(links)}${worksRowHtml(works)}${bottomLogosRowHtml(assets)}</div><div class="action-row"><button class="text-button" type="button" onclick="shareCurrent('series','${escapeAttr(no)}','${escapeAttr(title)}')">SHARE</button><a class="text-button" href="../">BACK TO LIST</a></div>`;
       } catch(e) { console.error(e); document.getElementById("detailHost").innerHTML="読み込みに失敗しました。"; }
     }
     loadSeriesPage();

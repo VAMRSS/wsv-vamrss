@@ -1,13 +1,13 @@
-# WSV / www.vamrss.com Launch Build v3.9.23
+# WSV / www.vamrss.com Launch Build v3.9.24
 
-## Inner Document Frame
+## Scrolling Inner Document Frame
 
 Changed:
 
-- Individual work page now has a thin visible frame inside the screen instead of directly on the viewport edge.
-- Individual series page uses the same inner visible frame.
-- The visible frame uses the previous document frame width.
-- The actual content area is inset further inside the visible frame, creating an invisible inner frame.
-- Existing DOS header, CODE128 barcode, fixed close button, and fixed share button are preserved.
+- The individual page document frame is no longer fixed to the viewport.
+- The frame now scrolls together with the page content.
+- The visible frame is narrowed by 10px on the left and 10px on the right.
+- The invisible internal content frame remains inside the visible border.
+- Fixed close/share controls remain unchanged.
 
 No additional SQL is required.

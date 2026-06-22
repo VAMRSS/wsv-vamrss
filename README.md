@@ -1,13 +1,16 @@
-# WSV / www.vamrss.com Launch Build v3.9.24
+# WSV / www.vamrss.com Launch Build v3.9.25
 
-## Scrolling Inner Document Frame
+## Zigzag Frame + Control Labels
 
 Changed:
 
-- The individual page document frame is no longer fixed to the viewport.
-- The frame now scrolls together with the page content.
-- The visible frame is narrowed by 10px on the left and 10px on the right.
-- The invisible internal content frame remains inside the visible border.
-- Fixed close/share controls remain unchanged.
+- Narrowed the individual page outer frame by another 10px on each side.
+- Changed the top and bottom frame edges to a thin zigzag line.
+- Kept the left and right frame edges as thin straight lines.
+- Moved the DOS output note above the outer frame.
+- Set the DOS output note to 10px and left aligned.
+- Changed fixed close button label to `CLOSE`.
+- Changed fixed share button label to `SHAREする`.
+- Changed fixed buttons to black background with white text.
 
 No additional SQL is required.

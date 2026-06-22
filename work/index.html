@@ -2435,7 +2435,7 @@
       padding: 0 !important;
     }
 
-    /* v3.9.9 corrected spacing policy */
+    /* v3.9.10 corrected spacing policy */
     .detail-grid {
       gap: 1px !important;
       align-items: start !important;
@@ -2519,7 +2519,7 @@
       padding-bottom: 0 !important;
     }
 
-    /* v3.9.9 final media spacing override */
+    /* v3.9.10 final media spacing override */
     .detail-grid {
       gap: 1px 0 !important;
     }
@@ -2620,7 +2620,7 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.9 compact media rendering */
+    /* v3.9.10 compact media rendering */
     .detail-row.logo-detail-row .detail-value,
     .detail-row.additional-logo-detail-row .detail-value,
     .detail-row.cover-detail-row .detail-value,
@@ -2674,7 +2674,7 @@
       column-gap: 0 !important;
     }
 
-    /* v3.9.9 balanced media spacing */
+    /* v3.9.10 balanced media spacing */
     .media-compact-row {
       margin-top: 0.45em !important;
       margin-bottom: 0.45em !important;
@@ -2691,7 +2691,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.9 requested media spacing */
+    /* v3.9.10 requested media spacing */
     .media-compact-row {
       margin-top: 1em !important;
       margin-bottom: 1em !important;
@@ -2708,7 +2708,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.9 high-specificity media spacing */
+    /* v3.9.10 high-specificity media spacing */
     .detail-row.cover-detail-row.media-compact-row,
     .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
       margin-top: 1.25em !important;
@@ -2737,7 +2737,7 @@
       margin-bottom: 0 !important;
     }
 
-    /* v3.9.9 logo top alignment */
+    /* v3.9.10 logo top alignment */
     .detail-row.logo-detail-row.media-compact-row,
     .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
       align-items: start !important;
@@ -2769,23 +2769,23 @@
       line-height: 1.45 !important;
     }
 
-    /* v3.9.9 logo visual offset */
+    /* v3.9.10 logo visual offset */
     .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
       transform: translateY(0.5em);
     }
 
-    /* v3.9.9 sort icon direction fix */
+    /* v3.9.10 sort icon direction fix */
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.9 unified reversed sort arrows */
+    /* v3.9.10 unified reversed sort arrows */
     .sort-mark,
     .sort-mark.desc {
       transform: none !important;
     }
 
-    /* v3.9.9 expanded detail close button */
+    /* v3.9.10 expanded detail close button */
     .detail-close-row {
       margin-top: 1.5em;
       display: flex;
@@ -2796,7 +2796,7 @@
       color: var(--sub);
     }
 
-    /* v3.9.9 share and individual page actions */
+    /* v3.9.10 share and individual page actions */
     .share-action-row {
       margin-top: 1.5em;
       display: flex;
@@ -2809,14 +2809,14 @@
       color: var(--sub);
     }
 
-    /* v3.9.9 lightweight list and lazy detail loading */
+    /* v3.9.10 lightweight list and lazy detail loading */
     .detail-loading {
       color: var(--sub);
       font-size: 12px;
       padding: 4px 0 10px;
     }
 
-    /* v3.9.9 selected number marker */
+    /* v3.9.10 selected number marker */
     .work.is-current .work-no,
     .series-work-row.is-current .detail-key {
       display: inline-block;
@@ -2829,7 +2829,7 @@
     }
 
   
-    /* v3.9.9 individual pages aligned with public top page */
+    /* v3.9.10 individual pages aligned with public top page */
     .brand-caption {
       display: none;
     }
@@ -2956,7 +2956,7 @@
       text-align: right;
     }
 
-    /* v3.9.9 individual page logo and media layout */
+    /* v3.9.10 individual page logo and media layout */
     .brand {
       grid-area: logo;
       display: block;
@@ -3085,7 +3085,7 @@
       text-align: left;
     }
 
-    /* v3.9.9 individual detail layout correction */
+    /* v3.9.10 individual detail layout correction */
     .topbar {
       display: grid !important;
       grid-template-columns: auto 1fr !important;
@@ -3246,7 +3246,40 @@
       border-top: 0 !important;
     }
 
-  </style></head><body><main class="app"><header class="topbar"><div class="brand"><a href="../"><img src="../assets/detail-logo.svg" alt="VAMRSS"></a><div class="brand-caption">WORK DETAIL</div></div><nav class="nav"><a href="../profile/">ABOUT</a></nav></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.9</div></main><script>
+    /* v3.9.10 individual page media one-line spacing */
+    .detail-row.top-image-row,
+    .detail-row.top-logo-row,
+    .detail-row.bottom-image-row,
+    .detail-row.bottom-logo-row {
+      margin-top: 2em !important;
+      margin-bottom: 2em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .top-image-stack figure,
+    .top-logo-stack figure,
+    .bottom-image-stack figure,
+    .bottom-logo-stack figure {
+      margin-top: 2em !important;
+      margin-bottom: 2em !important;
+    }
+
+    .top-image-stack figure:first-child,
+    .top-logo-stack figure:first-child,
+    .bottom-image-stack figure:first-child,
+    .bottom-logo-stack figure:first-child {
+      margin-top: 0 !important;
+    }
+
+    .top-image-stack figure:last-child,
+    .top-logo-stack figure:last-child,
+    .bottom-image-stack figure:last-child,
+    .bottom-logo-stack figure:last-child {
+      margin-bottom: 0 !important;
+    }
+
+  </style></head><body><main class="app"><header class="topbar"><div class="brand"><a href="../"><img src="../assets/detail-logo.svg" alt="VAMRSS"></a><div class="brand-caption">WORK DETAIL</div></div><nav class="nav"><a href="../profile/">ABOUT</a></nav></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.10</div></main><script>
     const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
     const SUPABASE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
     function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }

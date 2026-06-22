@@ -1,15 +1,13 @@
-# WSV / www.vamrss.com Launch Build v3.9.15
+# WSV / www.vamrss.com Launch Build v3.9.16
 
-## DOS Update Header
+## DOS Header Rule
 
 Changed:
 
-- Individual work and series pages only.
-- DOS logo width is now full internal content width.
-- The ABOUT link in the DOS header has been removed.
-- The right side of the top line now displays `PAGE 1/1`.
-- The date row now has three boxed columns: `UPDATE`, `ORDER`, and `PRINTING`.
-- UPDATE uses the record's `content_updated_at` value, falling back to `updated_at` or `created_at`.
-- ORDER and PRINTING use the current browser date.
+- Removed PRINTING from the individual page DOS date row.
+- Date row now shows UPDATE and ORDER only.
+- Added a thin horizontal rule below the UPDATE / ORDER row.
+- Changed the top-left DOS system text color to the same tone as field labels.
+- Changed the top-right PAGE 1/1 text color to the same tone as field labels.
 
-No additional SQL is required if the v3.8.3 SQL patch has already been applied.
+No additional SQL is required.

@@ -1,14 +1,14 @@
-# WSV / www.vamrss.com Launch Build v3.9.20
+# WSV / www.vamrss.com Launch Build v3.9.21
 
-## DOS Upper Logo and Barcode Flush
+## Asset Swap + Fixed Controls
 
 Changed:
 
-- Removed `PAGE 1/1` from individual pages.
-- Added the uploaded DOSUP SVG above `DOCUMENT ORDER SYSTEM V2.0.0`.
-- DOSUP SVG is displayed at full internal frame width.
-- Changed `DOCUMENT ORDER SYSTEM V2.0.0` to 10px.
-- Removed barcode left/right quiet margins so the barcode uses the full internal frame width.
-- Other public/admin/updates/profile pages remain unchanged except version numbering.
+- Replaced the DOSUP asset with the uploaded `DOSUP2.svg`.
+- Replaced the DOS logo asset with the uploaded `dos-logo2.svg`.
+- Added visible fixed `×` button to the top right of individual work and series pages.
+- Added visible fixed `SHARE` button to the bottom right of individual work and series pages.
+- The fixed controls scroll with the viewport and remain visible on PC and iPhone.
+- The close button tries to close the tab/window. If the browser blocks that, it goes back or returns to the list.
 
 No additional SQL is required.

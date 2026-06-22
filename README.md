@@ -1,17 +1,15 @@
-# WSV / www.vamrss.com Launch Build v3.9.17
+# WSV / www.vamrss.com Launch Build v3.9.18
 
-## CODE128 Barcode
+## Barcode + DOS Header Refinement
 
 Changed:
 
-- Added CODE128 barcode to individual work pages.
-- Added CODE128 barcode to individual series pages.
-- Barcode is placed above the DOS logo.
-- Barcode width is the full internal frame width.
-- Human-readable text is shown below the barcode.
-- Work barcode text: `WORKS ID:XXXX`.
-- Series barcode text: `SERIES ID:XXXX`.
-- Series ID uses the 4-digit series number, not the series code.
-- Barcode is generated in the browser at page load.
+- CODE128 barcode height is doubled.
+- Barcode text color now uses the main dark text color.
+- Removed the ID text below the DOS logo.
+- Removed ORDER from the DOS header.
+- UPDATE remains and is right-aligned.
+- Removed the box around the UPDATE display.
+- The thin horizontal rule below UPDATE remains.
 
 No additional SQL is required.

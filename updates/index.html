@@ -1,0 +1,3792 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../images/favicon.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>(VAMRSS) WSV UPDATES</title>
+  <meta name="description" content="(VAMRSS) WORKSHEET VAULT SYSTEM public update log.">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+
+    :root {
+      --bg: #f8f9f9;
+      --ink: #111714;
+      --sub: #68736f;
+      --muted: #9aa5a1;
+      --invert-bg: #111714;
+      --invert-ink: #f8f9f9;
+      --danger: #9b3144;
+      --font-main: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #101312;
+      --ink: #edf1ef;
+      --sub: #a4aeaa;
+      --muted: #707b77;
+      --invert-bg: #edf1ef;
+      --invert-ink: #101312;
+      --danger: #e28a9a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--font-main);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+      letter-spacing: 0.01em;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: calc(max(18px, env(safe-area-inset-top)) + 24px) 20px max(36px, env(safe-area-inset-bottom));
+      position: relative;
+    }
+
+
+    .fixed-version-mark {
+      position: absolute;
+      right: 20px;
+      bottom: max(36px, env(safe-area-inset-bottom));
+      z-index: 20;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) max-content;
+      grid-template-areas: "logo nav";
+      align-items: start;
+      column-gap: 18px;
+      row-gap: 0;
+      margin-bottom: 48px;
+    }
+
+    .site-title {
+      grid-area: logo;
+      margin: 0;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.11em;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      text-align: left;
+    }
+
+
+    .site-title {
+      grid-area: logo;
+      justify-self: start;
+      align-self: start;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 6px;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .site-logo {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      display: block;
+      width: 145px;
+      max-width: 38vw;
+      margin: 0;
+      padding: 0;
+      line-height: 0;
+      text-align: left;
+      flex: 0 0 auto;
+      transform: translateX(0);
+      cursor: pointer;
+    }
+
+    .site-logo-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 32px;
+      margin: 0;
+      padding: 0;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .site-logo:focus {
+      outline: none;
+    }
+
+    html[data-theme="dark"] .site-logo-img {
+      filter: invert(1);
+    }
+
+    .screen-label {
+      color: var(--sub);
+      letter-spacing: 0.08em;
+    }
+
+    .version-mark {
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+    }
+
+    .text-nav {
+      grid-area: nav;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      text-align: right;
+      align-self: start;
+      justify-self: end;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .text-button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0 2px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+
+    .inline-search-wrap.open {
+      display: block;
+    }
+
+    .inline-search-wrap #searchInput {
+      width: 100%;
+      min-width: 0;
+      min-height: 24px;
+      border: 0;
+      border-radius: 0;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 2px 8px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+      text-align: left;
+    }
+
+    .inline-search-wrap #searchInput::placeholder {
+      color: var(--bg);
+      opacity: 0.88;
+    }
+
+    .theme-symbol {
+      font-family: var(--font-main);
+      font-size: 12px;
+      line-height: 2;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .topbar .text-nav .text-button {
+      line-height: 1;
+      padding-top: 0;
+    }
+
+    .text-button:hover,
+    .text-button.active {
+      color: var(--ink);
+    }
+
+    .text-button.selected {
+      color: var(--ink);
+    }
+
+    .text-button.selected::before {
+      content: "[";
+    }
+
+    .text-button.selected::after {
+      content: "]";
+    }
+
+    #techniqueLinks .text-button.selected {
+      color: var(--invert-ink);
+      background: var(--invert-bg);
+    }
+
+    #techniqueLinks .text-button.selected::before,
+    #techniqueLinks .text-button.selected::after {
+      content: "";
+    }
+
+    .text-button.danger {
+      color: var(--danger);
+    }
+
+    .text-button.danger:hover {
+      color: var(--invert-ink);
+      background: var(--danger);
+    }
+
+
+    .mode-switch .text-button::before,
+    .bracket-switch .text-button::before {
+      content: "[";
+      color: var(--bg);
+    }
+
+    .mode-switch .text-button::after,
+    .bracket-switch .text-button::after {
+      content: "]";
+      color: var(--bg);
+    }
+
+    .mode-switch .text-button.selected::before,
+    .mode-switch .text-button.selected::after,
+    .bracket-switch .text-button.selected::before,
+    .bracket-switch .text-button.selected::after {
+      content: "";
+    }
+
+    .mode-switch .text-button .mode-bracket {
+      color: var(--bg);
+    }
+
+    .mode-switch .text-button.selected,
+    .bracket-switch .text-button.selected {
+      color: var(--ink);
+    }
+
+    .mode-switch .text-button.selected::before,
+    .bracket-switch .text-button.selected::before {
+      content: "[";
+      color: var(--ink);
+    }
+
+    .mode-switch .text-button.selected::after,
+    .bracket-switch .text-button.selected::after {
+      content: "]";
+      color: var(--ink);
+    }
+
+    #entryScreen .form input,
+    #entryScreen .form textarea,
+    #entryScreen .form select,
+    #seriesEntryScreen .form input,
+    #seriesEntryScreen .form textarea,
+    #seriesEntryScreen .form select {
+      border: 0;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 2px 8px;
+    }
+
+    #entryScreen .form input::placeholder,
+    #entryScreen .form textarea::placeholder,
+    #seriesEntryScreen .form input::placeholder,
+    #seriesEntryScreen .form textarea::placeholder {
+      color: var(--bg);
+      opacity: 0.65;
+    }
+
+    #entryScreen .ask-line,
+    #seriesEntryScreen .ask-line {
+      color: var(--sub);
+    }
+
+    #entryScreen .ask-line input {
+      background: transparent;
+      padding: 0;
+    }
+
+    #entryScreen .form select,
+    #seriesEntryScreen .form select {
+      color-scheme: dark;
+    }
+
+    html[data-theme="dark"] #entryScreen .form select,
+    html[data-theme="dark"] #seriesEntryScreen .form select {
+      color-scheme: light;
+    }
+
+    .filter-area {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 11px;
+    }
+
+    .link-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 5px;
+      min-width: 0;
+    }
+
+    .mode-switch,
+    .bracket-switch {
+      gap: 0 2px;
+    }
+
+    .collapsible {
+      display: none;
+      margin-top: 7px;
+    }
+
+    .collapsible.open {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 24px;
+    }
+
+    .search-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .utility-line {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .utility-line button:first-child {
+      grid-column: 1;
+      justify-self: start;
+    }
+
+    .utility-line button:last-child {
+      grid-column: 3;
+      justify-self: end;
+    }
+
+    .inline-search-wrap {
+      display: none;
+      grid-column: 2;
+      min-width: 0;
+    }
+
+    .inline-search-wrap.open {
+      display: block;
+    }
+
+    #searchInput {
+      width: 100%;
+      min-width: 0;
+      min-height: 24px;
+      border: 0;
+      border-radius: 0;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 2px 8px;
+      outline: none;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+      text-align: left;
+    }
+
+    #searchInput::placeholder {
+      color: var(--bg);
+      opacity: 0.88;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      min-width: 0;
+      min-height: 24px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      padding: 2px 0;
+      outline: none;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .search-line input {
+      border-bottom: 0;
+    }
+
+    .search-line input:focus {
+      border-bottom: 0;
+    }
+
+    .form input,
+    .form textarea,
+    .form select,
+    .data-block input,
+    .data-block textarea,
+    .data-block select {
+      border-bottom: 1px solid var(--sub);
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus,
+    .data-block input:focus,
+    .data-block textarea:focus,
+    .data-block select:focus {
+      border-bottom-color: var(--ink);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    select {
+      appearance: none;
+    }
+
+    .section-title {
+      margin: 16px 0 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .list {
+      display: grid;
+      gap: 0;
+    }
+
+    .list-head,
+    .work-summary {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 4.5em minmax(0, 1fr) 7.5em;
+      gap: 1em;
+      align-items: baseline;
+      border: 0;
+      background: transparent;
+      padding: 1px 0;
+      text-align: left;
+    }
+
+
+    .list-head .text-button.selected::before,
+    .list-head .text-button.selected::after {
+      content: "";
+    }
+
+    .list-head .text-button.selected {
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .list-head button,
+    .list-head button:last-child,
+    .list-head .text-button:nth-child(1),
+    .list-head .text-button:nth-child(2),
+    .list-head .text-button:nth-child(3) {
+      justify-self: stretch;
+      text-align: left;
+    }
+
+
+    .sort-mark {
+      display: inline-block;
+      width: 1em;
+      text-align: left;
+      transform-origin: center;
+    }
+
+    .sort-mark.desc {
+      transform: rotate(180deg);
+    }
+
+    .title-end-date {
+      color: var(--sub);
+      margin-left: 1em;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #techniqueLinks .text-button {
+      background: transparent;
+    }
+
+    #techniqueLinks .text-button.selected {
+      background: transparent !important;
+      color: var(--ink);
+    }
+
+    #techniqueLinks .text-button::before,
+    #techniqueLinks .text-button::after {
+      display: inline-block;
+      width: 0.55em;
+      text-align: center;
+    }
+
+    #techniqueLinks .text-button.selected::before {
+      content: "[";
+      color: var(--ink);
+    }
+
+    #techniqueLinks .text-button.selected::after {
+      content: "]";
+      color: var(--ink);
+    }
+
+    #techniqueLinks .text-button:not(.selected)::before {
+      content: "[";
+      color: var(--bg);
+    }
+
+    #techniqueLinks .text-button:not(.selected)::after {
+      content: "]";
+      color: var(--bg);
+    }
+
+    .list-head {
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .list-head button {
+      text-align: left;
+    }
+
+    .list-head button:last-child {
+      text-align: left;
+    }
+
+    .list-head .text-button {
+      display: block;
+      width: 100%;
+      white-space: nowrap;
+      min-width: 0;
+      overflow: visible;
+    }
+
+    .list-head .text-button:nth-child(1),
+    .list-head .text-button:nth-child(2) {
+      justify-self: stretch;
+      text-align: left;
+    }
+
+    .list-head .text-button:nth-child(3) {
+      justify-self: stretch;
+      text-align: left;
+    }
+
+    .work {
+      margin: 0;
+    }
+
+    .work-no {
+      color: var(--sub);
+      text-align: left;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+
+
+
+    .work-title {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .work-title .title-scroll {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+
+    }
+
+    }
+
+
+    .work-year {
+      display: block;
+      width: 100%;
+      color: var(--sub);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+    }
+
+    .work-detail {
+      display: none;
+      margin-left: 1em;
+      padding: 2px 0 9px 0;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .inline-expanded {
+      margin-left: 1em;
+    }
+
+    .work.open .work-detail {
+      display: block;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 1px;
+      padding: 3px 0 6px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 10px;
+      align-items: baseline;
+    }
+
+    .detail-key {
+      color: var(--muted);
+      text-align: left;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      color: var(--ink);
+      text-align: left;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 5px;
+    }
+
+    .empty {
+      padding: 14px 0;
+      color: var(--sub);
+      text-align: left;
+    }
+
+
+    }
+
+
+    }
+
+
+    .entry-layout {
+      display: grid;
+      gap: 10px;
+    }
+
+    .entry-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px 14px;
+      min-width: 0;
+    }
+
+    .entry-row.cols-2 {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .entry-workno-technique {
+      grid-template-columns: 100px 200px;
+      justify-content: start;
+    }
+
+    .entry-dates {
+      grid-template-columns: 130px 130px;
+      justify-content: start;
+    }
+
+    .entry-price {
+      grid-template-columns: 100px minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .entry-exhibition {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .entry-add-selected {
+      align-self: end;
+    }
+
+    .inline-add {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .price-row .ask-line,
+    .entry-price .ask-line {
+      min-height: 24px;
+      align-items: center;
+      display: flex;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .entry-hidden {
+      display: none;
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea {
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .form select,
+    .form input[type="date"] {
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .form input[type="date"] {
+      text-align: left;
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea,
+    .form select {
+      background: var(--bg) !important;
+      color: var(--ink);
+    }
+
+    .form input[type="date"] {
+      background: var(--bg) !important;
+      color: var(--ink);
+    }
+
+
+
+    .form input:not([type="checkbox"]),
+    .form textarea {
+      border-bottom-color: var(--ink) !important;
+    }
+
+    .form select,
+    .form input[type="date"] {
+      border-color: var(--ink) !important;
+    }
+
+
+    /* Readability-first form controls */
+    .form label {
+      color: var(--sub);
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea,
+    .form select {
+      width: 100%;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: var(--surface-soft) !important;
+      border: 1px solid var(--line-strong) !important;
+      border-radius: 0;
+      box-shadow: none;
+      opacity: 1;
+    }
+
+    .form input:not([type="checkbox"]),
+    .form textarea {
+      border-width: 0 0 1px 0 !important;
+      background: transparent !important;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .form select,
+    .form input[type="date"] {
+      border-width: 1px !important;
+      background: var(--surface-soft) !important;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .form input::placeholder,
+    .form textarea::placeholder {
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus {
+      outline: 1px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    .form input[type="date"] {
+      text-align: left;
+    }
+
+    .form input[type="date"]::-webkit-date-and-time-value {
+      text-align: left;
+    }
+
+    .form input[type="checkbox"] {
+      opacity: 1;
+      accent-color: var(--ink);
+    }
+
+    @media (max-width: 380px) {
+      .entry-workno-technique {
+        grid-template-columns: 100px minmax(0, 1fr);
+      }
+
+      .entry-dates {
+        grid-template-columns: 130px 130px;
+        overflow-x: auto;
+      }
+    }
+
+    .form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 10px 20px;
+    }
+
+    .field {
+      display: grid;
+      gap: 1px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .two-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .sub-field {
+      display: grid;
+      gap: 1px;
+    }
+
+    .sub-field label:not(.ask-line) {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .ask-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 20px;
+      margin-top: 1px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .ask-line input {
+      width: 12px;
+      min-height: 12px;
+      padding: 0;
+      accent-color: var(--ink);
+    }
+
+
+
+    .inline-add {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .inline-add.single-action {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .selected-list {
+      display: grid;
+      gap: 1px;
+      margin: 2px 0;
+      color: var(--sub);
+    }
+
+    .selected-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: baseline;
+    }
+
+
+    .hidden-file {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .file-label {
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 5px;
+      margin-top: 3px;
+    }
+
+    .data-block {
+      display: grid;
+      gap: 7px;
+      padding: 8px 0;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .option-list {
+      display: grid;
+      gap: 1px;
+      margin-top: 2px;
+    }
+
+    .option-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 1px 0;
+      color: var(--ink);
+    }
+
+
+    .theme-icon {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .nested-list {
+      display: grid;
+      gap: 0;
+      margin-top: 4px;
+    }
+
+    .nested-work {
+      padding-left: 0;
+    }
+
+    .nested-work .work-summary {
+      grid-template-columns: 4.5em minmax(0, 1fr) 7.5em;
+    }
+
+    .inline-series-link {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .inline-series-link:hover {
+      text-decoration: underline;
+    }
+
+    .font-sampler {
+      margin-top: 28px;
+      padding-top: 10px;
+      color: var(--sub);
+    }
+
+    .font-sampler-title {
+      margin: 0 0 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .font-list {
+      display: grid;
+      gap: 2px;
+    }
+
+    .font-option {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border: 0;
+      background: transparent;
+      padding: 1px 0;
+      text-align: left;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .font-name {
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .font-preview {
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+
+    .topbar .site-title,
+    .site-title .site-logo,
+    .site-title .site-logo-img {
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+    .topbar .site-title {
+      justify-self: start;
+    }
+
+
+    #techniqueLinks {
+      gap: 0 4px;
+    }
+
+    #techniqueLinks .text-button {
+      font-family: "Courier New", Monaco, Menlo, Consolas, monospace;
+      letter-spacing: 0;
+      padding: 0 0.25em;
+      background: transparent;
+      color: var(--sub);
+      white-space: pre;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #techniqueLinks .text-button::before {
+      content: "[ ";
+      color: var(--bg);
+    }
+
+    #techniqueLinks .text-button::after {
+      content: " ]";
+      color: var(--bg);
+    }
+
+    #techniqueLinks .text-button.selected {
+      color: var(--invert-ink);
+      background: var(--invert-bg) !important;
+    }
+
+    #techniqueLinks .text-button.selected::before {
+      content: "[ ";
+      color: var(--invert-ink);
+    }
+
+    #techniqueLinks .text-button.selected::after {
+      content: " ]";
+      color: var(--invert-ink);
+    }
+
+    html[data-theme="dark"] #techniqueLinks .text-button::before,
+    html[data-theme="dark"] #techniqueLinks .text-button::after {
+      color: var(--bg);
+    }
+
+
+    #techniqueLinks {
+      gap: 0 4px;
+    }
+
+    #techniqueLinks .text-button {
+      font-family: inherit !important;
+      letter-spacing: inherit;
+      padding: 0 0.65em;
+      background: transparent;
+      color: var(--sub);
+      white-space: nowrap;
+      font-variant-numeric: normal;
+    }
+
+    #techniqueLinks .text-button::before,
+    #techniqueLinks .text-button::after,
+    #techniqueLinks .text-button.selected::before,
+    #techniqueLinks .text-button.selected::after,
+    #techniqueLinks .text-button:not(.selected)::before,
+    #techniqueLinks .text-button:not(.selected)::after {
+      content: "" !important;
+      display: none !important;
+    }
+
+    #techniqueLinks .text-button.selected {
+      color: var(--invert-ink);
+      background: var(--invert-bg) !important;
+    }
+
+
+
+
+    .list-head .text-button:nth-child(3) {
+      text-align: left !important;
+      justify-self: stretch;
+      padding-left: max(0px, calc(100% - 9.5ch));
+      white-space: nowrap;
+    }
+
+    @media (max-width: 420px) {
+      .topbar {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        grid-template-areas: "logo nav";
+        gap: 18px;
+      }
+
+      .text-nav {
+        justify-content: flex-end;
+      }
+    }
+  
+    /* Final form visibility override */
+    .form input:not([type="checkbox"]),
+    .form textarea,
+    .form select {
+      width: 100% !important;
+      min-height: 28px;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: rgba(96, 112, 132, 0.10) !important;
+      border: 1px solid rgba(96, 112, 132, 0.38) !important;
+      border-radius: 0 !important;
+      padding: 3px 6px !important;
+      box-shadow: none !important;
+      opacity: 1 !important;
+      appearance: auto;
+      -webkit-appearance: auto;
+    }
+
+    .theme-dark .form input:not([type="checkbox"]),
+    .theme-dark .form textarea,
+    .theme-dark .form select {
+      background: rgba(255, 255, 255, 0.10) !important;
+      border-color: rgba(255, 255, 255, 0.34) !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+    }
+
+    .form textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .form input[type="date"] {
+      text-align: left !important;
+    }
+
+    .form input[type="date"]::-webkit-date-and-time-value {
+      text-align: left !important;
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus {
+      outline: 1px solid var(--ink) !important;
+      outline-offset: 1px !important;
+      border-color: var(--ink) !important;
+    }
+
+    .form input[type="checkbox"] {
+      opacity: 1 !important;
+      accent-color: var(--ink);
+    }
+
+  
+    /* DATA page controls visibility */
+    #dataScreen input:not([type="checkbox"]),
+    #dataScreen textarea,
+    #dataScreen select {
+      width: 100% !important;
+      min-height: 28px;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      background: rgba(96, 112, 132, 0.10) !important;
+      border: 1px solid rgba(96, 112, 132, 0.38) !important;
+      border-radius: 0 !important;
+      padding: 3px 6px !important;
+      box-shadow: none !important;
+      opacity: 1 !important;
+      appearance: auto;
+      -webkit-appearance: auto;
+    }
+
+    .theme-dark #dataScreen input:not([type="checkbox"]),
+    .theme-dark #dataScreen textarea,
+    .theme-dark #dataScreen select {
+      background: rgba(255, 255, 255, 0.10) !important;
+      border-color: rgba(255, 255, 255, 0.34) !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+    }
+
+    #dataScreen input:focus,
+    #dataScreen textarea:focus,
+    #dataScreen select:focus {
+      outline: 1px solid var(--ink) !important;
+      outline-offset: 1px !important;
+      border-color: var(--ink) !important;
+    }
+
+    #dataScreen input[type="file"] {
+      font-size: 12px;
+    }
+
+  
+    /* DATA compact layout */
+    #dataScreen .data-block,
+    #dataScreen .data-section,
+    #dataScreen .settings-section {
+      min-width: 0;
+    }
+
+    #dataScreen input[type="file"] {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 4px 6px !important;
+      overflow: hidden;
+    }
+
+    #dataScreen .field input[type="file"] {
+      display: block;
+    }
+
+    #dataScreen .inline-add,
+    #dataScreen .data-import-row,
+    #dataScreen .csv-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    #dataScreen .setting-item,
+    #dataScreen .catalog-item,
+    #dataScreen .option-item,
+    #dataScreen .series-item,
+    #dataScreen .data-list-row {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+      align-items: baseline;
+      min-width: 0;
+      padding: 0;
+      margin: 0;
+      line-height: 2;
+    }
+
+    #dataScreen .setting-item > *,
+    #dataScreen .catalog-item > *,
+    #dataScreen .option-item > *,
+    #dataScreen .series-item > *,
+    #dataScreen .data-list-row > * {
+      min-width: 0;
+    }
+
+    #dataScreen .setting-item span,
+    #dataScreen .catalog-item span,
+    #dataScreen .option-item span,
+    #dataScreen .series-item span,
+    #dataScreen .data-list-row span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #dataScreen .setting-item .text-button,
+    #dataScreen .catalog-item .text-button,
+    #dataScreen .option-item .text-button,
+    #dataScreen .series-item .text-button,
+    #dataScreen .data-list-row .text-button {
+      padding: 0;
+      min-height: 0;
+      line-height: 2;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    #dataScreen .settings-list,
+    #dataScreen .catalog-list,
+    #dataScreen .option-list,
+    #dataScreen .series-list,
+    #dataScreen .data-list {
+      display: grid;
+      gap: 0;
+    }
+
+    #dataScreen .data-actions,
+    #dataScreen .import-actions,
+    #dataScreen .csv-actions {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    @media (max-width: 380px) {
+      #dataScreen .inline-add,
+      #dataScreen .data-import-row,
+      #dataScreen .csv-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+  
+    /* DATA import/csv compact fix */
+    #dataScreen .hidden-file {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    #dataScreen .data-file-row {
+      display: flex !important;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    #dataScreen .file-label {
+      display: inline-flex !important;
+      width: auto !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      line-height: 2 !important;
+      background: transparent !important;
+      border: 0 !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      letter-spacing: .18em;
+      cursor: pointer;
+    }
+
+    #dataScreen .file-label:hover {
+      text-decoration: underline;
+    }
+
+    #dataScreen .option-list {
+      display: grid !important;
+      gap: 0 !important;
+      margin-top: 8px;
+    }
+
+    #dataScreen .compact-option-item {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto auto !important;
+      gap: 14px !important;
+      align-items: baseline !important;
+      min-width: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      line-height: 2 !important;
+    }
+
+    #dataScreen .compact-option-item .option-name {
+      min-width: 0 !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+      color: var(--ink);
+    }
+
+    #dataScreen .compact-option-item .option-action {
+      padding: 0 !important;
+      margin: 0 !important;
+      min-height: 0 !important;
+      line-height: 2 !important;
+      font-size: 12px !important;
+      white-space: nowrap !important;
+      background: transparent !important;
+      border: 0 !important;
+    }
+
+    #dataScreen .search-line {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto !important;
+      gap: 12px !important;
+      align-items: center !important;
+      min-width: 0 !important;
+    }
+
+    #dataScreen input:not(.hidden-file):not([type="checkbox"]),
+    #dataScreen textarea,
+    #dataScreen select {
+      width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+  
+    /* ENTRY layout adjustment */
+    .entry-workno {
+      grid-template-columns: 100px;
+      justify-content: start;
+    }
+
+    .entry-technique {
+      grid-template-columns: 200px;
+      justify-content: start;
+    }
+
+    .entry-dates {
+      grid-template-columns: 130px 130px !important;
+      gap: 20px !important;
+      justify-content: start;
+    }
+
+  
+    .form input::placeholder,
+    .form textarea::placeholder {
+      color: var(--sub) !important;
+      opacity: 1 !important;
+    }
+
+  
+    /* TOP list/date and version position adjustment */
+    .fixed-version-mark {
+      position: fixed !important;
+      right: 20px !important;
+      bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .work-summary {
+      padding-right: 0 !important;
+    }
+
+    .work-year {
+      justify-self: end !important;
+      text-align: right !important;
+      min-width: 0;
+    }
+
+    .works-list,
+    .work-list,
+    #worksList,
+    #seriesList {
+      padding-bottom: 32px;
+    }
+
+  
+
+  
+    /* TOP list column alignment */
+    .work-summary,
+    .list-header {
+      grid-template-columns: 4.5em minmax(0, 1fr) 9.5ch !important;
+      column-gap: 1em !important;
+      align-items: baseline;
+    }
+
+    .work-no {
+      text-align: left !important;
+      justify-self: start !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .work-year {
+      width: 9.5ch !important;
+      min-width: 9.5ch !important;
+      justify-self: start !important;
+      text-align: left !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .list-header .work-year,
+    .list-header button[data-sort="year"],
+    .list-header button[data-sort="startDate"] {
+      width: 9.5ch !important;
+      min-width: 9.5ch !important;
+      justify-self: start !important;
+      text-align: left !important;
+    }
+
+      input[type="hidden"],
+    textarea.entry-hidden {
+      display: none !important;
+    }
+
+  
+    .fixed-copyright-mark {
+      position: fixed !important;
+      left: 20px !important;
+      bottom: max(12px, env(safe-area-inset-bottom)) !important;
+      z-index: 20;
+      pointer-events: none;
+      font-size: 10px;
+      line-height: 1;
+      color: var(--sub);
+      letter-spacing: 0.04em;
+    }
+
+  
+    .app.is-locked {
+      display: none;
+    }
+
+    .auth-gate {
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      padding: 72px 20px;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    .auth-card {
+      width: min(100%, 420px);
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+    }
+
+    .auth-card h1 {
+      margin: 0 0 28px;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    .auth-note,
+    .auth-message {
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .auth-card label {
+      display: block;
+      margin-top: 18px;
+      color: var(--sub);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .auth-card input {
+      width: 100%;
+      margin-top: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 16px;
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+  
+
+    .logo-entry-preview,
+    .logo-detail-preview {
+      width: 100%;
+      display: block;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--sub);
+      padding: 0;
+      overflow: visible;
+      font-size: 12px;
+      line-height: 1.6;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-entry-preview img,
+    .logo-detail-preview img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: none;
+      margin: 0;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    html[data-theme="dark"] .logo-entry-preview img,
+    html[data-theme="dark"] .logo-detail-preview img {
+      filter: invert(1);
+    }
+
+    .detail-row.logo-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 8px calc(88px + 10px);
+      padding: 0;
+      width: calc(100% - 88px - 10px);
+    }
+
+    .detail-row.logo-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+    }
+
+    .logo-entry-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .logo-entry-note {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .logo-file-input {
+      margin-top: 8px;
+      font-size: 13px;
+      border-style: dashed;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      min-width: 0;
+    }
+
+    .image-entry-preview {
+      margin-top: 8px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius-small);
+      background: var(--surface-soft);
+      padding: 12px;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .image-entry-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
+    }
+
+    .image-entry-actions,
+    .image-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .image-entry-note {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .image-file-input {
+      margin-top: 8px;
+      font-size: 13px;
+      border-style: dashed;
+    }
+
+    .work-image-gallery {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .work-image-card {
+      width: 100%;
+    }
+
+    .work-image-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .work-image-caption {
+      margin-top: 5px;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .work-image-cover {
+      display: inline-block;
+      margin-left: 7px;
+      border: 1px solid var(--deep);
+      border-radius: 999px;
+      padding: 0 7px;
+      color: var(--deep);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
+    .detail-row.image-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 8px calc(88px + 10px);
+      padding: 0;
+      width: calc(100% - 88px - 10px);
+    }
+
+    .detail-row.image-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.image-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery {
+      width: 100%;
+      gap: 2em;
+    }
+
+    .detail-row.image-detail-row .work-image-caption {
+      text-align: center;
+      margin-top: 6px;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .detail-row.cover-detail-row {
+      display: block;
+      grid-template-columns: none;
+      margin: 0 0 10px calc(88px + 10px);
+      padding: 0;
+      width: calc(100% - 88px - 10px);
+    }
+
+    .detail-row.cover-detail-row .detail-key {
+      display: none;
+    }
+
+    .detail-row.cover-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .cover-detail-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-small);
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .detail-row.logo-detail-row {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      margin: 0;
+      padding: 0;
+      width: auto;
+    }
+
+    .detail-row.logo-detail-row .detail-key {
+      display: block;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      display: block;
+      width: 100%;
+      white-space: normal;
+      min-width: 0;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview {
+      width: 100px;
+      max-width: 100%;
+      display: block;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview img {
+      width: 100px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .detail-row.cover-detail-row {
+      margin-bottom: 1em;
+    }
+
+    .detail-row.logo-detail-row {
+      align-items: start;
+      margin-bottom: 1em;
+    }
+
+    .detail-row.logo-detail-row .detail-key {
+      line-height: 1;
+      padding-top: 0;
+    }
+
+    .detail-row.logo-detail-row .detail-value {
+      line-height: 1;
+      padding-top: 0;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview {
+      width: 150px;
+      max-width: 100%;
+      line-height: 1;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview img {
+      width: 150px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview {
+      width: 50%;
+      max-width: 50%;
+    }
+
+    .detail-row.logo-detail-row .logo-detail-preview img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0;
+    }
+
+  
+
+    .portfolio-note {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 2;
+    }
+
+    .portfolio-disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .portfolio-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .work-detail .detail-actions {
+      display: none;
+    }
+
+    .fixed-version-mark {
+      right: 20px;
+    }
+    .portfolio-search-line {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 10px;
+      align-items: center;
+      justify-content: start;
+      margin: 8px 0 12px;
+    }
+
+    .portfolio-search-line.search-open {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      justify-content: stretch;
+    }
+
+    .portfolio-search-wrap {
+      display: none !important;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .portfolio-search-line.search-open .portfolio-search-wrap {
+      display: block !important;
+    }
+
+    .portfolio-search-wrap input {
+      display: block !important;
+      width: 100%;
+      min-width: 0;
+      height: auto;
+      opacity: 1 !important;
+      visibility: visible !important;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      padding: 4px 0;
+      outline: none;
+      font-size: 13px;
+      line-height: 2;
+    }
+
+    .portfolio-search-wrap input::placeholder {
+      color: var(--muted);
+      opacity: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .portfolio-search-reset {
+      display: none;
+    }
+
+    .portfolio-search-line.search-open .portfolio-search-reset {
+      display: inline-block;
+      justify-self: end;
+    }
+
+    .portfolio-search-line {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      justify-content: stretch;
+      width: 100%;
+    }
+
+    .portfolio-search-line #statusPanelText {
+      grid-column: 1;
+      justify-self: start;
+    }
+
+    .portfolio-search-line .portfolio-search-wrap {
+      grid-column: 2;
+    }
+
+    .portfolio-search-line .portfolio-search-reset {
+      grid-column: 3;
+      display: inline-block !important;
+      justify-self: end;
+    }
+
+    .fixed-copyright-mark,
+    .fixed-version-mark {
+      font-family: var(--font-main) !important;
+      font-size: 10px !important;
+      font-weight: 300 !important;
+      line-height: 1 !important;
+      letter-spacing: 0.04em !important;
+      color: var(--sub) !important;
+    }
+
+    a.nav-text-button,
+    a.nav-button,
+    a.text-button {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .related-link-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .related-link-item {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      line-height: 1.9;
+      word-break: break-all;
+    }
+
+    .related-link-item:hover {
+      text-decoration: underline;
+    }
+
+    .related-link-note {
+      margin: 4px 0 0;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .related-link-list {
+      display: grid !important;
+      gap: 0 !important;
+      line-height: inherit !important;
+    }
+
+    .related-link-item {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: inherit !important;
+      color: inherit;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .related-url-row .detail-value {
+      white-space: normal !important;
+    }
+
+    .related-url-row .related-link-list {
+      display: grid !important;
+      gap: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: inherit !important;
+    }
+
+    .related-url-row .related-link-item {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: inherit !important;
+      color: inherit;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .related-url-row .related-link-item:hover {
+      text-decoration: underline;
+    }
+
+    .detail-link-button {
+      appearance: none;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .detail-link-button:hover {
+      text-decoration: underline;
+    }
+
+    .inline-series-host {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 0;
+    }
+
+    .inline-series-host .inline-expanded {
+      margin-left: 1em;
+      margin-top: 0.5em;
+      margin-bottom: 0.8em;
+    }
+
+    .series-work-row {
+      align-items: start !important;
+    }
+
+    .series-work-row .detail-value {
+      white-space: normal !important;
+      overflow: visible !important;
+    }
+
+    .series-work-row .inline-series-link {
+      display: block !important;
+      width: 100%;
+      white-space: normal !important;
+      overflow: visible !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+      line-height: 2 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .logo-stack {
+      display: grid;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .logo-stack-item {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .logo-stack-item img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      margin: 0;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    .logo-entry-card {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .logo-entry-card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .title-series-code {
+      color: var(--sub);
+    }
+
+    .detail-grid {
+      gap: 0.55em 0 !important;
+      align-items: start !important;
+    }
+
+    .detail-row {
+      align-items: start !important;
+      min-height: 0 !important;
+    }
+
+    .detail-row .detail-key,
+    .detail-row .detail-value {
+      line-height: 1.8 !important;
+      min-height: 0 !important;
+    }
+
+    .detail-row .detail-value {
+      white-space: pre-wrap !important;
+      overflow: visible !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+    }
+
+    .detail-row .detail-value button,
+    .detail-row .detail-value a {
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: normal !important;
+      line-height: 1.8 !important;
+    }
+
+    :root {
+      --font-main: "Noto Sans JP", sans-serif !important;
+    }
+
+    html,
+    body,
+    button,
+    input,
+    textarea,
+    select {
+      font-family: var(--font-main) !important;
+    }
+
+    * {
+      font-family: inherit;
+    }
+
+    .logo-stack {
+      gap: 6px !important;
+    }
+
+    .logo-entry-card {
+      gap: 4px !important;
+    }
+
+    .logo-caption,
+    .logo-caption-display {
+      margin-top: 3px !important;
+      color: var(--sub);
+      font-size: 11px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .logo-caption-input {
+      width: 100%;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .detail-row.logo-detail-row {
+      margin-bottom: 0.35em !important;
+    }
+
+    .detail-row.cover-detail-row {
+      margin-bottom: 0.45em !important;
+    }
+
+    .detail-row.image-detail-row {
+      margin-top: 0.35em !important;
+      margin-bottom: 0.35em !important;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery {
+      gap: 0.85em !important;
+    }
+
+    .work-image-caption {
+      margin-top: 3px !important;
+    }
+
+    .logo-detail-preview {
+      line-height: 1.45 !important;
+    }
+
+    .detail-grid {
+      gap: 1.8em 0 !important;
+      align-items: start !important;
+    }
+
+    .detail-row {
+      align-items: start !important;
+      min-height: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .detail-row.logo-detail-row,
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .logo-stack,
+    .work-image-gallery {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    .logo-stack-item,
+    .logo-entry-card,
+    .work-image-item,
+    .work-image-frame,
+    .cover-detail-preview,
+    .logo-detail-preview {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .logo-stack-item img,
+    .logo-entry-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .cover-detail-preview img,
+    .logo-detail-preview img,
+    .detail-row img {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .logo-caption,
+    .logo-caption-display,
+    .work-image-caption {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .profile-icon-img {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* v3.9.28 corrected spacing policy */
+    .detail-grid {
+      gap: 1px !important;
+      align-items: start !important;
+    }
+
+    .detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      min-height: 0 !important;
+      align-items: start !important;
+    }
+
+    .detail-row .detail-key,
+    .detail-row .detail-value {
+      min-height: 0 !important;
+    }
+
+    .detail-row.logo-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-stack,
+    .work-image-gallery {
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    .logo-stack-item,
+    .logo-entry-card,
+    .work-image-card,
+    .work-image-item,
+    .work-image-frame,
+    .cover-detail-preview,
+    .logo-detail-preview {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-stack-item img,
+    .logo-entry-card img,
+    .work-image-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .cover-detail-preview img,
+    .cover-detail-image,
+    .logo-detail-preview img,
+    .detail-row img {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .logo-caption,
+    .logo-caption-display,
+    .work-image-caption {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .profile-icon-img {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* v3.9.28 final media spacing override */
+    .detail-grid {
+      gap: 1px 0 !important;
+    }
+
+    .detail-row,
+    .detail-row.logo-detail-row,
+    .detail-row.cover-detail-row,
+    .detail-row.image-detail-row,
+    .detail-row.additional-logo-detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row {
+      display: block !important;
+    }
+
+    .detail-row.image-detail-row .detail-value,
+    .detail-row.logo-detail-row .detail-value,
+    .detail-row.cover-detail-row .detail-value,
+    .detail-row.additional-logo-detail-row .detail-value {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 1.45 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery,
+    .detail-row.logo-detail-row .logo-stack,
+    .detail-row.additional-logo-detail-row .logo-stack,
+    .work-image-gallery,
+    .logo-stack {
+      display: block !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-card,
+    .detail-row.image-detail-row .work-image-item,
+    .detail-row.image-detail-row .work-image-frame,
+    .detail-row.logo-detail-row .logo-stack-item,
+    .detail-row.additional-logo-detail-row .logo-stack-item,
+    .work-image-card,
+    .work-image-item,
+    .work-image-frame,
+    .logo-stack-item,
+    .cover-detail-preview,
+    .logo-detail-preview {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-card + .work-image-card,
+    .detail-row.image-detail-row .work-image-item + .work-image-item,
+    .detail-row.image-detail-row .work-image-frame + .work-image-frame,
+    .detail-row.logo-detail-row .logo-stack-item + .logo-stack-item,
+    .detail-row.additional-logo-detail-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1px !important;
+    }
+
+    .detail-row.image-detail-row img,
+    .detail-row.logo-detail-row img,
+    .detail-row.cover-detail-row img,
+    .detail-row.additional-logo-detail-row img,
+    .work-image-card img,
+    .work-image-item img,
+    .work-image-frame img,
+    .logo-stack-item img,
+    .cover-detail-preview img,
+    .logo-detail-preview img,
+    .profile-icon-img {
+      display: block !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row .work-image-caption,
+    .work-image-caption,
+    .logo-caption,
+    .logo-caption-display {
+      margin-top: 3px !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      line-height: 1.45 !important;
+    }
+
+    /* v3.9.28 compact media rendering */
+    .detail-row.logo-detail-row .detail-value,
+    .detail-row.additional-logo-detail-row .detail-value,
+    .detail-row.cover-detail-row .detail-value,
+    .detail-row.image-detail-row .detail-value {
+      white-space: normal !important;
+      line-height: 1.45 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+    }
+
+    .media-compact-row,
+    .media-compact-row .detail-value {
+      white-space: normal !important;
+    }
+
+    .media-compact-row img,
+    .media-compact-row .logo-stack,
+    .media-compact-row .logo-stack-item,
+    .media-compact-row .logo-detail-preview,
+    .media-compact-row .work-image-gallery,
+    .media-compact-row .work-image-card,
+    .media-compact-row .cover-detail-preview {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1px !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display {
+      margin: 3px 0 0 0 !important;
+      padding: 0 !important;
+      line-height: 1.45 !important;
+      white-space: pre-wrap !important;
+    }
+
+    .detail-row.image-detail-row .work-image-gallery,
+    .detail-row.logo-detail-row .logo-stack,
+    .detail-row.additional-logo-detail-row .logo-stack {
+      display: block !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
+      column-gap: 0 !important;
+    }
+
+    /* v3.9.28 balanced media spacing */
+    .media-compact-row {
+      margin-top: 0.45em !important;
+      margin-bottom: 0.45em !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 0.9em !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* v3.9.28 requested media spacing */
+    .media-compact-row {
+      margin-top: 1em !important;
+      margin-bottom: 1em !important;
+    }
+
+    .media-compact-row .work-image-card + .work-image-card,
+    .media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1em !important;
+    }
+
+    .media-compact-row .work-image-caption,
+    .media-compact-row .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* v3.9.28 high-specificity media spacing */
+    .detail-row.cover-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.media-compact-row:not(.additional-logo-detail-row) {
+      margin-top: 1.25em !important;
+      margin-bottom: 1.25em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
+      margin-top: 1.5em !important;
+      margin-bottom: 1.5em !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .detail-row.image-detail-row.media-compact-row .work-image-card + .work-image-card,
+    .detail-row.image-detail-row.media-compact-row .work-image-item + .work-image-item,
+    .detail-row.logo-detail-row.media-compact-row .logo-stack-item + .logo-stack-item {
+      margin-top: 1.5em !important;
+    }
+
+    .detail-row.image-detail-row.media-compact-row .work-image-caption,
+    .detail-row.logo-detail-row.media-compact-row .logo-caption-display {
+      margin-top: 0.35em !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* v3.9.28 logo top alignment */
+    .detail-row.logo-detail-row.media-compact-row,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row {
+      align-items: start !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row > .detail-key,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row > .detail-key {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row > .detail-value,
+    .detail-row.logo-detail-row.additional-logo-detail-row.media-compact-row > .detail-value {
+      align-self: start !important;
+      line-height: 0 !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row .logo-detail-preview,
+    .detail-row.logo-detail-row.media-compact-row .logo-stack,
+    .detail-row.logo-detail-row.media-compact-row .logo-stack-item,
+    .detail-row.logo-detail-row.media-compact-row img {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .detail-row.logo-detail-row.media-compact-row .logo-caption-display {
+      line-height: 1.45 !important;
+    }
+
+    /* v3.9.28 logo visual offset */
+    .detail-row.logo-detail-row.media-compact-row .logo-detail-preview {
+      transform: translateY(0.5em);
+    }
+
+    /* v3.9.28 sort icon direction fix */
+    .sort-mark.desc {
+      transform: none !important;
+    }
+
+    /* v3.9.28 updates page */
+    #updatesScreen .work-no {
+      font-size: 11px;
+      letter-spacing: 0.02em;
+    }
+
+    #updatesScreen .list-head span {
+      display: block;
+    }
+
+    /* v3.9.28 updates table layout */
+    #updatesScreen .update-kind-label {
+      color: var(--sub);
+      margin-right: 0.55em;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    #updatesScreen .work-year {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* v3.9.28 updates no search / date column alignment */
+    #updatesScreen .list-head,
+    #updatesScreen .work-summary {
+      grid-template-columns: 4.5em minmax(0, 1fr) 9.5ch !important;
+      column-gap: 1em !important;
+      align-items: baseline !important;
+    }
+
+    #updatesScreen .list-head span:nth-child(3),
+    #updatesScreen .work-year {
+      width: 9.5ch !important;
+      min-width: 9.5ch !important;
+      justify-self: start !important;
+      text-align: left !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #updatesScreen #searchInput[type="hidden"] {
+      display: none !important;
+    }
+
+    /* v3.9.28 unified reversed sort arrows */
+    .sort-mark,
+    .sort-mark.desc {
+      transform: none !important;
+    }
+
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="app">
+    <div class="fixed-copyright-mark">(C) 2026 SHIRASUSALAD</div>
+    <div class="fixed-version-mark">v3.9.28</div>
+
+    <section id="updatesScreen" class="screen active">
+      <div class="topbar">
+        <h1 class="site-title">
+          <button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme">
+            <img class="site-logo-img" src="../admin/assets/wsv-logo.svg" alt="(VAMRSS) WSV">
+          </button>
+        </h1>
+        <nav class="text-nav">
+          <a class="text-button" href="../">HOME</a>
+          <a class="text-button" href="../profile/">ABOUT</a>
+        </nav>
+      </div>
+
+      <div class="list-head">
+        <span>№</span>
+        <span>TITLE</span>
+        <span>DATE</span>
+      </div>
+
+      <input id="searchInput" type="hidden" value="">
+
+      <div id="status" class="portfolio-note">更新情報を読み込み中です。</div>
+      <div id="workList" class="list"></div>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
+    const WSV_ASSET_BUCKET = "wsv-assets";
+    const cloudClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    let works = [];
+    let seriesRecords = [];
+    let cloudAssets = [];
+    let relatedLinks = [];
+    let activeListMode = "works";
+    let activeTechnique = "ALL";
+    let activeProduction = "ALL";
+    let activeManagement = "ALL";
+    let sortKey = "workNo";
+    let sortDirection = "asc";
+
+    const PRODUCTION_STATUSES = ["制作中", "完成", "制作終了"];
+    const MANAGEMENT_STATUSES = ["保管中", "売却済", "譲渡済", "貸出中", "処分済"];
+
+    const workList = document.getElementById("workList");
+    const searchInput = document.getElementById("searchInput");
+    const statusEl = document.getElementById("status");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, "&#096;");
+    }
+
+    
+
+    function normalizeUrl(url = "") {
+      const raw = String(url || "").trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw)) return raw;
+      return "https://" + raw;
+    }
+
+    function normalizeRelatedLinks(links = []) {
+      if (!Array.isArray(links)) return [];
+      return links
+        .map((link, index) => {
+          const url = normalizeUrl(link.url || "");
+          if (!url) return null;
+          return {
+            id: link.id || "",
+            title: String(link.title || url).trim(),
+            url,
+            sortOrder: Number.isFinite(Number(link.sort_order ?? link.sortOrder)) ? Number(link.sort_order ?? link.sortOrder) : index,
+            isPublic: Boolean(link.is_public ?? link.isPublic)
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    }
+
+    function relatedLinksForWork(work = {}) {
+      return normalizeRelatedLinks(relatedLinks.filter(link => link.work_id === work.id));
+    }
+
+    function relatedLinksForSeries(series = {}) {
+      return normalizeRelatedLinks(relatedLinks.filter(link => link.series_id === series.id));
+    }
+
+    function relatedLinksSearchText(links = []) {
+      return normalizeRelatedLinks(links).map(link => `${link.title} ${link.url}`).join(" ");
+    }
+
+    function relatedLinksDetailRowHtml(links = []) {
+      const clean = normalizeRelatedLinks(links);
+      if (!clean.length) return "";
+      const items = clean
+        .map(link => `<a class="related-link-item" href="${escapeAttr(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)} / ${escapeHtml(link.url)}</a>`)
+        .join("");
+      return `<div class="detail-row related-url-row"><div class="detail-key">URL</div><div class="detail-value"><div class="related-link-list">${items}</div></div></div>`;
+    }
+
+function normalizeWorkNo(value) {
+      const digits = String(value ?? "").replace(/\D/g, "").slice(0, 4);
+      return digits ? digits.padStart(4, "0") : "";
+    }
+
+    function normalizeStatuses(work = {}) {
+      return {
+        productionStatus: work.production_status || work.productionStatus || "",
+        managementStatus: work.management_status || work.managementStatus || ""
+      };
+    }
+
+    function cloudAssetPublicUrl(path) {
+      if (!path) return "";
+      const { data } = cloudClient.storage.from(WSV_ASSET_BUCKET).getPublicUrl(path);
+      return data && data.publicUrl ? data.publicUrl : "";
+    }
+
+    function formatMoney(value) {
+      if (value === null || value === undefined || value === "") return "";
+      const n = Number(value);
+      if (!Number.isFinite(n)) return String(value);
+      return "¥" + Math.round(n).toLocaleString("ja-JP");
+    }
+
+    function formatDimensions(work = {}) {
+      const h = work.size_h ?? work.sizeH ?? "";
+      const w = work.size_w ?? work.sizeW ?? "";
+      const d = work.size_d ?? work.sizeD ?? "";
+      const parts = [];
+      if (h !== "" && h !== null) parts.push("H" + h);
+      if (w !== "" && w !== null) parts.push("W" + w);
+      if (d !== "" && d !== null) parts.push("D" + d);
+      return parts.length ? parts.join(" × ") + " mm" : "";
+    }
+
+    function workTitle(work = {}) {
+      return work.title || work.title_en || "Untitled";
+    }
+
+    function workListTitleHtml(work = {}) {
+      const title = escapeHtml(workTitle(work));
+      const series = seriesRecords.find(item => item.id === work.series_id);
+      const code = series && series.code ? String(series.code).trim() : "";
+      if (!code) return title;
+      return `${title}<span class="title-series-code">（${escapeHtml(code)}）</span>`;
+    }
+
+    function workDescription(work = {}) {
+      return work.description || "";
+    }
+
+    function normalizeProductionDate(work = {}) {
+      return work.start_date || "";
+    }
+
+    function seriesTitle(series = {}) {
+      return series.title || series.title_en || series.code || normalizeWorkNo(series.series_no) || "";
+    }
+
+    function seriesLabel(series = {}) {
+      if (!series) return "";
+      const code = series.code ? series.code + " / " : "";
+      return code + seriesTitle(series);
+    }
+
+
+    function seriesLabelHtml(series, hostId = "") {
+      const label = seriesLabel(series);
+      if (!series || !series.id || !label) return escapeHtml(label || "");
+      const safeHostId = hostId || series.id;
+      return `<button class="detail-link-button" type="button" onclick="toggleInlineSeries('${escapeAttr(series.id)}', '${escapeAttr(safeHostId)}')">${escapeHtml(label)}</button>`;
+    }
+
+    function seriesDetailHtml(series = {}) {
+      const no = normalizeWorkNo(series.series_no);
+      const relatedWorks = works
+        .filter(w => w.series_id === series.id)
+        .sort(compareWorks);
+
+      return `
+        <div class="inline-expanded">
+          <div class="detail-grid">
+            ${logoDetailRowHtml("series", series)}
+            ${row("№", no)}
+            ${row("Code", series.code)}
+            ${row("Title", series.title)}
+            ${row("T_EN", series.title_en)}
+            ${row("Start", series.start_date)}
+            ${row("Works", String(relatedWorks.length))}
+            ${row("Description", series.description)}
+            ${row("D_EN", series.description_en)}
+            ${additionalLogoDetailRowHtml("series", series)}
+            ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
+          </div>
+        </div>`;
+    }
+
+    window.toggleInlineSeries = function(seriesId, hostId = "") {
+      const safeHostId = hostId || seriesId;
+      const target = document.getElementById(`inline-series-${safeHostId}-${seriesId}`);
+      if (!target) return;
+      if (target.dataset.open === "1") {
+        target.innerHTML = "";
+        target.dataset.open = "";
+        return;
+      }
+      const series = seriesRecords.find(item => item.id === seriesId);
+      if (!series) return;
+      target.dataset.open = "1";
+      target.innerHTML = seriesDetailHtml(series);
+    };
+
+
+    function getSeriesRecordForWork(work = {}) {
+      return seriesRecords.find(series => series.id === work.series_id) || null;
+    }
+
+    function getSeriesRecordByTitle(title) {
+      return seriesRecords.find(series => seriesTitle(series) === title || seriesLabel(series) === title) || null;
+    }
+
+    function findLogoAssets(kind, record = {}) {
+      if (!record || !record.id) return [];
+      const assetType = kind === "series" ? "series_logo" : "work_logo";
+      const assets = cloudAssets
+        .filter(asset => {
+          if (asset.asset_type !== assetType) return false;
+          return kind === "series" ? asset.series_id === record.id : asset.work_id === record.id;
+        })
+        .sort((a, b) => {
+          const ao = Number.isFinite(Number(a.sort_order)) ? Number(a.sort_order) : 0;
+          const bo = Number.isFinite(Number(b.sort_order)) ? Number(b.sort_order) : 0;
+          if (ao !== bo) return ao - bo;
+          return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+        });
+
+      const id = record.logo_asset_id || record.logoAssetId || "";
+      if (!id) return assets;
+      const index = assets.findIndex(asset => asset.id === id);
+      if (index <= 0) return assets;
+      const primary = assets[index];
+      return [primary, ...assets.slice(0, index), ...assets.slice(index + 1)];
+    }
+
+    function findLogoAsset(kind, record = {}) {
+      return findLogoAssets(kind, record)[0] || null;
+    }
+
+    function findWorkImageAssets(work = {}) {
+      if (!work || !work.id) return [];
+      return cloudAssets
+        .filter(asset => asset.work_id === work.id && asset.asset_type === "work_image")
+        .sort((a, b) => {
+          if (Boolean(a.is_cover) !== Boolean(b.is_cover)) return a.is_cover ? -1 : 1;
+          return Number(a.sort_order || 0) - Number(b.sort_order || 0) || String(a.created_at || "").localeCompare(String(b.created_at || ""));
+        });
+    }
+
+    function findCoverImageAsset(work = {}) {
+      if (!work) return null;
+      const coverId = work.cover_asset_id || "";
+      if (coverId) {
+        const byId = cloudAssets.find(asset => asset.id === coverId && asset.asset_type === "work_image");
+        if (byId) return byId;
+      }
+      return findWorkImageAssets(work).find(asset => asset.is_cover) || findWorkImageAssets(work)[0] || null;
+    }
+
+    function coverImageDetailRowHtml(work = {}) {
+      const asset = findCoverImageAsset(work);
+      if (!asset || !asset.storage_path) return "";
+      const url = cloudAssetPublicUrl(asset.storage_path);
+      if (!url) return "";
+      return `<div class="detail-row cover-detail-row media-compact-row"><div class="detail-value"><img class="cover-detail-image" src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || workTitle(work))}"></div></div>`;
+    }
+
+    function logoAssetMarkup(kind, asset, showCaption = true) {
+      if (!asset || !asset.storage_path) return "";
+      const url = cloudAssetPublicUrl(asset.storage_path);
+      if (!url) return "";
+      const caption = showCaption ? escapeHtml(asset.caption || "") : "";
+      return `<div class="logo-stack-item"><img src="${escapeAttr(url)}" alt="${escapeAttr(kind === "series" ? "Series logo" : "Work logo")}">${caption ? `<div class="logo-caption-display">${caption}</div>` : ""}</div>`;
+    }
+
+    function logoDetailRowHtml(kind, record = {}) {
+      const assets = findLogoAssets(kind, record).filter(asset => asset && asset.storage_path && cloudAssetPublicUrl(asset.storage_path));
+      const primary = assets[0] || null;
+      if (!primary) return "";
+      return `<div class="detail-row logo-detail-row media-compact-row"><div class="detail-key">LOGO</div><div class="detail-value"><div class="logo-detail-preview"><div class="logo-stack">${logoAssetMarkup(kind, primary, false)}</div></div></div></div>`;
+    }
+
+    function additionalLogoDetailRowHtml(kind, record = {}) {
+      const assets = findLogoAssets(kind, record)
+        .filter(asset => asset && asset.storage_path && cloudAssetPublicUrl(asset.storage_path))
+        .slice(1);
+      if (!assets.length) return "";
+      return `<div class="detail-row logo-detail-row additional-logo-detail-row media-compact-row"><div class="detail-key">LOGO</div><div class="detail-value"><div class="logo-detail-preview"><div class="logo-stack">${assets.map(asset => logoAssetMarkup(kind, asset, true)).join("")}</div></div></div></div>`;
+    }
+
+    function workImagesDetailRowHtml(work = {}) {
+      const cover = findCoverImageAsset(work);
+      const images = findWorkImageAssets(work).filter(asset => !cover || asset.id !== cover.id);
+      if (!images.length) return "";
+      const items = images.map(asset => {
+        const url = cloudAssetPublicUrl(asset.storage_path);
+        if (!url) return "";
+        const caption = escapeHtml(asset.caption || "");
+        return `<div class="work-image-card"><img src="${escapeAttr(url)}" alt="${escapeAttr(asset.alt_text || asset.caption || workTitle(work))}">${caption ? `<div class="work-image-caption">${caption}</div>` : ""}</div>`;
+      }).join("");
+      return `<div class="detail-row image-detail-row media-compact-row"><div class="detail-value"><div class="work-image-gallery">${items}</div></div></div>`;
+    }
+
+    function row(key, value) {
+      if (value === null || value === undefined || String(value).trim() === "") return "";
+      return `<div class="detail-row"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`;
+    }
+
+    function seriesLinkHtml(seriesTitleText) {
+      return escapeHtml(seriesTitleText || "");
+    }
+
+    function workDetailHtml(work = {}) {
+      const statuses = normalizeStatuses(work);
+      const priceText = work.price_ask ? "ASK" : formatMoney(work.price_amount);
+      const costText = formatMoney(work.cost_amount);
+      const workNo = normalizeWorkNo(work.work_no);
+      const series = getSeriesRecordForWork(work);
+      return `
+              <div class="detail-grid">
+                ${coverImageDetailRowHtml(work)}
+                ${logoDetailRowHtml("work", work)}
+                ${row("№", workNo)}
+                ${row("Title", work.title)}
+                ${row("T_EN", work.title_en)}
+                <div class="detail-row">
+                  <div class="detail-key">Series</div>
+                  <div class="detail-value">${seriesLabelHtml(series, work.id)}</div>
+                </div>
+                ${series && series.id ? `<div class="inline-series-host" id="inline-series-${escapeAttr(work.id)}-${escapeAttr(series.id)}"></div>` : ""}
+                ${row("Start", normalizeProductionDate(work))}
+                ${row("Completed", work.completed_date)}
+                ${row("Production", statuses.productionStatus)}
+                ${row("Management", statuses.managementStatus)}
+                ${row("Location", work.location)}
+                ${row("Owner", work.holder_name)}
+                ${row("Technique", work.technique)}
+                ${row("Materials", work.materials)}
+                ${row("Size", formatDimensions(work))}
+                ${row("Price", "*******")}
+                ${row("Cost", "*******")}
+                ${row("Description", workDescription(work))}
+                ${row("D_EN", work.description_en)}
+                ${additionalLogoDetailRowHtml("work", work)}
+                ${relatedLinksDetailRowHtml(relatedLinksForWork(work))}
+                ${workImagesDetailRowHtml(work)}
+              </div>`;
+    }
+
+    function compareWorks(a, b) {
+      let av = "";
+      let bv = "";
+      if (sortKey === "workNo") {
+        av = normalizeWorkNo(a.work_no);
+        bv = normalizeWorkNo(b.work_no);
+      } else if (sortKey === "title") {
+        av = workTitle(a);
+        bv = workTitle(b);
+      } else if (sortKey === "year") {
+        av = String(a.completed_date || a.start_date || "");
+        bv = String(b.completed_date || b.start_date || "");
+      }
+      const result = av.localeCompare(bv, "ja", { numeric: true });
+      return sortDirection === "asc" ? result : -result;
+    }
+
+    function compareSeries(a, b) {
+      let av = "";
+      let bv = "";
+      if (sortKey === "workNo") {
+        av = normalizeWorkNo(a.series_no);
+        bv = normalizeWorkNo(b.series_no);
+      } else if (sortKey === "title") {
+        av = seriesTitle(a);
+        bv = seriesTitle(b);
+      } else if (sortKey === "year") {
+        av = String(a.start_date || "");
+        bv = String(b.start_date || "");
+      }
+      const result = av.localeCompare(bv, "ja", { numeric: true });
+      return sortDirection === "asc" ? result : -result;
+    }
+
+    function renderLinkButtons(id, options, active, handler) {
+      const wrap = document.getElementById(id);
+      if (!wrap) return;
+      wrap.innerHTML = [
+        `<button class="text-button ${active === "ALL" ? "selected" : ""}" type="button" data-value="ALL">ALL</button>`,
+        ...options.map(option => `<button class="text-button ${active === option ? "selected" : ""}" type="button" data-value="${escapeAttr(option)}">${escapeHtml(option)}</button>`)
+      ].join("");
+      wrap.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => handler(button.dataset.value || "ALL"));
+      });
+    }
+
+
+    function techniqueSortByCount(a, b) {
+      const labelA = String(a || "").trim();
+      const labelB = String(b || "").trim();
+      const countA = works.filter(work => String(work.technique || "").trim() === labelA).length;
+      const countB = works.filter(work => String(work.technique || "").trim() === labelB).length;
+      if (countB !== countA) return countB - countA;
+      return labelA.localeCompare(labelB, "ja", { numeric: true });
+    }
+
+    function renderFilters() {
+      const techniques = Array.from(new Set(works.map(w => String(w.technique || "").trim()).filter(Boolean))).sort(techniqueSortByCount);
+      renderLinkButtons("techniqueLinks", techniques, activeTechnique, value => {
+        activeTechnique = value;
+        render();
+      });
+      renderLinkButtons("productionLinks", PRODUCTION_STATUSES, activeProduction, value => {
+        activeProduction = value;
+        render();
+      });
+      renderLinkButtons("managementLinks", MANAGEMENT_STATUSES, activeManagement, value => {
+        activeManagement = value;
+        render();
+      });
+    }
+
+    function renderSortMarks() {
+      const map = {
+        workNo: document.getElementById("sortMarkWorkNo"),
+        title: document.getElementById("sortMarkTitle"),
+        year: document.getElementById("sortMarkYear")
+      };
+      Object.entries(map).forEach(([key, el]) => {
+        if (!el) return;
+        el.className = "sort-mark " + (sortDirection === "desc" ? "desc" : "");
+        el.textContent = sortKey === key ? (sortDirection === "desc" ? "↘" : "↗") : "";
+      });
+    }
+
+    function filteredWorks() {
+      const query = searchInput.value.trim().toLowerCase();
+      return works
+        .filter(w => activeTechnique === "ALL" || String(w.technique || "") === activeTechnique)
+        .filter(w => {
+          const statuses = normalizeStatuses(w);
+          return activeProduction === "ALL" || statuses.productionStatus === activeProduction;
+        })
+        .filter(w => {
+          const statuses = normalizeStatuses(w);
+          return activeManagement === "ALL" || statuses.managementStatus === activeManagement;
+        })
+        .filter(w => {
+          if (!query) return true;
+          const statuses = normalizeStatuses(w);
+          const series = getSeriesRecordForWork(w);
+          return [
+            normalizeWorkNo(w.work_no),
+            w.title,
+            w.title_en,
+            w.completed_date,
+            w.start_date,
+            seriesLabel(series),
+            statuses.productionStatus,
+            statuses.managementStatus,
+            w.technique,
+            w.materials,
+            formatDimensions(w),
+            w.location,
+            w.holder_name,
+            w.description,
+            w.description_en,
+            relatedLinksSearchText(relatedLinksForWork(w))
+          ].some(value => String(value || "").toLowerCase().includes(query));
+        })
+        .sort(compareWorks);
+    }
+
+    function renderWorksList() {
+      renderFilters();
+      renderSortMarks();
+      const filtered = filteredWorks();
+      if (!filtered.length) {
+        workList.innerHTML = '<div class="empty">公開作品がありません。</div>';
+        return;
+      }
+
+      workList.innerHTML = filtered.map(w => {
+        const workNo = normalizeWorkNo(w.work_no);
+        return `
+          <article class="work" id="work-${escapeAttr(w.id)}">
+            <button class="work-summary" type="button" onclick="toggleWork('${escapeAttr(w.id)}')">
+              <div class="work-no">${escapeHtml(workNo)}</div>
+              <div class="work-title"><span class="title-scroll">${workListTitleHtml(w)}</span></div>
+              <div class="work-year">${escapeHtml(w.completed_date || "")}</div>
+            </button>
+            <div class="work-detail">
+              ${workDetailHtml(w)}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderSeriesList() {
+      renderFilters();
+      renderSortMarks();
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = seriesRecords
+        .filter(s => {
+          if (!query) return true;
+          return [
+            normalizeWorkNo(s.series_no),
+            s.code,
+            s.title,
+            s.title_en,
+            s.start_date,
+            s.description,
+            s.description_en,
+            relatedLinksSearchText(relatedLinksForSeries(s))
+          ].some(value => String(value || "").toLowerCase().includes(query));
+        })
+        .sort(compareSeries);
+
+      if (!filtered.length) {
+        workList.innerHTML = '<div class="empty">公開シリーズがありません。</div>';
+        return;
+      }
+
+      workList.innerHTML = filtered.map(s => {
+        const no = normalizeWorkNo(s.series_no);
+        const relatedWorks = works
+          .filter(w => w.series_id === s.id)
+          .sort(compareWorks);
+
+        return `
+          <article class="work" id="series-${escapeAttr(s.id)}">
+            <button class="work-summary" type="button" onclick="toggleSeries('${escapeAttr(s.id)}')">
+              <div class="work-no">${escapeHtml(no)}</div>
+              <div class="work-title"><span class="title-scroll">${escapeHtml(s.code ? s.code + " / " : "")}${escapeHtml(seriesTitle(s))}</span></div>
+              <div class="work-year">${escapeHtml(s.start_date || "")}</div>
+            </button>
+            <div class="work-detail">
+              <div class="detail-grid">
+                ${logoDetailRowHtml("series", s)}
+                ${row("№", no)}
+                ${row("Code", s.code)}
+                ${row("Title", s.title)}
+                ${row("T_EN", s.title_en)}
+                ${row("Start", s.start_date)}
+                ${row("Works", String(relatedWorks.length))}
+                ${row("Description", s.description)}
+                ${row("D_EN", s.description_en)}
+                ${additionalLogoDetailRowHtml("series", s)}
+                ${relatedLinksDetailRowHtml(relatedLinksForSeries(s))}
+              </div>
+              ${relatedWorks.length ? `
+                <div class="detail-grid">
+                  ${relatedWorks.map(w => `
+                    <div class="detail-row series-work-row">
+                      <div class="detail-key">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
+                      <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('series-${escapeAttr(s.id)}', '${escapeAttr(w.id)}')">${escapeHtml(workTitle(w))}</button></div>
+                    </div>
+                    <div id="series-${escapeAttr(s.id)}-work-${escapeAttr(w.id)}"></div>
+                  `).join("")}
+                </div>
+              ` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function render() {
+      const isSeries = activeListMode === "series";
+      document.getElementById("worksModeButton").classList.toggle("selected", !isSeries);
+      document.getElementById("seriesModeButton").classList.toggle("selected", isSeries);
+      const navWorksButton = document.getElementById("navWorksButton");
+      const navSeriesButton = document.getElementById("navSeriesButton");
+      if (navWorksButton) navWorksButton.classList.toggle("selected", !isSeries);
+      if (navSeriesButton) navSeriesButton.classList.toggle("selected", isSeries);
+      document.getElementById("worksFilterArea").style.display = isSeries ? "none" : "grid";
+      const headerButtons = document.querySelectorAll(".list-head .text-button");
+      if (headerButtons[2]) headerButtons[2].firstChild.nodeValue = isSeries ? "START" : "DONE";
+      const productionLinks = document.getElementById("productionLinks");
+      const managementLinks = document.getElementById("managementLinks");
+      if (productionLinks) productionLinks.style.display = isSeries ? "none" : "flex";
+      if (managementLinks) managementLinks.style.display = isSeries ? "none" : "flex";
+      if (isSeries) renderSeriesList();
+      else renderWorksList();
+    }
+
+    function safeRender() {
+      try {
+        render();
+      } catch (renderError) {
+        console.warn("WSV portfolio render retry without URL links.", renderError);
+        relatedLinks = [];
+        render();
+      }
+    }
+
+    window.toggleWork = function(id) {
+      const target = document.getElementById("work-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.toggleSeries = function(id) {
+      const target = document.getElementById("series-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.toggleNestedWork = function(hostId, workId) {
+      const target = document.getElementById(`${hostId}-work-${workId}`);
+      const w = works.find(item => item.id === workId);
+      if (!target || !w) return;
+
+      if (target.dataset.open === "1") {
+        target.innerHTML = "";
+        target.dataset.open = "";
+        return;
+      }
+
+      target.dataset.open = "1";
+      target.innerHTML = `
+        <div class="inline-expanded" style="margin-top:1em; margin-bottom:1em;">
+          ${workDetailHtml(w)}
+        </div>
+      `;
+    };
+
+    window.setListMode = function(mode) {
+      activeListMode = mode === "series" ? "series" : "works";
+      render();
+    };
+
+    window.setSort = function(key) {
+      if (sortKey === key) sortDirection = sortDirection === "asc" ? "desc" : "asc";
+      else {
+        sortKey = key;
+        sortDirection = "asc";
+      }
+      render();
+    };
+
+    window.toggleStatusPanel = function() {
+      const panel = document.getElementById("statusPanel");
+      const text = document.getElementById("statusPanelText");
+      const searchLine = document.getElementById("portfolioSearchLine");
+      const open = panel.classList.toggle("open");
+      if (searchLine) searchLine.classList.toggle("search-open", open);
+      text.textContent = open ? "−" : "＋";
+      if (open) {
+        const input = document.getElementById("searchInput");
+        if (input) setTimeout(() => input.focus(), 0);
+      }
+    };
+
+    window.clearFilters = function() {
+      activeTechnique = "ALL";
+      activeProduction = "ALL";
+      activeManagement = "ALL";
+      searchInput.value = "";
+      render();
+    };
+
+    window.toggleTheme = function() {
+      const root = document.documentElement;
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("wsvPortfolioTheme", next);
+    };
+
+
+    function timestampFromValue(value) {
+      const time = Date.parse(value || "");
+      return Number.isFinite(time) ? time : 0;
+    }
+
+    function maxTimestamp(values = []) {
+      return values.reduce((max, value) => Math.max(max, timestampFromValue(value)), 0);
+    }
+
+    function isoFromTimestamp(timestamp) {
+      if (!timestamp) return "";
+      return new Date(timestamp).toISOString();
+    }
+
+    function formatUpdateDate(value) {
+      const timestamp = typeof value === "number" ? value : timestampFromValue(value);
+      if (!timestamp) return "----- -- --".replaceAll(" ", "");
+      const d = new Date(timestamp);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function updateTimestampForWork(work = {}) {
+      return maxTimestamp([work.content_updated_at, work.created_at]);
+    }
+
+    function updateTimestampForSeries(series = {}) {
+      return maxTimestamp([series.content_updated_at, series.created_at]);
+    }
+
+    function updateSeriesDetailHtml(series = {}) {
+      const no = normalizeWorkNo(series.series_no);
+      const relatedWorks = works
+        .filter(w => w.series_id === series.id)
+        .sort(compareWorks);
+
+      return `
+        <div class="detail-grid">
+          ${logoDetailRowHtml("series", series)}
+          ${row("№", no)}
+          ${row("Code", series.code)}
+          ${row("Title", series.title)}
+          ${row("T_EN", series.title_en)}
+          ${row("Start", series.start_date)}
+          ${row("Works", String(relatedWorks.length))}
+          ${row("Description", series.description)}
+          ${row("D_EN", series.description_en)}
+          ${additionalLogoDetailRowHtml("series", series)}
+          ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
+        </div>
+        ${relatedWorks.length ? `
+          <div class="detail-grid">
+            ${relatedWorks.map(w => `
+              <div class="detail-row series-work-row">
+                <div class="detail-key">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
+                <div class="detail-value"><button class="inline-series-link" type="button" onclick="toggleNestedWork('updates-series-${escapeAttr(series.id)}', '${escapeAttr(w.id)}')">${escapeHtml(workTitle(w))}</button></div>
+              </div>
+              <div id="updates-series-${escapeAttr(series.id)}-work-${escapeAttr(w.id)}"></div>
+            `).join("")}
+          </div>
+        ` : ""}`;
+    }
+
+    function updateSearchText(item) {
+      if (item.type === "work") {
+        const w = item.record;
+        const statuses = normalizeStatuses(w);
+        const series = getSeriesRecordForWork(w);
+        return [
+          "WORK",
+          normalizeWorkNo(w.work_no),
+          workTitle(w),
+          w.title,
+          w.title_en,
+          seriesLabel(series),
+          statuses.productionStatus,
+          statuses.managementStatus,
+          w.technique,
+          w.materials,
+          w.location,
+          w.holder_name,
+          w.description,
+          w.description_en,
+          relatedLinksSearchText(relatedLinksForWork(w))
+        ].join(" ");
+      }
+
+      const s = item.record;
+      return [
+        "SERIES",
+        normalizeWorkNo(s.series_no),
+        s.code,
+        seriesTitle(s),
+        s.title,
+        s.title_en,
+        s.description,
+        s.description_en,
+        relatedLinksSearchText(relatedLinksForSeries(s))
+      ].join(" ");
+    }
+
+    function updateItems() {
+      const workItems = works.map(work => ({
+        id: `work-${work.id}`,
+        type: "work",
+        label: "WORK",
+        timestamp: updateTimestampForWork(work),
+        record: work
+      }));
+
+      const seriesItems = seriesRecords.map(series => ({
+        id: `series-${series.id}`,
+        type: "series",
+        label: "SERIES",
+        timestamp: updateTimestampForSeries(series),
+        record: series
+      }));
+
+      return [...workItems, ...seriesItems]
+        .filter(item => item.timestamp)
+        .sort((a, b) => b.timestamp - a.timestamp);
+    }
+
+    function renderUpdates() {
+      const query = searchInput.value.trim().toLowerCase();
+      const items = updateItems()
+        .filter(item => !query || updateSearchText(item).toLowerCase().includes(query))
+        .slice(0, 60);
+
+      if (!items.length) {
+        workList.innerHTML = '<div class="empty">更新情報がありません。</div>';
+        return;
+      }
+
+      workList.innerHTML = items.map(item => {
+        if (item.type === "work") {
+          const w = item.record;
+          const series = getSeriesRecordForWork(w);
+          return `
+            <article class="work" id="updates-work-${escapeAttr(w.id)}">
+              <button class="work-summary" type="button" onclick="toggleUpdateWork('${escapeAttr(w.id)}')">
+                <div class="work-no">${escapeHtml(normalizeWorkNo(w.work_no))}</div>
+                <div class="work-title"><span class="title-scroll"><span class="update-kind-label">[WORK]</span>${workListTitleHtml(w)}</span></div>
+                <div class="work-year">${escapeHtml(formatUpdateDate(item.timestamp))}</div>
+              </button>
+              <div class="work-detail">${workDetailHtml(w)}</div>
+            </article>`;
+        }
+
+        const s = item.record;
+        return `
+          <article class="work" id="updates-series-${escapeAttr(s.id)}">
+            <button class="work-summary" type="button" onclick="toggleUpdateSeries('${escapeAttr(s.id)}')">
+              <div class="work-no">${escapeHtml(normalizeWorkNo(s.series_no))}</div>
+              <div class="work-title"><span class="title-scroll"><span class="update-kind-label">[SERIES]</span>${escapeHtml(seriesTitle(s))}</span></div>
+              <div class="work-year">${escapeHtml(formatUpdateDate(item.timestamp))}</div>
+            </button>
+            <div class="work-detail">${updateSeriesDetailHtml(s)}</div>
+          </article>`;
+      }).join("");
+    }
+
+    function render() {
+      renderUpdates();
+    }
+
+    function safeRender() {
+      try {
+        renderUpdates();
+      } catch (renderError) {
+        console.warn("WSV updates render retry without URL links.", renderError);
+        relatedLinks = [];
+        renderUpdates();
+      }
+    }
+
+    window.toggleUpdateWork = function(id) {
+      const target = document.getElementById("updates-work-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.toggleUpdateSeries = function(id) {
+      const target = document.getElementById("updates-series-" + id);
+      if (target) target.classList.toggle("open");
+    };
+
+    window.clearFilters = function() {
+      searchInput.value = "";
+      renderUpdates();
+    };
+
+    searchInput.addEventListener("input", render);
+
+    async function loadPortfolio() {
+      try {
+        statusEl.textContent = "更新情報を読み込み中です。";
+
+        const [seriesResult, worksResult, assetsResult] = await Promise.all([
+          cloudClient
+            .from("wsv_series")
+            .select("id,series_no,code,title,title_en,start_date,description,description_en,logo_asset_id,is_public,sort_order,created_at,updated_at,content_updated_at")
+            .eq("is_public", true)
+            .order("series_no", { ascending: true }),
+          cloudClient
+            .from("wsv_works")
+            .select("id,work_no,title,title_en,series_id,start_date,completed_date,production_status,management_status,technique,materials,size_h,size_w,size_d,price_amount,price_ask,cost_amount,location,holder_name,description,description_en,logo_asset_id,cover_asset_id,is_public,sort_order,created_at,updated_at,content_updated_at")
+            .eq("is_public", true)
+            .order("work_no", { ascending: true }),
+          cloudClient
+            .from("wsv_assets")
+            .select("id,work_id,series_id,asset_type,storage_bucket,storage_path,file_name,mime_type,alt_text,caption,sort_order,is_cover,is_public,created_at,updated_at")
+            .eq("is_public", true)
+            .in("asset_type", ["work_logo", "series_logo", "work_image"])
+        ]);
+
+        if (seriesResult.error) throw seriesResult.error;
+        if (worksResult.error) throw worksResult.error;
+        if (assetsResult.error) throw assetsResult.error;
+
+        seriesRecords = seriesResult.data || [];
+        works = worksResult.data || [];
+        cloudAssets = assetsResult.data || [];
+
+        try {
+          const relatedLinksResult = await cloudClient
+            .from("wsv_related_links")
+            .select("id,target_type,work_id,series_id,title,url,sort_order,is_public,created_at,updated_at")
+            .eq("is_public", true)
+            .order("sort_order", { ascending: true });
+
+          if (relatedLinksResult.error) throw relatedLinksResult.error;
+          relatedLinks = relatedLinksResult.data || [];
+        } catch (relatedError) {
+          console.warn("WSV related URL links could not be loaded.", relatedError);
+          relatedLinks = [];
+        }
+
+        statusEl.style.display = "none";
+        safeRender();
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = "更新情報を読み込めませんでした。公開設定またはRLSをご確認ください。";
+      }
+    }
+
+    const savedTheme = localStorage.getItem("wsvPortfolioTheme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+      document.documentElement.dataset.theme = savedTheme;
+    }
+
+    loadPortfolio();
+  </script>
+</body>
+</html>

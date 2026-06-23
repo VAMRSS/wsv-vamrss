@@ -14,3 +14,6 @@ Changed:
 - The first SVG logo in the page body now uses the full content-frame width.
 
 No additional SQL is required.
+
+
+- v3.9.29: 個別ページの上部背景エリアに出力文と反転表示SVGを配置し、その下にドキュメント面が続く構成へ調整。

@@ -2436,7 +2436,7 @@
     }
 
     
-    /* v3.9.40 consolidated individual document layout */
+    /* v3.9.41 consolidated individual document layout */
     html,
     body {
       background: #101312 !important;
@@ -2866,7 +2866,7 @@
     }
 
   
-    /* v3.9.40 body order, author row, and compact detail spacing */
+    /* v3.9.41 body order, author row, and compact detail spacing */
     .detail-grid {
       gap: 0 !important;
       margin: 0 !important;
@@ -2923,7 +2923,73 @@
       line-height: 1.45 !important;
     }
 
-  </style></head><body><button class="dos-fixed-control dos-close-control" type="button" onclick="closeDocumentPage()" aria-label="Close page">CLOSE</button><button class="dos-fixed-control dos-share-control" type="button" onclick="shareFixedDocument()" aria-label="Share page">SHAREする</button><div class="dos-copyright-note">(C) 2026 <a href="../profile/">SHIRASUSALAD</a></div><div class="dos-top-background"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div><img class="dos-top-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"></div><main class="app"><header class="dos-header"><div class="dos-up-logo-block"><img class="dos-up-logo" src="../assets/dosup-logo.svg" alt="DOS UPPER LOGO"></div><div class="dos-topline"><div class="dos-system-title">DOCUMENT ORDER SYSTEM V2.0.0</div></div><div class="dos-barcode dos-barcode-top" id="dosBarcode" aria-label="CODE128 barcode"></div><div class="dos-logo-block"><img class="dos-logo" src="../assets/dos-logo.svg" alt="DOCUMENT ORDER SYSTEM"></div><div class="dos-order-row"><div class="dos-update-text" id="dosUpdateDate">UPDATE:----/--/--</div></div><div class="dos-header-rule" aria-hidden="true"></div></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.40</div><div class="dos-barcode dos-barcode-bottom" id="dosBarcodeBottom" aria-label="CODE128 barcode"></div><img class="dos-bottom-inner-logo" src="../assets/dosdown-logo.svg" alt="DOCUMENT ORDER SYSTEM lower mark"></main><div class="dos-bottom-background"><img class="dos-bottom-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div></div><script>
+  
+    /* v3.9.41 body spacing and author notation */
+    .detail-grid {
+      gap: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .detail-row {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .top-image-row,
+    .top-logo-row,
+    .author-row,
+    .description-row,
+    .bottom-image-row,
+    .bottom-logo-row {
+      margin-top: 1em !important;
+    }
+
+    .top-image-row .detail-key,
+    .top-logo-row .detail-key,
+    .author-row .detail-key,
+    .description-row .detail-key,
+    .bottom-image-row .detail-key,
+    .bottom-logo-row .detail-key {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    .top-image-stack,
+    .top-logo-stack,
+    .bottom-image-stack,
+    .bottom-logo-stack,
+    .top-image-stack figure,
+    .top-logo-stack figure,
+    .bottom-image-stack figure,
+    .bottom-logo-stack figure {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .bottom-image-stack figure + figure,
+    .bottom-logo-stack figure + figure {
+      margin-top: 1em !important;
+    }
+
+    .caption,
+    figcaption {
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: 1.45 !important;
+    }
+
+    .author-row .detail-value a {
+      color: inherit !important;
+      text-decoration: none !important;
+      border-bottom: 1px solid currentColor !important;
+    }
+
+  </style></head><body><button class="dos-fixed-control dos-close-control" type="button" onclick="closeDocumentPage()" aria-label="Close page">CLOSE</button><button class="dos-fixed-control dos-share-control" type="button" onclick="shareFixedDocument()" aria-label="Share page">SHAREする</button><div class="dos-copyright-note">(C) 2026 <a href="../profile/">SHIRASUSALAD</a></div><div class="dos-top-background"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div><img class="dos-top-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"></div><main class="app"><header class="dos-header"><div class="dos-up-logo-block"><img class="dos-up-logo" src="../assets/dosup-logo.svg" alt="DOS UPPER LOGO"></div><div class="dos-topline"><div class="dos-system-title">DOCUMENT ORDER SYSTEM V2.0.0</div></div><div class="dos-barcode dos-barcode-top" id="dosBarcode" aria-label="CODE128 barcode"></div><div class="dos-logo-block"><img class="dos-logo" src="../assets/dos-logo.svg" alt="DOCUMENT ORDER SYSTEM"></div><div class="dos-order-row"><div class="dos-update-text" id="dosUpdateDate">UPDATE:----/--/--</div></div><div class="dos-header-rule" aria-hidden="true"></div></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.41</div><div class="dos-barcode dos-barcode-bottom" id="dosBarcodeBottom" aria-label="CODE128 barcode"></div><img class="dos-bottom-inner-logo" src="../assets/dosdown-logo.svg" alt="DOCUMENT ORDER SYSTEM lower mark"></main><div class="dos-bottom-background"><img class="dos-bottom-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div></div><script>
     const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
     const SUPABASE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
     function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }
@@ -2942,7 +3008,7 @@
     async function supabaseGet(table, params) { const u=new URL(`${SUPABASE_URL}/rest/v1/${table}`); Object.entries(params||{}).forEach(([k,v])=>u.searchParams.set(k,v)); const r=await fetch(u,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}}); if(!r.ok) throw new Error(`${table} ${r.status}`); return r.json(); }
     function hasDisplayValue(value) { if(value===null||value===undefined) return false; if(Array.isArray(value)) return value.length>0; return String(value).trim()!==""; }
     function row(key,value,className="") { if(!hasDisplayValue(value)) return ""; const cls=className?` ${escapeAttr(className)}`:""; return `<div class="detail-row${cls}"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`; }
-    function authorRowHtml() { return `<div class="detail-row author-row"><div class="detail-key">作者</div><div class="detail-value"><a href="../profile/">しらすサラダ</a></div></div>`; }
+    function authorRowHtml() { return `<div class="detail-row author-row"><div class="detail-key">Author</div><div class="detail-value"><a href="../profile/">しらすサラダ/SHIRASUSALAD</a></div></div>`; }
     function linksHtml(links) { return (links||[]).filter(l=>l&&hasDisplayValue(l.url)).map(l=>`<div class="detail-row"><div class="detail-key">URL</div><div class="detail-value"><a href="${escapeAttr(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.title||l.url)}</a></div></div>`).join(""); }
     function assetFigureHtml(asset, fallbackAlt) { return `<figure><img src="${escapeAttr(publicAssetUrl(asset))}" alt="${escapeAttr(asset.alt_text||asset.file_name||fallbackAlt)}">${asset.caption?`<figcaption class="caption">${escapeHtml(asset.caption)}</figcaption>`:""}</figure>`; }
     function seriesLogos(assets) { return (assets||[]).filter(a=>a.asset_type==="series_logo"||a.asset_type==="work_logo"); }
@@ -3081,7 +3147,7 @@
         ]);
         const title=seriesTitle(series); document.title=`VAMRSS / ${title}`; setCurrentDetail("series", series.series_no, title);
         document.getElementById("detailHost").classList.remove("empty");
-        document.getElementById("detailHost").innerHTML=`<div class="detail-grid">${row("Title",title,"series-title-row")}${row("T_EN",series.title_en,"series-title-en-row")}${topLogoRowHtml(assets)}${authorRowHtml()}${row("Type","[SERIES]")}${row("№",normalizeNo(series.series_no))}${row("Code",series.code)}${row("Start",series.start_date)}${row("Count",String(works.length))}${row("Description",series.description)}${row("D_EN",series.description_en)}${linksHtml(links)}${worksRowHtml(works)}${bottomLogosRowHtml(assets)}</div>`;
+        document.getElementById("detailHost").innerHTML=`<div class="detail-grid">${row("Title",title,"series-title-row")}${row("T_EN",series.title_en,"series-title-en-row")}${topLogoRowHtml(assets)}${authorRowHtml()}${row("Type","[SERIES]")}${row("№",normalizeNo(series.series_no))}${row("Code",series.code)}${row("Start",series.start_date)}${row("Count",String(works.length))}${row("Description",series.description,"description-row")}${row("D_EN",series.description_en,"description-en-row")}${linksHtml(links)}${worksRowHtml(works)}${bottomLogosRowHtml(assets)}</div>`;
       } catch(e) { console.error(e); document.getElementById("detailHost").innerHTML="読み込みに失敗しました。"; }
     }
     loadSeriesPage();

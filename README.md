@@ -16,37 +16,37 @@ Changed:
 No additional SQL is required.
 
 
-- v3.9.39: 個別ページの上部背景エリアに出力文と反転表示SVGを配置し、その下にドキュメント面が続く構成へ調整。
+- v3.9.40: 個別ページの上部背景エリアに出力文と反転表示SVGを配置し、その下にドキュメント面が続く構成へ調整。
 
 
-- v3.9.39: 個別ページのドキュメント面の上下に、添付SVGをドキュメント面幅いっぱいで配置。
+- v3.9.40: 個別ページのドキュメント面の上下に、添付SVGをドキュメント面幅いっぱいで配置。
 
 
-- v3.9.39: 添付SVGを個別ページのドキュメント面内の最上部・最下部へ移動。出力文を3行中央揃えに変更し、余白を調整。著作権表示のSHIRASUSALADをABOUTページへのリンクに変更。
+- v3.9.40: 添付SVGを個別ページのドキュメント面内の最上部・最下部へ移動。出力文を3行中央揃えに変更し、余白を調整。著作権表示のSHIRASUSALADをABOUTページへのリンクに変更。
 
 
-- v3.9.39: iPhone Safariでdocument-edge-up/downが内部余白幅までしか表示されない問題を修正。著作権表示のSHIRASUSALADリンクをクリック可能に修正。
+- v3.9.40: iPhone Safariでdocument-edge-up/downが内部余白幅までしか表示されない問題を修正。著作権表示のSHIRASUSALADリンクをクリック可能に修正。
 
 
-- v3.9.39: document-edge-up/downをドキュメント面の内側、最上端・最下端に再配置。iPhone Safariでも内部余白幅ではなくドキュメント面幅いっぱいに表示されるよう調整。
+- v3.9.40: document-edge-up/downをドキュメント面の内側、最上端・最下端に再配置。iPhone Safariでも内部余白幅ではなくドキュメント面幅いっぱいに表示されるよう調整。
 
 
-- v3.9.39: document-edge-up/downを実際にドキュメント面内へ再挿入し、Safariでもドキュメント面幅いっぱいに表示されるよう強制指定を追加。
+- v3.9.40: document-edge-up/downを実際にドキュメント面内へ再挿入し、Safariでもドキュメント面幅いっぱいに表示されるよう強制指定を追加。
 
 
-- v3.9.39: 上側バーコード高さを120pxに調整。ドキュメント面の内部枠下側に高さ80pxのバーコードとDOSDOWN SVGを追加。ドキュメント面下部の外側にもdos-bg-logoと出力文を追加。
+- v3.9.40: 上側バーコード高さを120pxに調整。ドキュメント面の内部枠下側に高さ80pxのバーコードとDOSDOWN SVGを追加。ドキュメント面下部の外側にもdos-bg-logoと出力文を追加。
 
 
-- v3.9.39: document-edge-up/down SVGによる端部表現を停止し、CSS疑似要素で等間隔三角のレシート風ギザギザ端部をドキュメント面の上下に実装。iPhone Safariでの幅崩れ対策。
+- v3.9.40: document-edge-up/down SVGによる端部表現を停止し、CSS疑似要素で等間隔三角のレシート風ギザギザ端部をドキュメント面の上下に実装。iPhone Safariでの幅崩れ対策。
 
 
-- v3.9.39: レシート風ギザギザの三角サイズを約半分に縮小。下端のギザギザを上端に対して上下反転した向きに明示調整。
+- v3.9.40: レシート風ギザギザの三角サイズを約半分に縮小。下端のギザギザを上端に対して上下反転した向きに明示調整。
 
 
-- v3.9.39: ドキュメント面の上下端をCSS clip-pathで直接ギザギザ化。三角が外側にはみ出さないよう、ドキュメント面自体をレシート風の輪郭としてクリップ。
+- v3.9.40: ドキュメント面の上下端をCSS clip-pathで直接ギザギザ化。三角が外側にはみ出さないよう、ドキュメント面自体をレシート風の輪郭としてクリップ。
 
 
-## v3.9.39 Cleanup / Consolidation
+## v3.9.40 Cleanup / Consolidation
 
 - Individual work / series page CSS for the confirmed non-body document chrome was consolidated.
 - Redundant historical override blocks were removed from the individual page styles.
@@ -54,3 +54,6 @@ No additional SQL is required.
 - Unused `document-edge-up.svg` and `document-edge-down.svg` assets were removed.
 - CSS receipt-edge clipping, top / bottom background areas, fixed controls, copyright link, top / bottom barcodes, and DOSDOWN logo are retained.
 - No additional SQL is required.
+
+
+- v3.9.40: 個別ページ本文の項目間余白を詰め、Title/T_ENを先頭に移動。作品・シリーズのタイトルを14px化。作者行「しらすサラダ」をABOUTリンク付きで追加。profile/assets/profile-icon.svgを同梱。

@@ -1,17 +1,16 @@
-# WSV / www.vamrss.com Launch Build v3.9.27
+# WSV / www.vamrss.com Launch Build v3.9.28
 
-## Copyright / Frame Cleanup
+## Detail Page Layout Refinement
 
 Changed:
 
-- Copyright notation is unified to `(C) 2026 SHIRASUSALAD`.
-- Individual page document area is slightly wider by reducing the screen-to-frame gap by 5px on each side.
-- Individual page document area keeps the dark page background and white document surface.
-- Visible outer frame lines are removed.
-- Top and bottom zigzag frame lines are removed.
-- The DOS output note is moved to the top outside the document area.
-- The DOS output note remains 10px and uses the same muted tone.
-- The copyright side note is enlarged one step.
-- Fixed `CLOSE` and `SHAREする` controls remain black with white text.
+- Removed top and bottom internal padding from the individual-page document content area.
+- Added top and bottom background spacing around the white document surface, matching the side background gap concept.
+- Moved the DOS output note into the top background area.
+- The DOS output note no longer follows the screen while scrolling.
+- The DOS output note uses the same muted tone as the copyright mark.
+- Aligned the copyright mark bottom position with the fixed share button.
+- Set the copyright mark to 10px.
+- The first SVG logo in the page body now uses the full content-frame width.
 
 No additional SQL is required.

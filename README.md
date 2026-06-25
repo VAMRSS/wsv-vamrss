@@ -63,3 +63,14 @@ No additional SQL is required.
 
 
 - v3.9.42: DATAページでProduction/Management候補を追加・編集・削除可能に変更。ENTRY/Series Entryの関連URLを最大3件のタイトル・URL横並び入力フォームへ変更。
+
+
+## v3.9.43 Status Constraint Patch
+
+Supabase側の `wsv_works_production_status_check` / `wsv_works_management_status_check` により、DATAページで追加した独自のProduction / Management値が保存できない問題に対応しました。
+
+Run once in Supabase SQL Editor:
+
+- `sql/wsv_status_constraint_patch_v3_9_43.sql`
+
+No HTML behavior change is required from v3.9.42.

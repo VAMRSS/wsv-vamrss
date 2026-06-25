@@ -5,7 +5,7 @@
   <link rel="icon" href="../images/favicon.png" type="image/png">
   <meta name="robots" content="noindex,nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.9.42</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.9.45</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2666,7 +2666,7 @@
     }
 
   
-    /* v3.9.42 structured related link inputs */
+    /* v3.9.45 structured related link inputs */
     .related-link-editor {
       display: grid;
       grid-template-columns: 1fr;
@@ -3117,25 +3117,6 @@
 
 
       <div class="data-block">
-        <div class="section-title">Production / 制作状態</div>
-        <div class="search-line">
-          <input id="productionStatusOptionInput" type="text" placeholder="制作中">
-          <button class="text-button" type="button" id="addProductionStatusButton">ADD</button>
-        </div>
-        <div id="productionStatusOptionList" class="option-list"></div>
-      </div>
-
-      <div class="data-block">
-        <div class="section-title">Management / 管理状態</div>
-        <div class="search-line">
-          <input id="managementStatusOptionInput" type="text" placeholder="保管中">
-          <button class="text-button" type="button" id="addManagementStatusButton">ADD</button>
-        </div>
-        <div id="managementStatusOptionList" class="option-list"></div>
-      </div>
-
-
-      <div class="data-block">
         <div class="section-title">Technique</div>
         <div class="search-line">
           <input id="techniqueOptionInput" type="text" placeholder="Installation">
@@ -3187,8 +3168,6 @@
     const CATEGORY_STORAGE_KEY = "vamrss-wsv-minimal-text-categories-v4";
     const TECHNIQUE_STORAGE_KEY = "vamrss-wsv-minimal-text-techniques-v4";
     const LOCATION_STORAGE_KEY = "vamrss-wsv-minimal-text-locations-v4";
-    const PRODUCTION_STATUS_STORAGE_KEY = "vamrss-wsv-minimal-text-production-statuses-v1";
-    const MANAGEMENT_STATUS_STORAGE_KEY = "vamrss-wsv-minimal-text-management-statuses-v1";
     const SERIES_STORAGE_KEY = "vamrss-wsv-minimal-text-series-v2";
     const EXHIBITION_STORAGE_KEY = "vamrss-wsv-minimal-text-exhibitions-v2";
     const SERIES_DATA_STORAGE_KEY = "vamrss-wsv-minimal-text-series-data-v6";
@@ -3329,10 +3308,8 @@
     const DEFAULT_LOCATIONS = [];
     const DEFAULT_SERIES = [];
     const DEFAULT_EXHIBITIONS = [];
-    const DEFAULT_PRODUCTION_STATUSES = ["制作中", "完成", "制作終了"];
-    const DEFAULT_MANAGEMENT_STATUSES = ["保管中", "売却済", "譲渡済", "貸出中", "処分済"];
-    let PRODUCTION_STATUSES = [...DEFAULT_PRODUCTION_STATUSES];
-    let MANAGEMENT_STATUSES = [...DEFAULT_MANAGEMENT_STATUSES];
+    const PRODUCTION_STATUSES = ["制作中", "完成", "制作終了"];
+    const MANAGEMENT_STATUSES = ["保管中", "売却済", "譲渡済", "貸出中", "処分済"];
 
     const LEGACY_STATUS_MAP = {
       "制作中": { productionStatus: "制作中", managementStatus: "保管中" },
@@ -5597,12 +5574,6 @@
       try { locations = cleanOptions(JSON.parse(localStorage.getItem(LOCATION_STORAGE_KEY)), DEFAULT_LOCATIONS); }
       catch { locations = [...DEFAULT_LOCATIONS]; }
 
-      try { PRODUCTION_STATUSES = cleanOptions(JSON.parse(localStorage.getItem(PRODUCTION_STATUS_STORAGE_KEY)), DEFAULT_PRODUCTION_STATUSES); }
-      catch { PRODUCTION_STATUSES = [...DEFAULT_PRODUCTION_STATUSES]; }
-
-      try { MANAGEMENT_STATUSES = cleanOptions(JSON.parse(localStorage.getItem(MANAGEMENT_STATUS_STORAGE_KEY)), DEFAULT_MANAGEMENT_STATUSES); }
-      catch { MANAGEMENT_STATUSES = [...DEFAULT_MANAGEMENT_STATUSES]; }
-
       try { seriesOptions = cleanOptions(JSON.parse(localStorage.getItem(SERIES_STORAGE_KEY)), DEFAULT_SERIES); }
       catch { seriesOptions = [...DEFAULT_SERIES]; }
 
@@ -5614,8 +5585,6 @@
       localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(categories));
       localStorage.setItem(TECHNIQUE_STORAGE_KEY, JSON.stringify(techniques));
       localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(locations));
-      localStorage.setItem(PRODUCTION_STATUS_STORAGE_KEY, JSON.stringify(PRODUCTION_STATUSES));
-      localStorage.setItem(MANAGEMENT_STATUS_STORAGE_KEY, JSON.stringify(MANAGEMENT_STATUSES));
       localStorage.setItem(SERIES_STORAGE_KEY, JSON.stringify(seriesOptions));
       localStorage.setItem(EXHIBITION_STORAGE_KEY, JSON.stringify(exhibitionOptions));
     }
@@ -5646,8 +5615,6 @@
       categories = cleanOptions(categories, DEFAULT_CATEGORIES);
       techniques = cleanOptions(techniques, DEFAULT_TECHNIQUES);
       locations = cleanOptions(locations, DEFAULT_LOCATIONS);
-      PRODUCTION_STATUSES = cleanOptions(PRODUCTION_STATUSES, DEFAULT_PRODUCTION_STATUSES);
-      MANAGEMENT_STATUSES = cleanOptions(MANAGEMENT_STATUSES, DEFAULT_MANAGEMENT_STATUSES);
       seriesOptions = cleanOptions(seriesOptions, DEFAULT_SERIES);
       exhibitionOptions = cleanOptions(exhibitionOptions, DEFAULT_EXHIBITIONS);
       saveSettings();
@@ -5748,8 +5715,6 @@
     }
 
     function renderOptionLists() {
-      renderOptionList("productionStatus", PRODUCTION_STATUSES);
-      renderOptionList("managementStatus", MANAGEMENT_STATUSES);
       renderOptionList("technique", techniques);
       renderOptionList("location", locations);
       renderOptionList("exhibition", exhibitionOptions);
@@ -5776,8 +5741,6 @@
       if (kind === "category" && !categories.includes(value)) categories.push(value);
       if (kind === "technique" && !techniques.includes(value)) techniques.push(value);
       if (kind === "location" && !locations.includes(value)) locations.push(value);
-      if (kind === "productionStatus" && !PRODUCTION_STATUSES.includes(value)) PRODUCTION_STATUSES.push(value);
-      if (kind === "managementStatus" && !MANAGEMENT_STATUSES.includes(value)) MANAGEMENT_STATUSES.push(value);
       if (kind === "series" && !seriesOptions.includes(value)) seriesOptions.push(value);
       if (kind === "exhibition" && !exhibitionOptions.includes(value)) exhibitionOptions.push(value);
 
@@ -5792,14 +5755,6 @@
       if (kind === "category") categories = categories.filter(item => item !== value);
       if (kind === "technique") techniques = techniques.filter(item => item !== value);
       if (kind === "location") locations = locations.filter(item => item !== value);
-      if (kind === "productionStatus") {
-        PRODUCTION_STATUSES = PRODUCTION_STATUSES.filter(item => item !== value);
-        if (activeProduction === value) activeProduction = "ALL";
-      }
-      if (kind === "managementStatus") {
-        MANAGEMENT_STATUSES = MANAGEMENT_STATUSES.filter(item => item !== value);
-        if (activeManagement === value) activeManagement = "ALL";
-      }
       if (kind === "series") seriesOptions = seriesOptions.filter(item => item !== value);
       if (kind === "exhibition") exhibitionOptions = exhibitionOptions.filter(item => item !== value);
       saveSettings();
@@ -5842,16 +5797,6 @@
       if (kind === "location") {
         locations = renameInList(locations);
         works = works.map(w => w.location === oldValue ? { ...w, location: value, updatedAt: nowIso() } : w);
-      }
-      if (kind === "productionStatus") {
-        PRODUCTION_STATUSES = renameInList(PRODUCTION_STATUSES);
-        works = works.map(w => w.productionStatus === oldValue ? { ...w, productionStatus: value, updatedAt: nowIso() } : w);
-        if (activeProduction === oldValue) activeProduction = value;
-      }
-      if (kind === "managementStatus") {
-        MANAGEMENT_STATUSES = renameInList(MANAGEMENT_STATUSES);
-        works = works.map(w => w.managementStatus === oldValue ? { ...w, managementStatus: value, updatedAt: nowIso() } : w);
-        if (activeManagement === oldValue) activeManagement = value;
       }
 
       saveSettings();
@@ -5934,11 +5879,9 @@
 
     function normalizeStatuses(w = {}) {
       const legacy = LEGACY_STATUS_MAP[w.status] || {};
-      const production = String(w.productionStatus || legacy.productionStatus || "").trim();
-      const management = String(w.managementStatus || legacy.managementStatus || "").trim();
       return {
-        productionStatus: production || PRODUCTION_STATUSES[0] || DEFAULT_PRODUCTION_STATUSES[0] || "制作中",
-        managementStatus: management || MANAGEMENT_STATUSES[0] || DEFAULT_MANAGEMENT_STATUSES[0] || "保管中"
+        productionStatus: PRODUCTION_STATUSES.includes(w.productionStatus) ? w.productionStatus : legacy.productionStatus || "制作中",
+        managementStatus: MANAGEMENT_STATUSES.includes(w.managementStatus) ? w.managementStatus : legacy.managementStatus || "保管中"
       };
     }
 
@@ -6006,8 +5949,8 @@
       setCurrentExhibitions([]);
       fields.technique.value = techniques[0] || "";
       fields.location.value = locations[0] || "";
-      fields.productionStatus.value = PRODUCTION_STATUSES[0] || DEFAULT_PRODUCTION_STATUSES[0] || "";
-      fields.managementStatus.value = MANAGEMENT_STATUSES[0] || DEFAULT_MANAGEMENT_STATUSES[0] || "";
+      fields.productionStatus.value = "制作中";
+      fields.managementStatus.value = "保管中";
       updateManagementDependentFields();
       fields.priceAsk.checked = false;
       fields.price.disabled = false;
@@ -6456,7 +6399,6 @@
       render();
     };
 
-
     ["work", "series"].forEach(kind => {
       const base = relatedBaseId(kind);
       for (let i = 1; i <= 3; i++) {
@@ -6879,10 +6821,8 @@
     document.getElementById("addExhibitionButton").addEventListener("click", () => addOption("exhibition"));
     document.getElementById("addTechniqueButton").addEventListener("click", () => addOption("technique"));
     document.getElementById("addLocationButton").addEventListener("click", () => addOption("location"));
-    document.getElementById("addProductionStatusButton").addEventListener("click", () => addOption("productionStatus"));
-    document.getElementById("addManagementStatusButton").addEventListener("click", () => addOption("managementStatus"));
 
-    ["series", "exhibition", "technique", "location", "productionStatus", "managementStatus"].forEach(kind => {
+    ["series", "exhibition", "technique", "location"].forEach(kind => {
       document.getElementById(kind + "OptionInput").addEventListener("keydown", event => {
         if (event.key !== "Enter") return;
         event.preventDefault();
@@ -7149,8 +7089,6 @@
       categories = [];
       techniques = [];
       locations = [];
-      PRODUCTION_STATUSES = [];
-      MANAGEMENT_STATUSES = [];
       seriesOptions = [];
       exhibitionOptions = [];
       currentExhibitions = [];
@@ -7196,9 +7134,7 @@
             seriesOptions: [...seriesOptions],
             exhibitionOptions: [...exhibitionOptions],
             techniques: [...techniques],
-            locations: [...locations],
-            productionStatuses: [...PRODUCTION_STATUSES],
-            managementStatuses: [...MANAGEMENT_STATUSES]
+            locations: [...locations]
           }
         },
         works: works.map(w => ({ ...w })),
@@ -7207,9 +7143,7 @@
         seriesOptions: [...seriesOptions],
         exhibitionOptions: [...exhibitionOptions],
         techniques: [...techniques],
-        locations: [...locations],
-        productionStatuses: [...PRODUCTION_STATUSES],
-        managementStatuses: [...MANAGEMENT_STATUSES]
+        locations: [...locations]
       };
 
       const now = new Date();
@@ -7367,8 +7301,6 @@
           categories = cleanOptions([...(importedCatalogs.categories || data.categories || categories), ...works.map(w => w.category)], DEFAULT_CATEGORIES);
           techniques = cleanOptions([...(importedCatalogs.techniques || data.techniques || techniques), ...works.map(w => w.technique)], DEFAULT_TECHNIQUES);
           locations = cleanOptions([...(importedCatalogs.locations || data.locations || locations), ...works.map(w => w.location)], DEFAULT_LOCATIONS);
-          PRODUCTION_STATUSES = cleanOptions([...(importedCatalogs.productionStatuses || data.productionStatuses || PRODUCTION_STATUSES), ...works.map(w => w.productionStatus)], DEFAULT_PRODUCTION_STATUSES);
-          MANAGEMENT_STATUSES = cleanOptions([...(importedCatalogs.managementStatuses || data.managementStatuses || MANAGEMENT_STATUSES), ...works.map(w => w.managementStatus)], DEFAULT_MANAGEMENT_STATUSES);
           seriesOptions = cleanOptions([...(importedCatalogs.seriesOptions || data.seriesOptions || data.series || seriesOptions), ...seriesRecords.map(s => seriesTitle(s)), ...works.map(w => w.series)], DEFAULT_SERIES);
           exhibitionOptions = cleanOptions([...(importedCatalogs.exhibitionOptions || data.exhibitionOptions || data.exhibitions || exhibitionOptions), ...works.flatMap(w => normalizeExhibitions(w.exhibitionHistory))], DEFAULT_EXHIBITIONS);
 
@@ -7399,8 +7331,6 @@
       categories = [];
       techniques = [];
       locations = [];
-      PRODUCTION_STATUSES = [];
-      MANAGEMENT_STATUSES = [];
       seriesOptions = [];
       exhibitionOptions = [];
       currentExhibitions = [];
@@ -7415,8 +7345,6 @@
         CATEGORY_STORAGE_KEY,
         TECHNIQUE_STORAGE_KEY,
         LOCATION_STORAGE_KEY,
-        PRODUCTION_STATUS_STORAGE_KEY,
-        MANAGEMENT_STATUS_STORAGE_KEY,
         SERIES_STORAGE_KEY,
         EXHIBITION_STORAGE_KEY,
         SERIES_DATA_STORAGE_KEY

@@ -16,37 +16,37 @@ Changed:
 No additional SQL is required.
 
 
-- v3.9.41: 個別ページの上部背景エリアに出力文と反転表示SVGを配置し、その下にドキュメント面が続く構成へ調整。
+- v3.9.42: 個別ページの上部背景エリアに出力文と反転表示SVGを配置し、その下にドキュメント面が続く構成へ調整。
 
 
-- v3.9.41: 個別ページのドキュメント面の上下に、添付SVGをドキュメント面幅いっぱいで配置。
+- v3.9.42: 個別ページのドキュメント面の上下に、添付SVGをドキュメント面幅いっぱいで配置。
 
 
-- v3.9.41: 添付SVGを個別ページのドキュメント面内の最上部・最下部へ移動。出力文を3行中央揃えに変更し、余白を調整。著作権表示のSHIRASUSALADをABOUTページへのリンクに変更。
+- v3.9.42: 添付SVGを個別ページのドキュメント面内の最上部・最下部へ移動。出力文を3行中央揃えに変更し、余白を調整。著作権表示のSHIRASUSALADをABOUTページへのリンクに変更。
 
 
-- v3.9.41: iPhone Safariでdocument-edge-up/downが内部余白幅までしか表示されない問題を修正。著作権表示のSHIRASUSALADリンクをクリック可能に修正。
+- v3.9.42: iPhone Safariでdocument-edge-up/downが内部余白幅までしか表示されない問題を修正。著作権表示のSHIRASUSALADリンクをクリック可能に修正。
 
 
-- v3.9.41: document-edge-up/downをドキュメント面の内側、最上端・最下端に再配置。iPhone Safariでも内部余白幅ではなくドキュメント面幅いっぱいに表示されるよう調整。
+- v3.9.42: document-edge-up/downをドキュメント面の内側、最上端・最下端に再配置。iPhone Safariでも内部余白幅ではなくドキュメント面幅いっぱいに表示されるよう調整。
 
 
-- v3.9.41: document-edge-up/downを実際にドキュメント面内へ再挿入し、Safariでもドキュメント面幅いっぱいに表示されるよう強制指定を追加。
+- v3.9.42: document-edge-up/downを実際にドキュメント面内へ再挿入し、Safariでもドキュメント面幅いっぱいに表示されるよう強制指定を追加。
 
 
-- v3.9.41: 上側バーコード高さを120pxに調整。ドキュメント面の内部枠下側に高さ80pxのバーコードとDOSDOWN SVGを追加。ドキュメント面下部の外側にもdos-bg-logoと出力文を追加。
+- v3.9.42: 上側バーコード高さを120pxに調整。ドキュメント面の内部枠下側に高さ80pxのバーコードとDOSDOWN SVGを追加。ドキュメント面下部の外側にもdos-bg-logoと出力文を追加。
 
 
-- v3.9.41: document-edge-up/down SVGによる端部表現を停止し、CSS疑似要素で等間隔三角のレシート風ギザギザ端部をドキュメント面の上下に実装。iPhone Safariでの幅崩れ対策。
+- v3.9.42: document-edge-up/down SVGによる端部表現を停止し、CSS疑似要素で等間隔三角のレシート風ギザギザ端部をドキュメント面の上下に実装。iPhone Safariでの幅崩れ対策。
 
 
-- v3.9.41: レシート風ギザギザの三角サイズを約半分に縮小。下端のギザギザを上端に対して上下反転した向きに明示調整。
+- v3.9.42: レシート風ギザギザの三角サイズを約半分に縮小。下端のギザギザを上端に対して上下反転した向きに明示調整。
 
 
-- v3.9.41: ドキュメント面の上下端をCSS clip-pathで直接ギザギザ化。三角が外側にはみ出さないよう、ドキュメント面自体をレシート風の輪郭としてクリップ。
+- v3.9.42: ドキュメント面の上下端をCSS clip-pathで直接ギザギザ化。三角が外側にはみ出さないよう、ドキュメント面自体をレシート風の輪郭としてクリップ。
 
 
-## v3.9.41 Cleanup / Consolidation
+## v3.9.42 Cleanup / Consolidation
 
 - Individual work / series page CSS for the confirmed non-body document chrome was consolidated.
 - Redundant historical override blocks were removed from the individual page styles.
@@ -56,7 +56,10 @@ No additional SQL is required.
 - No additional SQL is required.
 
 
-- v3.9.41: 個別ページ本文の項目間余白を詰め、Title/T_ENを先頭に移動。作品・シリーズのタイトルを14px化。作者行「しらすサラダ」をABOUTリンク付きで追加。profile/assets/profile-icon.svgを同梱。
+- v3.9.42: 個別ページ本文の項目間余白を詰め、Title/T_ENを先頭に移動。作品・シリーズのタイトルを14px化。作者行「しらすサラダ」をABOUTリンク付きで追加。profile/assets/profile-icon.svgを同梱。
 
 
-- v3.9.41: 本文内の指定箇所に1行分の余白を追加。作者ラベルをAuthorへ変更し、作者名を「しらすサラダ/SHIRASUSALAD」に変更。下部画像/ロゴ間の余白とキャプション密着表示を調整。
+- v3.9.42: 本文内の指定箇所に1行分の余白を追加。作者ラベルをAuthorへ変更し、作者名を「しらすサラダ/SHIRASUSALAD」に変更。下部画像/ロゴ間の余白とキャプション密着表示を調整。
+
+
+- v3.9.42: DATAページでProduction/Management候補を追加・編集・削除可能に変更。ENTRY/Series Entryの関連URLを最大3件のタイトル・URL横並び入力フォームへ変更。

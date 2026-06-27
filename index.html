@@ -3540,7 +3540,7 @@ function normalizeWorkNo(value) {
       const no = normalizeWorkNo(work.work_no);
       return `${workDetailHtml(work)}
               <div class="share-action-row">
-                <button class="text-button" type="button" onclick="openDetailPage('work', '${escapeAttr(no)}')">SHARE</button>
+                <button class="text-button" type="button" onclick="openDetailPage('work', '${escapeAttr(no)}')">DOSV2で出力（SHARE）</button>
                 <button class="text-button detail-close-button" type="button" onclick="toggleWork('${escapeAttr(work.id)}')">CLOSE</button>
               </div>`;
     }
@@ -3565,7 +3565,7 @@ function normalizeWorkNo(value) {
                 ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
               </div>
               <div class="share-action-row">
-                <button class="text-button" type="button" onclick="openDetailPage('series', '${escapeAttr(no)}')">SHARE</button>
+                <button class="text-button" type="button" onclick="openDetailPage('series', '${escapeAttr(no)}')">DOSV2で出力（SHARE）</button>
                 <button class="text-button detail-close-button" type="button" onclick="toggleSeries('${escapeAttr(series.id)}')">CLOSE</button>
               </div>
               ${relatedWorks.length ? `
@@ -3745,7 +3745,7 @@ function normalizeWorkNo(value) {
           <div class="inline-expanded" style="margin-top:1em; margin-bottom:1em;">
             ${workDetailHtml(work)}
             <div class="share-action-row">
-              <button class="text-button" type="button" onclick="openDetailPage('work', '${escapeAttr(normalizeWorkNo(work.work_no))}')">SHARE</button>
+              <button class="text-button" type="button" onclick="openDetailPage('work', '${escapeAttr(normalizeWorkNo(work.work_no))}')">DOSV2で出力（SHARE）</button>
               <button class="text-button detail-close-button" type="button" onclick="toggleNestedWork('${escapeAttr(hostId)}', '${escapeAttr(work.id)}')">CLOSE</button>
             </div>
           </div>

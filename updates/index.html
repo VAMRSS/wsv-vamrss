@@ -2835,6 +2835,33 @@
       transform: none !important;
     }
 
+  
+
+    /* v3.9.46 updates expanded marker and actions */
+    #updatesScreen .work.open > .work-summary .work-no,
+    #updatesScreen .series-work-row.is-current .detail-key {
+      display: inline-block;
+      width: fit-content;
+      min-width: 0;
+      color: var(--bg) !important;
+      background: var(--ink) !important;
+      padding: 0 0.35em;
+      line-height: 1.55;
+    }
+
+    #updatesScreen .share-action-row {
+      margin-top: 1.5em;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.25em;
+      flex-wrap: wrap;
+    }
+
+    #updatesScreen .share-action-row .text-button,
+    #updatesScreen .detail-close-button {
+      color: var(--sub);
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3558,6 +3585,36 @@ function normalizeWorkNo(value) {
       return `${y}-${m}-${day}`;
     }
 
+
+
+    function siteBaseUrl() {
+      const path = location.pathname || "/";
+      const lower = path.toLowerCase();
+      let basePath = path;
+      ["/work/", "/series/", "/updates/", "/profile/", "/admin/", "/portfolio/"].forEach(segment => {
+        const index = lower.indexOf(segment);
+        if (index >= 0) basePath = path.slice(0, index + 1);
+      });
+      return location.origin + basePath;
+    }
+
+    function detailUrl(type, no) {
+      const cleanNo = normalizeWorkNo(no);
+      const folder = type === "series" ? "series" : "work";
+      return `${siteBaseUrl()}${folder}/?no=${encodeURIComponent(cleanNo)}`;
+    }
+
+    function openDetailPage(type, no) {
+      const url = detailUrl(type, no);
+      const opened = window.open(url, "_blank");
+      if (opened) {
+        opened.opener = null;
+        return;
+      }
+      const status = document.getElementById("status");
+      if (status) { status.style.display = "block"; status.textContent = "Open page was blocked. Please allow pop-ups for this site."; }
+    }
+
     function updateTimestampForWork(work = {}) {
       return maxTimestamp([work.content_updated_at, work.created_at]);
     }
@@ -3596,7 +3653,11 @@ function normalizeWorkNo(value) {
               <div id="updates-series-${escapeAttr(series.id)}-work-${escapeAttr(w.id)}"></div>
             `).join("")}
           </div>
-        ` : ""}`;
+        ` : ""}
+        <div class="share-action-row">
+          <button class="text-button" type="button" onclick="openDetailPage('series', '${escapeAttr(no)}')">DOSV2で出力（SHARE）</button>
+          <button class="text-button detail-close-button" type="button" onclick="toggleUpdateSeries('${escapeAttr(series.id)}')">CLOSE</button>
+        </div>`;
     }
 
     function updateSearchText(item) {
@@ -3681,7 +3742,13 @@ function normalizeWorkNo(value) {
                 <div class="work-title"><span class="title-scroll"><span class="update-kind-label">[WORK]</span>${workListTitleHtml(w)}</span></div>
                 <div class="work-year">${escapeHtml(formatUpdateDate(item.timestamp))}</div>
               </button>
-              <div class="work-detail">${workDetailHtml(w)}</div>
+              <div class="work-detail">
+                ${workDetailHtml(w)}
+                <div class="share-action-row">
+                  <button class="text-button" type="button" onclick="openDetailPage('work', '${escapeAttr(normalizeWorkNo(w.work_no))}')">DOSV2で出力（SHARE）</button>
+                  <button class="text-button detail-close-button" type="button" onclick="toggleUpdateWork('${escapeAttr(w.id)}')">CLOSE</button>
+                </div>
+              </div>
             </article>`;
         }
 

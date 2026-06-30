@@ -1,0 +1,21 @@
+WSV / www.vamrss.com Launch Build v3.9.51
+ABOUT Statement Final Full Package
+
+Base:
+- wsv_www_vamrss_com_launch_v3_9_49_series_works_link_hotfix
+
+Updated:
+- profile/index.html
+
+Changes:
+- Replaced the ABOUT page with the latest supplied file.
+- Kept STATEMENT directly under NAME.
+- Kept the ICON spacing adjustment.
+- Preserved the complete folder hierarchy for GitHub upload.
+- Updated user-visible version marks to v3.9.51.
+
+SQL:
+- No additional SQL is required.
+
+Upload:
+- Upload / place all files and folders in this package at the repository root.

@@ -1,14 +1,15 @@
-# WSV / www.vamrss.com Launch Build v3.9.51
+# WSV / www.vamrss.com Launch Build v3.9.52
 
-## v3.9.51 ABOUT Statement Final Full Package
+## v3.9.52 ABOUT Sections Full Package
 
-ABOUTページを最終版のSTATEMENT内容に更新し、`v3.9.49_series_works_link_hotfix` の全ファイル・フォルダ階層を維持したまま、GitHubへアップロードしやすい一式としてまとめたビルドです。
+ABOUTページの本文を `STATEMENT` / `VAMRSS` / `THIS SITE` の3項目に分け、`v3.9.49_series_works_link_hotfix` 由来の全ファイル・フォルダ階層を維持したまま、GitHubへアップロードしやすい一式としてまとめたビルドです。
 
-- `profile/index.html` を今回のABOUT最新版に差し替え。
+- `profile/index.html` を今回のABOUT項目分け版に差し替え。
 - `STATEMENT` は `NAME` の直下に配置。
+- `VAMRSS` と `THIS SITE` を独立項目として追加。
 - `ICON` SVG下の余白調整を維持。
 - ルート、`admin/`, `portfolio/`, `profile/`, `series/`, `updates/`, `work/`, `assets/`, `images/`, `sql/` などのフォルダ階層を維持。
-- 表示バージョンを `v3.9.51` に更新。
+- 表示バージョンを `v3.9.52` に更新。
 - 追加SQLは不要です。
 
 ## v3.9.49 Series Works Link Display Hotfix

@@ -1,0 +1,19 @@
+WSV / www.vamrss.com Launch Build v3.9.52
+
+ABOUT Sections Full Package
+
+Base:
+- v3.9.51 full package based on v3.9.49_series_works_link_hotfix
+
+Changed:
+- Updated profile/index.html ABOUT content structure.
+- Split the ABOUT text into STATEMENT, VAMRSS, and THIS SITE rows.
+- Kept STATEMENT directly below NAME.
+- Kept ICON SVG spacing adjustment.
+- Updated user-visible version marks to v3.9.52.
+- Updated README.md for this package.
+
+Unchanged:
+- Root page and all non-ABOUT page structures are preserved from the previous full package.
+- admin/, portfolio/, series/, updates/, work/, assets/, images/, and sql/ folder structure is preserved.
+- No additional SQL is required.

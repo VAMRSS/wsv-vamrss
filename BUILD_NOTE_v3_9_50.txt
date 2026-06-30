@@ -1,0 +1,11 @@
+WSV ABOUT v3.9.50
+
+Base file: index(1).html
+
+Changes:
+- Moved STATEMENT directly below NAME in the ABOUT detail rows.
+- Added a final CSS override to create one line of spacing below the ICON SVG row.
+- Updated fixed version mark from v3.9.49 to v3.9.50.
+
+Upload target suggestion:
+- Replace the ABOUT page index.html with the included index.html.

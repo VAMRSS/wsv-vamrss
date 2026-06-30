@@ -1,0 +1,12 @@
+WSV / www.vamrss.com Launch Build v3.9.49
+
+このZIPは、v3.9.48 admin display hotfixをベースにした全ファイル一式です。
+
+主な変更:
+- series/index.html: シリーズ個別出力画面のWorks欄で、各作品リンクを1作品1行で表示。
+- README.md: v3.9.49の変更履歴を追記。
+- 表示バージョン: v3.9.49へ更新。
+
+アップロード方法:
+- ZIP内の全ファイル・全フォルダをリポジトリ直下へ配置してください。
+- Supabase SQLの追加実行は不要です。

@@ -1,4 +1,15 @@
-# WSV / www.vamrss.com Launch Build v3.9.28
+# WSV / www.vamrss.com Launch Build v3.9.49
+
+## v3.9.49 Series Works Link Display Hotfix
+
+シリーズ個別出力画面の `Works` 欄で、各作品リンクが改行なしに連なって表示される問題を修正しました。
+
+- `series/index.html` のCSS末尾に、`.works-row` 配下だけへ効く最小スコープの表示指定を追加。
+- 各作品リンク `.work-link-row` を1作品ごとのグリッド行として表示。
+- 作品番号、作品タイトル、日付の並びは維持。
+- 既存のDOSV2出力画面レイアウト、HTML構造、Supabase読み込み処理、メンション変換処理は変更していません。
+- 追加SQLは不要です。
+
 
 ## Detail Page Layout Refinement
 
@@ -84,7 +95,7 @@ Changed:
 - No additional SQL is required.
 
 
-## v3.9.47 Prototype Status / Mention Links
+## v3.9.48 Prototype Status / Mention Links
 
 - Added fixed Production option: 試作品.
 - Description and D_EN now render @0000 mentions as links to DOSV2 individual pages.
@@ -93,3 +104,12 @@ Changed:
 - Unresolved mentions remain as @0000.
 - Mention rendering is applied to TOP, UPDATES, DOSV2 work/series pages, and admin detail displays.
 - SQL patch included for projects where the old production_status check constraint blocks 試作品.
+
+
+## v3.9.48 Admin Display Hotfix
+
+管理画面で作品一覧が表示されなくなる問題を修正しました。v3.9.47で追加した説明文メンション変換が、管理画面側に未定義の表示判定関数を参照していたため、レンダリング時に停止していました。
+
+- Admin page: added missing `hasDisplayValue()` helper.
+- Public TOP / UPDATE / DOSV2 behavior remains unchanged from v3.9.47.
+- No additional SQL required for this hotfix.

@@ -5,7 +5,7 @@
   <link rel="icon" href="../images/favicon.png" type="image/png">
   <meta name="robots" content="noindex,nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>(VAMRSS) WSV Minimal Text / v3.9.47</title>
+  <title>(VAMRSS) WSV Minimal Text / v3.9.48</title>
   <style>
     :root {
       --bg: #f8f9f9;
@@ -2666,7 +2666,7 @@
     }
 
   
-    /* v3.9.47 structured related link inputs */
+    /* v3.9.48 structured related link inputs */
     .related-link-editor {
       display: grid;
       grid-template-columns: 1fr;
@@ -2698,7 +2698,7 @@
 
   
 
-    /* v3.9.47 prototype status and mention links */
+    /* v3.9.48 prototype status and mention links */
     .mention-link {
       color: inherit;
       text-decoration: none;
@@ -2745,7 +2745,7 @@
 
   <main class="app is-locked">
     <div class="fixed-copyright-mark">(C) 2026 SHIRASUSALAD</div>
-  <div class="fixed-version-mark">v3.9.47</div>
+  <div class="fixed-version-mark">v3.9.48</div>
     <section id="worksScreen" class="screen active">
       <div class="topbar">
         <h1 class="site-title"><button class="site-logo" type="button" onclick="toggleTheme()" aria-label="Toggle light and dark theme"><img class="site-logo-img" src="./assets/wsv-logo.svg" alt="(VAMRSS) WSV"></button></h1>
@@ -3945,6 +3945,12 @@
 
     function escapeAttr(text) {
       return escapeHtml(text).replaceAll("`", "&#096;");
+    }
+
+    function hasDisplayValue(value) {
+      if (value === null || value === undefined) return false;
+      if (Array.isArray(value)) return value.length > 0;
+      return String(value).trim() !== "";
     }
 
     function normalizeUrl(url = "") {

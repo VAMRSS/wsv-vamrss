@@ -2436,7 +2436,7 @@
     }
 
     
-    /* v3.9.46 consolidated individual document layout */
+    /* v3.9.47 consolidated individual document layout */
     html,
     body {
       background: #101312 !important;
@@ -2866,7 +2866,7 @@
     }
 
   
-    /* v3.9.46 body order, author row, and compact detail spacing */
+    /* v3.9.47 body order, author row, and compact detail spacing */
     .detail-grid {
       gap: 0 !important;
       margin: 0 !important;
@@ -2924,7 +2924,7 @@
     }
 
   
-    /* v3.9.46 body spacing and author notation */
+    /* v3.9.47 body spacing and author notation */
     .detail-grid {
       gap: 0 !important;
       margin: 0 !important;
@@ -2989,7 +2989,28 @@
       border-bottom: 1px solid currentColor !important;
     }
 
-  </style></head><body><button class="dos-fixed-control dos-close-control" type="button" onclick="closeDocumentPage()" aria-label="Close page">CLOSE</button><button class="dos-fixed-control dos-share-control" type="button" onclick="shareFixedDocument()" aria-label="Share page">SHAREする</button><div class="dos-copyright-note">(C) 2026 <a href="../profile/">SHIRASUSALAD</a></div><div class="dos-top-background"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div><img class="dos-top-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"></div><main class="app"><header class="dos-header"><div class="dos-up-logo-block"><img class="dos-up-logo" src="../assets/dosup-logo.svg" alt="DOS UPPER LOGO"></div><div class="dos-topline"><div class="dos-system-title">DOCUMENT ORDER SYSTEM V2.0.0</div></div><div class="dos-barcode dos-barcode-top" id="dosBarcode" aria-label="CODE128 barcode"></div><div class="dos-logo-block"><img class="dos-logo" src="../assets/dos-logo.svg" alt="DOCUMENT ORDER SYSTEM"></div><div class="dos-order-row"><div class="dos-update-text" id="dosUpdateDate">UPDATE:----/--/--</div></div><div class="dos-header-rule" aria-hidden="true"></div></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.46</div><div class="dos-barcode dos-barcode-bottom" id="dosBarcodeBottom" aria-label="CODE128 barcode"></div><img class="dos-bottom-inner-logo" src="../assets/dosdown-logo.svg" alt="DOCUMENT ORDER SYSTEM lower mark"></main><div class="dos-bottom-background"><img class="dos-bottom-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div></div><script>
+  
+
+    /* v3.9.47 prototype status and mention links */
+    .mention-link {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+      text-underline-offset: 0.18em;
+    }
+
+    .mention-link:hover {
+      color: var(--sub);
+    }
+
+    .mention-kind {
+      color: var(--sub);
+      margin-right: 0.25em;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+  </style></head><body><button class="dos-fixed-control dos-close-control" type="button" onclick="closeDocumentPage()" aria-label="Close page">CLOSE</button><button class="dos-fixed-control dos-share-control" type="button" onclick="shareFixedDocument()" aria-label="Share page">SHAREする</button><div class="dos-copyright-note">(C) 2026 <a href="../profile/">SHIRASUSALAD</a></div><div class="dos-top-background"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div><img class="dos-top-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"></div><main class="app"><header class="dos-header"><div class="dos-up-logo-block"><img class="dos-up-logo" src="../assets/dosup-logo.svg" alt="DOS UPPER LOGO"></div><div class="dos-topline"><div class="dos-system-title">DOCUMENT ORDER SYSTEM V2.0.0</div></div><div class="dos-barcode dos-barcode-top" id="dosBarcode" aria-label="CODE128 barcode"></div><div class="dos-logo-block"><img class="dos-logo" src="../assets/dos-logo.svg" alt="DOCUMENT ORDER SYSTEM"></div><div class="dos-order-row"><div class="dos-update-text" id="dosUpdateDate">UPDATE:----/--/--</div></div><div class="dos-header-rule" aria-hidden="true"></div></header><section id="detailHost" class="empty">Loading...</section><div class="status" id="statusText"></div><div class="version">v3.9.47</div><div class="dos-barcode dos-barcode-bottom" id="dosBarcodeBottom" aria-label="CODE128 barcode"></div><img class="dos-bottom-inner-logo" src="../assets/dosdown-logo.svg" alt="DOCUMENT ORDER SYSTEM lower mark"></main><div class="dos-bottom-background"><img class="dos-bottom-background-logo" src="../assets/dos-bg-logo.svg" alt="DOCUMENT ORDER SYSTEM auxiliary mark"><div class="dos-output-note">このページは<br>DOCUMENT ORDER SYSTEM V2.0.0<br>によって出力されました。</div></div><script>
     const SUPABASE_URL = "https://xovbmsyjhtlxldtjbvvm.supabase.co";
     const SUPABASE_KEY = "sb_publishable_gP9cTUqzNytHEXRUY9-dug__quOy4fv";
     function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])); }
@@ -3007,7 +3028,69 @@
     function publicAssetUrl(asset) { return asset&&asset.storage_bucket&&asset.storage_path ? `${SUPABASE_URL}/storage/v1/object/public/${asset.storage_bucket}/${asset.storage_path}` : ""; }
     async function supabaseGet(table, params) { const u=new URL(`${SUPABASE_URL}/rest/v1/${table}`); Object.entries(params||{}).forEach(([k,v])=>u.searchParams.set(k,v)); const r=await fetch(u,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}}); if(!r.ok) throw new Error(`${table} ${r.status}`); return r.json(); }
     function hasDisplayValue(value) { if(value===null||value===undefined) return false; if(Array.isArray(value)) return value.length>0; return String(value).trim()!==""; }
-    function row(key,value,className="") { if(!hasDisplayValue(value)) return ""; const cls=className?` ${escapeAttr(className)}`:""; return `<div class="detail-row${cls}"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`; }
+    function richRow(key,html,className="") { if(!hasDisplayValue(html)) return ""; const cls=className?` ${escapeAttr(className)}`:""; return `<div class="detail-row${cls}"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${html}</div></div>`; }
+    function row(key,value,className="") { return richRow(key, escapeHtml(value), className); }
+    function mentionRow(key,value,className="") { return richRow(key, renderMentionText(value), className); }
+
+    let mentionWorks = [];
+    let mentionSeries = [];
+
+    function collectMentionNos(...texts) {
+      const set = new Set();
+      texts.forEach(text => {
+        const raw = String(text ?? "");
+        const pattern = /@(\d{4})(?!\d)/g;
+        let match;
+        while ((match = pattern.exec(raw)) !== null) set.add(normalizeNo(match[1]));
+      });
+      return [...set].filter(Boolean);
+    }
+
+    async function loadMentionTargetsForTexts(...texts) {
+      const nos = collectMentionNos(...texts);
+      mentionWorks = [];
+      mentionSeries = [];
+      if (!nos.length) return;
+      const inList = `in.(${nos.map(no => `"${no}"`).join(",")})`;
+      const [workRows, seriesRows] = await Promise.all([
+        supabaseGet("wsv_works", { select: "id,work_no,title,title_en,is_public", work_no: inList, is_public: "eq.true" }).catch(() => []),
+        supabaseGet("wsv_series", { select: "id,series_no,code,title,title_en,is_public", series_no: inList, is_public: "eq.true" }).catch(() => [])
+      ]);
+      mentionWorks = Array.isArray(workRows) ? workRows : [];
+      mentionSeries = Array.isArray(seriesRows) ? seriesRows : [];
+    }
+
+    function mentionTargetByNo(no) {
+      const cleanNo = normalizeNo(no);
+      if (!cleanNo) return null;
+      const work = mentionWorks.find(item => normalizeNo(item.work_no) === cleanNo);
+      if (work) return { type: "work", label: "WORK", title: workTitle(work) || cleanNo, no: cleanNo };
+      const series = mentionSeries.find(item => normalizeNo(item.series_no) === cleanNo);
+      if (series) return { type: "series", label: "SERIES", title: seriesTitle(series) || cleanNo, no: cleanNo };
+      return null;
+    }
+
+    function renderMentionText(value) {
+      const raw = String(value ?? "");
+      if (!hasDisplayValue(raw)) return "";
+      const pattern = /@(\d{4})(?!\d)/g;
+      let html = "";
+      let lastIndex = 0;
+      let match;
+      while ((match = pattern.exec(raw)) !== null) {
+        html += escapeHtml(raw.slice(lastIndex, match.index));
+        const target = mentionTargetByNo(match[1]);
+        if (target) {
+          html += `<a class="mention-link" href="${escapeAttr(detailUrl(target.type, target.no))}" target="_blank" rel="noopener noreferrer"><span class="mention-kind">[${escapeHtml(target.label)}]</span>${escapeHtml(target.title)}</a>`;
+        } else {
+          html += escapeHtml(match[0]);
+        }
+        lastIndex = pattern.lastIndex;
+      }
+      html += escapeHtml(raw.slice(lastIndex));
+      return html;
+    }
+
     function authorRowHtml() { return `<div class="detail-row author-row"><div class="detail-key">Author</div><div class="detail-value"><a href="../profile/">しらすサラダ/SHIRASUSALAD</a></div></div>`; }
     function linksHtml(links) { return (links||[]).filter(l=>l&&hasDisplayValue(l.url)).map(l=>`<div class="detail-row"><div class="detail-key">URL</div><div class="detail-value"><a href="${escapeAttr(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.title||l.url)}</a></div></div>`).join(""); }
     function assetFigureHtml(asset, fallbackAlt) { return `<figure><img src="${escapeAttr(publicAssetUrl(asset))}" alt="${escapeAttr(asset.alt_text||asset.file_name||fallbackAlt)}">${asset.caption?`<figcaption class="caption">${escapeHtml(asset.caption)}</figcaption>`:""}</figure>`; }
@@ -3148,8 +3231,9 @@
           supabaseGet("wsv_assets",{select:"*",work_id:`eq.${work.id}`,is_public:"eq.true",order:"sort_order.asc,created_at.asc"}),
           supabaseGet("wsv_related_links",{select:"*",target_type:"eq.work",work_id:`eq.${work.id}`,is_public:"eq.true",order:"sort_order.asc,created_at.asc"})
         ]);
+        await loadMentionTargetsForTexts(work.description, work.description_en);
         const series=seriesRows[0], title=workTitle(work); document.title=`VAMRSS / ${title}`; setCurrentDetail("work", work.work_no, title); document.getElementById("detailHost").classList.remove("empty");
-        document.getElementById("detailHost").innerHTML=`<div class="detail-grid">${row("Title",title,"work-title-row")}${row("T_EN",work.title_en,"work-title-en-row")}${topImageRowHtml(assets)}${topLogoRowHtml(assets)}${authorRowHtml()}${row("Type","[WORK]")}${row("№",normalizeNo(work.work_no))}${row("Series",series?`${series.code?series.code+" / ":""}${seriesTitle(series)}`:"")}${row("Start",work.start_date)}${row("Completed",work.completed_date)}${row("Production",work.production_status)}${row("Management",work.management_status)}${row("Technique",work.technique)}${row("Materials",work.materials)}${row("Size",formatDimensions(work))}${row("Description",work.description,"description-row")}${row("D_EN",work.description_en,"description-en-row")}${linksHtml(links)}${bottomImagesRowHtml(assets)}${bottomLogosRowHtml(assets)}</div>`;
+        document.getElementById("detailHost").innerHTML=`<div class="detail-grid">${row("Title",title,"work-title-row")}${row("T_EN",work.title_en,"work-title-en-row")}${topImageRowHtml(assets)}${topLogoRowHtml(assets)}${authorRowHtml()}${row("Type","[WORK]")}${row("№",normalizeNo(work.work_no))}${row("Series",series?`${series.code?series.code+" / ":""}${seriesTitle(series)}`:"")}${row("Start",work.start_date)}${row("Completed",work.completed_date)}${row("Production",work.production_status)}${row("Management",work.management_status)}${row("Technique",work.technique)}${row("Materials",work.materials)}${row("Size",formatDimensions(work))}${mentionRow("Description",work.description,"description-row")}${mentionRow("D_EN",work.description_en,"description-en-row")}${linksHtml(links)}${bottomImagesRowHtml(assets)}${bottomLogosRowHtml(assets)}</div>`;
       } catch(e) { console.error(e); document.getElementById("detailHost").innerHTML="読み込みに失敗しました。"; }
     }
     loadWorkPage();

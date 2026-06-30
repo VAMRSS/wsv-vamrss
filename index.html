@@ -2834,6 +2834,27 @@
       line-height: 1.55;
     }
 
+  
+
+    /* v3.9.47 prototype status and mention links */
+    .mention-link {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+      text-underline-offset: 0.18em;
+    }
+
+    .mention-link:hover {
+      color: var(--sub);
+    }
+
+    .mention-kind {
+      color: var(--sub);
+      margin-right: 0.25em;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2842,7 +2863,7 @@
 <body>
   <main class="app">
     <div class="fixed-copyright-mark">(C) 2026 SHIRASUSALAD</div>
-    <div class="fixed-version-mark">v3.9.28</div>
+    <div class="fixed-version-mark">v3.9.47</div>
 
     <section id="worksScreen" class="screen active">
       <div class="topbar">
@@ -2907,7 +2928,7 @@
     let sortKey = "workNo";
     let sortDirection = "asc";
 
-    const PRODUCTION_STATUSES = ["制作中", "完成", "制作終了"];
+    const PRODUCTION_STATUSES = ["制作中", "完成", "制作終了", "試作品"];
     const MANAGEMENT_STATUSES = ["保管中", "売却済", "譲渡済", "貸出中", "処分済"];
 
     const workList = document.getElementById("workList");
@@ -3065,8 +3086,8 @@ function normalizeWorkNo(value) {
             ${row("T_EN", series.title_en)}
             ${row("Start", series.start_date)}
             ${row("Works", String(relatedWorks.length))}
-            ${row("Description", series.description)}
-            ${row("D_EN", series.description_en)}
+            ${mentionRow("Description", series.description)}
+            ${mentionRow("D_EN", series.description_en)}
             ${additionalLogoDetailRowHtml("series", series)}
             ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
           </div>
@@ -3205,6 +3226,47 @@ function normalizeWorkNo(value) {
       return `<div class="detail-row"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${escapeHtml(value)}</div></div>`;
     }
 
+
+    function mentionTargetByNo(no) {
+      const cleanNo = normalizeWorkNo(no);
+      if (!cleanNo) return null;
+      const work = works.find(item => normalizeWorkNo(item.work_no) === cleanNo);
+      if (work) return { type: "work", label: "WORK", title: workTitle(work) || cleanNo, no: cleanNo };
+      const series = seriesRecords.find(item => normalizeWorkNo(item.series_no) === cleanNo);
+      if (series) return { type: "series", label: "SERIES", title: seriesTitle(series) || cleanNo, no: cleanNo };
+      return null;
+    }
+
+    function renderMentionText(value) {
+      const raw = String(value ?? "");
+      if (!hasDisplayValue(raw)) return "";
+      const pattern = /@(\d{4})(?!\d)/g;
+      let html = "";
+      let lastIndex = 0;
+      let match;
+      while ((match = pattern.exec(raw)) !== null) {
+        html += escapeHtml(raw.slice(lastIndex, match.index));
+        const target = mentionTargetByNo(match[1]);
+        if (target) {
+          html += `<a class="mention-link" href="${escapeAttr(detailUrl(target.type, target.no))}" target="_blank" rel="noopener noreferrer"><span class="mention-kind">[${escapeHtml(target.label)}]</span>${escapeHtml(target.title)}</a>`;
+        } else {
+          html += escapeHtml(match[0]);
+        }
+        lastIndex = pattern.lastIndex;
+      }
+      html += escapeHtml(raw.slice(lastIndex));
+      return html;
+    }
+
+    function richRow(key, html) {
+      if (!hasDisplayValue(html)) return "";
+      return `<div class="detail-row"><div class="detail-key">${escapeHtml(key)}</div><div class="detail-value">${html}</div></div>`;
+    }
+
+    function mentionRow(key, value) {
+      return richRow(key, renderMentionText(value));
+    }
+
     function seriesLinkHtml(seriesTitleText) {
       return escapeHtml(seriesTitleText || "");
     }
@@ -3234,8 +3296,8 @@ function normalizeWorkNo(value) {
                 ${row("Technique", work.technique)}
                 ${row("Materials", work.materials)}
                 ${row("Size", formatDimensions(work))}
-                ${row("Description", workDescription(work))}
-                ${row("D_EN", work.description_en)}
+                ${mentionRow("Description", workDescription(work))}
+                ${mentionRow("D_EN", work.description_en)}
                 ${additionalLogoDetailRowHtml("work", work)}
                 ${relatedLinksDetailRowHtml(relatedLinksForWork(work))}
                 ${workImagesDetailRowHtml(work)}
@@ -3559,8 +3621,8 @@ function normalizeWorkNo(value) {
                 ${row("T_EN", series.title_en)}
                 ${row("Start", series.start_date)}
                 ${row("Works", String(relatedWorks.length))}
-                ${row("Description", series.description)}
-                ${row("D_EN", series.description_en)}
+                ${mentionRow("Description", series.description)}
+                ${mentionRow("D_EN", series.description_en)}
                 ${additionalLogoDetailRowHtml("series", series)}
                 ${relatedLinksDetailRowHtml(relatedLinksForSeries(series))}
               </div>

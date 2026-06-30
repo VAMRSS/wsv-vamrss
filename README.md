@@ -82,3 +82,14 @@ Changed:
 - Public top list share/open button label changed to `DOSV2で出力（SHARE）`.
 - Updates page uses the same label for the DOSV2 share/open button.
 - No additional SQL is required.
+
+
+## v3.9.47 Prototype Status / Mention Links
+
+- Added fixed Production option: 試作品.
+- Description and D_EN now render @0000 mentions as links to DOSV2 individual pages.
+- Work mentions display as [WORK] Title.
+- Series mentions display as [SERIES] Title.
+- Unresolved mentions remain as @0000.
+- Mention rendering is applied to TOP, UPDATES, DOSV2 work/series pages, and admin detail displays.
+- SQL patch included for projects where the old production_status check constraint blocks 試作品.
